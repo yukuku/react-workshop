@@ -1,0 +1,20 @@
+  /////////////////////////////////
+  // EMMETT & SNIPPETS
+  /////////////////////////////////
+  "editor.snippetSuggestions": "none",
+  "editor.tabCompletion": "onlySnippets",
+  "editor.quickSuggestions": {
+    "other": false,
+    "comments": false,
+    "strings": false
+  },
+  "emmet.triggerExpansionOnTab": true,
+  // Emmet works in certain files only, to make it work in other files
+  // or contexts:
+  "emmet.includeLanguages": {
+    "markdown": "html",
+    "javascript": "javascriptreact"
+  },
+  // Helps emmett work in code fences of markdown, in combination with
+  // the emmet.includeLanguages above
+  "emmet.excludeLanguages": [],

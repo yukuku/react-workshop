@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MdShoppingCart } from 'react-icons/md'
 import serializeForm from 'form-serialize'
 import Heading from 'YesterTech/Heading'
 
 function CheckoutBilling({ onSubmit }) {
-  const sameAsBilling = false
+  const [sameAsBilling, setSameAsBilling] = React.useState(false)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -36,19 +36,27 @@ function CheckoutBilling({ onSubmit }) {
         </Heading>
 
         <label>
-          <input type="checkbox" /> <span>Same as Billing</span>
+          <input
+            type="checkbox"
+            onChange={() => {
+              setSameAsBilling(!sameAsBilling)
+            }}
+          />{' '}
+          <span>Same as Billing</span>
         </label>
 
-        <div className="spacing">
-          <div className="form-field">
-            <label htmlFor="shipping:name">Name</label>
-            <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
-          </div>
-          <div className="form-field">
-            <label htmlFor="shipping:address">Address</label>
-            <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
-          </div>
-        </div>
+        {!sameAsBilling && (
+          <React.Fragment>
+            <div className="form-field">
+              <label htmlFor="shipping:name">Name</label>
+              <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="shipping:address">Address</label>
+              <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
+            </div>
+          </React.Fragment>
+        )}
 
         <footer>
           <button type="submit" className="button">

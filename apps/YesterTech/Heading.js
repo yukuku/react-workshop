@@ -4,8 +4,8 @@ import classnames from 'classnames'
 
 import 'YesterTech/Heading.scss'
 
-function Heading({ as: Component = 'h1', size = 1, className, ...rest }) {
-  return <Component className={classnames('heading', `size-${size}`, className)} {...rest} />
+function Heading({ as: Component = 'h1', size = 1, className, ...props }) {
+  return <Component className={classnames('heading', `size-${size}`, className)} {...props} />
 }
 
 Heading.propTypes = {
