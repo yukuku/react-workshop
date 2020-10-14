@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Columns, Column } from 'react-flex-columns'
 
@@ -16,7 +16,19 @@ function ProductProfile() {
   let { productId } = useParams()
   productId = parseInt(productId, 10)
 
-  const product = null
+  const [product, setProduct] = useState()
+
+  useEffect(() => {
+    let isCurrent = true
+    api.products.getProduct(productId).then(product => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [productId])
 
   // Cart
   const { addToCart, updateQuantity, getQuantity } = useShoppingCart()
@@ -49,10 +61,7 @@ function ProductProfile() {
 
               {quantity > 0 && (
                 <div className="align-right">
-                  <Quantity
-                    onChange={q => updateQuantity(productId, q)}
-                    quantity={quantity}
-                  />
+                  <Quantity onChange={q => updateQuantity(productId, q)} quantity={quantity} />
                 </div>
               )}
             </Column>
