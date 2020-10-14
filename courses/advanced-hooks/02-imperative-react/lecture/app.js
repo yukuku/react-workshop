@@ -1,25 +1,59 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { position } from './utils'
 import './styles.scss'
 
-// const targetRect = targetRef.current.getBoundingClientRect()
-// const popoverRect = popoverRef.current.getBoundingClientRect()
-// setStyles(position(targetRect, popoverRect))
+function Portal({ children }) {
+  const nodeRef = useRef()
+  const [_, forceUpdate] = useState()
 
-function Popover({ children }) {
-  return <div className="popover">{children}</div>
+  useEffect(() => {
+    const node = document.createElement('div')
+    document.body.appendChild(node)
+    nodeRef.current = node
+    forceUpdate({})
+    return () => {
+      document.body.removeChild(node)
+    }
+  }, [])
+
+  return nodeRef.current ? createPortal(children, nodeRef.current) : null
+}
+
+function Popover({ children, targetRef }) {
+  const [styles, setStyles] = useState({})
+  const popoverRef = useRef()
+
+  function initPopoverRef(node) {
+    if (node && !popoverRef.current) {
+      popoverRef.current = node
+      const targetRect = targetRef.current.getBoundingClientRect()
+      const popoverRect = popoverRef.current.getBoundingClientRect()
+      setStyles(position(targetRect, popoverRect))
+    }
+  }
+
+  return (
+    <Portal>
+      <div ref={initPopoverRef} className="popover" style={{ position: 'absolute', ...styles }}>
+        {children}
+      </div>
+    </Portal>
+  )
 }
 
 function Define({ children }) {
   const [open, setOpen] = useState(false)
+  const buttonRef = useRef()
 
   return (
     <>
-      <button onClick={() => setOpen(!open)} className="as-link">
+      <button ref={buttonRef} onClick={() => setOpen(!open)} className="as-link">
         {children}
       </button>
-      {open && <Popover>Hooks are a way to compose behavior into components</Popover>}
+      {open && (
+        <Popover targetRef={buttonRef}>Hooks are a way to compose behavior into components</Popover>
+      )}
     </>
   )
 }
@@ -27,9 +61,9 @@ function Define({ children }) {
 export default function App() {
   return (
     <p>
-      Modern React is filled with <Define>Hooks</Define>. They work with
-      function-components and they give us an ability to use state and other React
-      features similarly to class-based components.
+      Modern React is filled with <Define>Hooks</Define>. They work with function-components and
+      they give us an ability to use state and other React features similarly to class-based
+      components.
     </p>
   )
 }
