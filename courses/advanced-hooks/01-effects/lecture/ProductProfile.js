@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Columns, Column } from 'react-flex-columns'
 
@@ -16,7 +16,20 @@ function ProductProfile() {
   let { productId } = useParams()
   productId = parseInt(productId, 10)
 
-  const product = null
+  const [product, setProduct] = useState(null)
+
+  // Any variables that we "close over", THAT CAN CHANGE!!!!
+  useEffect(() => {
+    let isCurrent = true
+    api.products.getProduct(productId).then(product => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [productId])
 
   // Cart
   const { addToCart, updateQuantity, getQuantity } = useShoppingCart()
@@ -27,11 +40,7 @@ function ProductProfile() {
     <div className="spacing">
       <Columns gutters>
         <Column>
-          <ProductImage
-            src={product.imagePath}
-            alt={product.name}
-            size={15}
-          />
+          <ProductImage src={product.imagePath} alt={product.name} size={15} />
         </Column>
         <Column flex className="spacing">
           <Heading>{product.name}</Heading>
@@ -47,18 +56,13 @@ function ProductProfile() {
             </Column>
             <Column className="spacing-small">
               <ShoppingCartButton
-                onClick={() =>
-                  addToCart(productId, product.name, product.price)
-                }
+                onClick={() => addToCart(productId, product.name, product.price)}
                 getQuantity={quantity}
               />
 
               {quantity > 0 && (
                 <div className="align-right">
-                  <Quantity
-                    onChange={q => updateQuantity(productId, q)}
-                    quantity={quantity}
-                  />
+                  <Quantity onChange={q => updateQuantity(productId, q)} quantity={quantity} />
                 </div>
               )}
             </Column>
@@ -85,4 +89,4 @@ function ProductProfile() {
   )
 }
 
-export default ProductProfile
+export default withFetchProduct(ProductProfile)
