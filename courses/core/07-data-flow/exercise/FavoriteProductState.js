@@ -1,13 +1,12 @@
-// import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useContext, useState, useEffect, useRef } from 'react'
 // import * as storage from 'YesterTech/localStorage'
 
-// Make your context here
+const Context = React.createContext()
 
 export function FavoriteProductProvider({ children }) {
-  // Wrap children in the provider
-  return children
+  return <Context.Provider value="message" children={children} />
 }
 
 export function useFavoriteProduct() {
-  // return the return-value of useContext
+  return useContext(Context)
 }

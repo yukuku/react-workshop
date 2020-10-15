@@ -5,15 +5,17 @@ import { ShoppingCartProvider } from 'YesterTech/ShoppingCartState'
 import PrimaryLayout from 'YesterTech/PrimaryLayout'
 import 'YesterTech/styles/global-styles.scss'
 
-// import { FavoriteProductProvider } from './FavoriteProductState'
+import { FavoriteProductProvider } from './FavoriteProductState'
 
 function App() {
   return (
     <BrowserRouter>
       <AuthStateProvider>
-        <ShoppingCartProvider>
-          <PrimaryLayout />
-        </ShoppingCartProvider>
+        <FavoriteProductProvider>
+          <ShoppingCartProvider>
+            <PrimaryLayout />
+          </ShoppingCartProvider>
+        </FavoriteProductProvider>
       </AuthStateProvider>
     </BrowserRouter>
   )
