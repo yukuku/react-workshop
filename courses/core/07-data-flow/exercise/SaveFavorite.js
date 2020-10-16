@@ -4,24 +4,16 @@ import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
 import { useFavoriteProduct } from 'YesterTech/FavoriteProductState'
 
 function SaveFavorite({ productId }) {
-  const [favorites, setFavorites] = useState([])
-
-  const message = useFavoriteProduct()
-  console.log(message)
+  const { isFavorite, addFavorite, removeFavorite } = useFavoriteProduct()
 
   // See if our productId is one of the favorites
-  const favorite = favorites.includes(productId)
+  const favorite = isFavorite(productId)
 
   function handleClick() {
     if (favorite) {
-      // Remove favorites by filtering an array down to everything that
-      // doesn't match the productId
-      setFavorites(favorites.filter(id => id !== productId))
+      removeFavorite(productId)
     } else {
-      // Add favorites by concatenating two arrays together. If favorites
-      // looks like this: [1, 2] and you concat an array that looks
-      // like this [3], the end result is [1,2,3]
-      setFavorites(favorites.concat([productId]))
+      addFavorite(productId)
     }
   }
 
