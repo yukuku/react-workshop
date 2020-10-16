@@ -1,13 +1,7 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { Columns, Column } from 'react-flex-columns'
-import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuLink
-} from '@reach/menu-button'
+import { Menu, MenuList, MenuButton, MenuItem, MenuLink } from '@reach/menu-button'
 import { MdShoppingCart } from 'react-icons/md'
 
 import api from 'YesterTech/api'
@@ -25,7 +19,7 @@ function PrimaryHeader() {
 
   function handleLogout() {
     api.auth.logout().then(() => {
-      // Tell the app we're logged out with a `dispatch`
+      dispatch({ type: 'LOGOUT' })
     })
   }
 
@@ -46,10 +40,7 @@ function PrimaryHeader() {
               Products
             </NavLink>
             {cartSize > 0 && (
-              <NavLink
-                to="/checkout"
-                className="primary-nav-item nav-cart"
-              >
+              <NavLink to="/checkout" className="primary-nav-item nav-cart">
                 <MdShoppingCart />
                 <span className="label">{cartSize}</span>
               </NavLink>
