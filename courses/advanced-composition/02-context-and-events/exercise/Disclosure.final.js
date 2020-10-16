@@ -13,33 +13,36 @@ export function Disclosure({ children, onChange, defaultOpen = false, ...props }
     isOpen,
     panelId,
     onSelect: () => {
-      onChange && onChange()
+      onChange && onChange(isOpen)
       setIsOpen(!isOpen)
     }
   }
 
-  return <DisclosureContext.Provider children={children} value={context} />
+  return (
+    <DisclosureContext.Provider
+      children={typeof children === 'function' ? children({ isOpen }) : children}
+      value={context}
+    />
+  )
 }
 
-export const DisclosureButton = forwardRef(
-  ({ children, onClick, ...props }, forwardedRef) => {
-    const { isOpen, panelId, onSelect } = useContext(DisclosureContext)
+export const DisclosureButton = forwardRef(({ children, onClick, ...props }, forwardedRef) => {
+  const { isOpen, panelId, onSelect } = useContext(DisclosureContext)
 
-    return (
-      <button
-        {...props}
-        onClick={wrapEvent(onClick, onSelect)}
-        data-disclosure-button=""
-        data-state={isOpen ? 'open' : 'collapsed'}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        ref={forwardedRef}
-      >
-        {children}
-      </button>
-    )
-  }
-)
+  return (
+    <button
+      {...props}
+      onClick={wrapEvent(onClick, onSelect)}
+      data-disclosure-button=""
+      data-state={isOpen ? 'open' : 'collapsed'}
+      aria-expanded={isOpen}
+      aria-controls={panelId}
+      ref={forwardedRef}
+    >
+      {children}
+    </button>
+  )
+})
 
 DisclosureButton.displayName = 'DisclosureButton'
 
