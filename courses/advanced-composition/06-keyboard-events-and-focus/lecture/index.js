@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Menu, MenuButton, MenuList, MenuItem } from './Menu'
+import { Menu, MenuButton, MenuList, MenuItem } from './Menu.final'
 import './styles.scss'
 
 function App() {
