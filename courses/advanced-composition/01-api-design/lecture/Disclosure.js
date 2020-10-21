@@ -1,34 +1,65 @@
-import React, { useState, forwardRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
 // Import or write our own:
-// import { useId } from '../../useId'
-// function useId() {}
+import { useId } from '../../useId'
 
-export function Disclosure({ children, label, defaultIsOpen = false }) {
+export function Disclosure({ children, onChange, defaultIsOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultIsOpen)
 
+  const id = useId()
+  const panelId = `panel-${id}`
+
   function onSelect() {
+    onChange && onChange(!isOpen)
     setIsOpen(!isOpen)
   }
 
-  // Notice how awful it is to compose class names. We'll fix it with data-attributes
+  children = React.Children.map(children, child => {
+    return React.cloneElement(child, {
+      isOpen,
+      onSelect,
+      panelId
+    })
+  })
 
-  return (
-    <div className="disclosure">
+  return children
+}
+
+export const DisclosureButton = React.forwardRef(
+  ({ children, isOpen, onSelect, panelId, ...props }, forwardedRef) => {
+    return (
       <button
+        {...props}
+        ref={forwardedRef}
         onClick={onSelect}
-        className={`disclosure-button ${isOpen ? 'open' : 'collapsed'}`}
+        aria-controls={panelId}
+        data-disclosure-button=""
+        data-state={isOpen ? 'open' : 'collapsed'}
       >
-        {isOpen ? <FaAngleDown /> : <FaAngleRight />}
-        <span>{label}</span>
+        {children}
       </button>
+    )
+  }
+)
+
+DisclosureButton.displayName = 'DisclosureButton'
+
+export const DisclosurePanel = React.forwardRef(
+  ({ children, isOpen, panelId, ...props }, forwardedRef) => {
+    return (
       <div
-        className={`disclosure-panel ${isOpen ? 'open' : 'collapsed'}`}
+        {...props}
+        ref={forwardedRef}
+        id={panelId}
+        data-disclosure-panel=""
+        data-state={isOpen ? 'open' : 'collapsed'}
         hidden={!isOpen}
       >
         {children}
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
+
+DisclosurePanel.displayName = 'DisclosurePanel'
