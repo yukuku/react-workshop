@@ -11,20 +11,19 @@ function App() {
     <div>
       <p>
         Want to read more about{' '}
-        <button onClick={() => null} className="as-link">
+        <button onClick={() => setIndex(1)} className="as-link">
           a11y
         </button>
       </p>
 
-      <Accordion onChange={setIndex}>
+      <Accordion onChange={setIndex} index={index}>
         <AccordionItem>
           <AccordionButton>
             {index === 0 ? <FaAngleDown /> : <FaAngleRight />}
             <span>What is ARIA?</span>
           </AccordionButton>
           <AccordionPanel>
-            A way to make web content more accessible: "Accessible Rich Internet
-            Applications".
+            A way to make web content more accessible: "Accessible Rich Internet Applications".
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem>
@@ -33,8 +32,7 @@ function App() {
             <span>What does "a11y" stand for?</span>
           </AccordionButton>
           <AccordionPanel>
-            A11y is short for "accessibility" since there are 11 characters between "a"
-            and "y".
+            A11y is short for "accessibility" since there are 11 characters between "a" and "y".
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
