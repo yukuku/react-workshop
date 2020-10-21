@@ -84,9 +84,7 @@ function Define({ children }) {
         {children}
       </button>
       {open && (
-        <Popover targetRef={buttonRef}>
-          Hooks are a way to compose behavior into components
-        </Popover>
+        <Popover targetRef={buttonRef}>Hooks are a way to compose behavior into components</Popover>
       )}
     </>
   )
@@ -95,9 +93,9 @@ function Define({ children }) {
 export default function App() {
   return (
     <p>
-      Modern React is filled with <Define>Hooks</Define>. They work with
-      function-components and they give us an ability to use state and other React
-      features similarly to class-based components.
+      Modern React is filled with <Define>Hooks</Define>. They work with function-components and
+      they give us an ability to use state and other React features similarly to class-based
+      components.
     </p>
   )
 }
