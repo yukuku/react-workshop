@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Quantity from './Quantity'
-// import { useShoppingCart } from './ShoppingCartState'
+import { useShoppingCart } from './ShoppingCartState'
 import ProductImage from 'YesterTech/ProductImage'
 
 function BrowseProductItem({ productId, name, price, imagePath, quantity }) {
-  const { addToCart, updateQuantity } = useContext(ShoppingCartContext)
+  const { addToCart, updateQuantity } = useShoppingCart()
 
   return (
     <div className="browse-product-item">

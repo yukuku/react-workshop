@@ -4,7 +4,7 @@ import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
 // import { useFavoriteProduct } from 'YesterTech/FavoriteProductState'
 
 function SaveFavorite({ productId }) {
-  const [favorites, setFavorites] = useState([])
+  const [favorites, setFavorites] = useState()
 
   // See if our productId is one of the favorites
   const favorite = favorites.includes(productId)

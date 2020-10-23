@@ -1,11 +1,11 @@
 import React from 'react'
 import { useProducts } from './utils'
-// import { useShoppingCart } from './ShoppingCartState'
+import { useShoppingCart } from './ShoppingCartState'
 import BrowseProductItem from './BrowseProductItem'
 
 function BrowseProducts() {
   const products = useProducts()
-  const { cart, getQuantity } = useContext(ShoppingCartContext)
+  const { cart, getQuantity } = useShoppingCart()
 
   return (
     <div className="spacing">
