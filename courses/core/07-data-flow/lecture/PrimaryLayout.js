@@ -6,21 +6,25 @@ import Checkout from 'YesterTech/Checkout'
 import 'YesterTech/PrimaryLayout.scss'
 
 function PrimaryLayout() {
+  const { cart } = useContext(ShoppingCartContext)
+
   return (
     <div className="primary-layout">
       <div>
         <header className="primary-header">
           <NavLink to="/products">Products</NavLink>
-          <NavLink to="/checkout">Checkout</NavLink>
+          {cart.length > 0 && <NavLink to="/checkout">Checkout</NavLink>}
         </header>
         <main className="primary-content">
           <Switch>
             <Route path="/products">
               <BrowseProducts />
             </Route>
-            <Route path="/checkout">
-              <Checkout cart={[]} />
-            </Route>
+            {cart.length > 0 && (
+              <Route path="/checkout">
+                <Checkout cart={cart} />
+              </Route>
+            )}
             <Redirect to="/products" />
           </Switch>
         </main>
