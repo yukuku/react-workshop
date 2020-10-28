@@ -2,6 +2,8 @@ import React from 'react'
 // import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 // import Heading from 'YesterTech/Heading'
 
+import StarRatings from './StarRatings'
+
 const products = [
   {
     id: 1,
@@ -12,26 +14,28 @@ const products = [
   },
   {
     id: 2,
-    name: 'Donkey Kong',
-    rating: 3.5,
+    name: 'Other',
+    rating: 5,
     brand: 'Nintendo',
-    condition: 'good'
-  },
-  {
-    id: 3,
-    name: 'Nintendo NES',
-    rating: 4,
-    brand: 'Nintendo',
-    condition: 'fair'
+    condition: 'new',
+    special: true
   }
 ]
 
 export default function BrowseProducts() {
-  console.log(products)
-
   return (
     <div>
-      {/* Exercise code goes here! This is what comments look like in JSX */}
+      {products.map(product => {
+        return (
+          <div key={product.id}>
+            <h1>{product.name}</h1>
+            <div>
+              <StarRatings rating={product.rating} />
+            </div>
+            <div>{product.brand}</div>
+          </div>
+        )
+      })}
     </div>
   )
 }
