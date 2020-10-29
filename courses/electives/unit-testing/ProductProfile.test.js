@@ -38,6 +38,8 @@ api.products.getProduct.mockResolvedValue(mockProductResponse)
  * Tests
  */
 
+// Kent C Dodds
+
 describe('ProductProfile', () => {
   it('should render the product', async () => {
     render(<ProductProfile />)

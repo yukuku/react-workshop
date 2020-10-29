@@ -18,7 +18,6 @@ function ProductProfile() {
 
   const [product, setProduct] = useState(null)
 
-  // Any variable that we "close over" that CAN CHANGE!!!!
   useEffect(() => {
     let isCurrent = true
     api.products.getProduct(productId).then(product => {

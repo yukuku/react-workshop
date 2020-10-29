@@ -5,7 +5,7 @@
 *****************************************/
 
 // const admin: boolean = true
-// const message = 'hello world'
+// const message: string = 'hello world'
 // const age: number = 70
 // const someVariable: any = 'could be a string, or number, or object, etc...'
 
@@ -44,14 +44,14 @@
   `type` Alias
 *****************************************/
 
-// // In the above example, `user` is not a "type", it's a variable with
-// // limited possible values
+// In the above example, `user` is not a "type", it's a variable with
+// limited possible values
 
 // type User = 'member' | 'admin'
 // let user: User = 'admin'
 
-// // Lets say you wanted a "Loading" type that is either `null` or
-// // a particular object, like a "user" object:
+// Lets say you wanted a "Loading" type that is either `null` or
+// a particular object, like a "user" object:
 
 // type Loading = null | object // bad
 // type Loading = null | { name: string } // better
@@ -80,10 +80,10 @@
 
 // interface Person {
 //   name: string
-//   // age?: number
-//   // readonly age: number // Variables use const whereas properties use readonly.
-//   // sayHi?: () => string
-//   // [key: string]: any
+//   age?: number
+//   readonly age: number // Variables use const whereas properties use readonly.
+//   sayHi?: () => string
+//   [key: string]: any
 // }
 
 // function logPerson(person: Person): void {
@@ -96,8 +96,8 @@
   Type Alias vs Interface
 *****************************************/
 
-// // Type Aliases vs Interface
-// // https://www.youtube.com/watch?v=crjIq7LEAYw
+// Type Aliases vs Interface
+// https://www.youtube.com/watch?v=crjIq7LEAYw
 
 // // Type aliases are small compared to interfaces:
 // type Names = string[]
@@ -175,7 +175,7 @@
 //   (arg: T): T[]
 // }
 
-// const makeArray: ValueToArray<{ name: string } | string> = arg => {
+// const makeArray: ValueToArray<SomeOtherInterface> = arg => {
 //   return [arg]
 // }
 

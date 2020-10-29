@@ -65,27 +65,23 @@ function Counter() {
   )
 }
 
-function Report() {
+const Report = observer(() => {
   const store = useContext(StoreContext)
 
-  return (
-    <Observer>
-      {() => {
-        return (
-          <div>
-            Count: {store.count}
-            {/* <Other /> */}
-          </div>
-        )
-      }}
-    </Observer>
-  )
-}
+  console.log('render')
 
-// function Other() {
-//   console.log('Do I get re-rendered')
-//   return <div />
-// }
+  return (
+    <div>
+      Count: {store.count}
+      <Other />
+    </div>
+  )
+})
+
+function Other() {
+  console.log('Do I get re-rendered')
+  return <div />
+}
 
 // <Observer> essentially takes a function and can only observe
 // the variables used within. Whereas `observer(Comp)` (the HoC)

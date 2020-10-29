@@ -60,22 +60,18 @@ function Counter() {
 
 // File 2: import store
 
-function Report() {
+const Report = observer(() => {
   return (
-    <Observer>
-      {() => (
-        <div>
-          Count: {store.count}
-          {/* <Other /> */}
-        </div>
-      )}
-    </Observer>
+    <div>
+      Count: {store.count}
+      <Other />
+    </div>
   )
-}
+})
 
-// function Other() {
-//   console.log('Do I get re-rendered')
-//   return <div />
-// }
+function Other() {
+  console.log('Do I get re-rendered')
+  return <div />
+}
 
 ReactDOM.render(<App />, document.getElementById('root'))

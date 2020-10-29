@@ -18,63 +18,63 @@ import ReactDOM from 'react-dom'
 //  */
 
 // // https://fettblog.eu/typescript-react-why-i-dont-use-react-fc/
-// interface FC<P = {}> {
-//   (props: PropsWithChildren<P>): ReactElement | null
-// }
+// // interface FC<P = {}> {
+// //   (props: PropsWithChildren<P>): ReactElement | null
+// // }
 
 // // /**
 // //  * Our Code
 // //  */
 
-// interface Props {
-//   message: string
-// }
+// // interface Props {
+// //   message: string
+// // }
 
-// export const MyComponent: FC<Props> = ({ message }) => {
-//   return <div>{message}</div>
-// }
+// // export const MyComponent: React.FC<Props> = ({ message }) => {
+// //   return <div>{message}</div>
+// // }
 
-/****************************************
-  useState: Numeric Value
-*****************************************/
+// /****************************************
+//   useState: Numeric Value
+// *****************************************/
 
-// export const MyComponent: React.FC = () => {
-//   // Explicit
-//   // const [count, setCount] = useState<number>(0)
+// // export const MyComponent: React.FC = () => {
+// //   // Explicit
+// //   const [count, setCount] = useState<number>(0)
 
-//   // Implicit number type
-//   const [count, setCount] = useState(0)
+// //   // Implicit number type
+// //   const [count, setCount] = useState(0)
 
-//   // remember you can always do unions like <string | null>
+// //   // remember you can always do unions like <string | null>
 
-//   return (
-//     <button onClick={() => setCount(count + 1)} className="button">
-//       Count: {count}
-//     </button>
-//   )
-// }
+// //   return (
+// //     <button onClick={() => setCount(count + 1)} className="button">
+// //       Count: {count}
+// //     </button>
+// //   )
+// // }
 
-/****************************************
-  useState: Object
-*****************************************/
+// /****************************************
+//   useState: Object
+// *****************************************/
 
-// interface User {
-//   name?: string
-// }
+// // interface User {
+// //   name?: string
+// // }
 
-// export const MyComponent: React.FC = () => {
-//   const [user, setUser] = useState<User>({})
+// // export const MyComponent: React.FC = () => {
+// //   const [user, setUser] = useState<User>({})
 
-//   return (
-//     <button onClick={() => setUser({ name: 'Nathan' })} className="button">
-//       User: {user.name || <i>None</i>}
-//     </button>
-//   )
-// }
+// //   return (
+// //     <button onClick={() => setUser({ name: 'Nathan' })} className="button">
+// //       User: {user.name || <i>None</i>}
+// //     </button>
+// //   )
+// // }
 
-/****************************************
-  Props and onClick events
-*****************************************/
+// /****************************************
+//   Props and onClick events
+// *****************************************/
 
 // export const MyComponent: React.FC = () => {
 //   const [showMessage, setShowMessage] = useState<boolean>(false)
@@ -90,9 +90,9 @@ import ReactDOM from 'react-dom'
 // interface Props {
 //   message: string
 //   showMessage: boolean
-//   onClick: () => void
+//   // onClick: () => void
 //   // You can hover (sometimes) or CTRL+Space on `onClick` event to see this definition
-//   // onClick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined
+//   onClick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined
 // }
 
 // export const Message: React.FC<Props> = ({ message, showMessage, onClick }) => {
@@ -103,42 +103,43 @@ import ReactDOM from 'react-dom'
 //   )
 // }
 
-/****************************************
-  useRef: DOM
-*****************************************/
+// /****************************************
+//   useRef: DOM
+// *****************************************/
 
-// export const MyComponent: React.FC = () => {
-//   // HTMLDivElement will ensure .current is just that, or null.
-//   // The ! and the end of null makes it read-only which is ideal
-//   // for refs that are used on DOM elements
-//   const divRef = useRef<HTMLDivElement>(null!)
-//   return <div ref={divRef} />
-// }
+// // export const MyComponent: React.FC = () => {
+// //   // HTMLDivElement will ensure .current is just that, or null.
+// //   // The ! and the end of null makes it read-only which is ideal
+// //   // for refs that are used on DOM elements
+// //   const divRef = useRef<HTMLDivElement>(null!)
+// //   return <div ref={divRef} />
+// // }
 
-/****************************************
-  useRef: Mutable Ref
-*****************************************/
+// /****************************************
+//   useRef: Mutable Ref
+// *****************************************/
 
-// export const MyComponent: React.FC = () => {
-//   // Mutable ref
-//   const firstRender = useRef<boolean>(true)
+// // export const MyComponent: React.FC = () => {
+// //   // Mutable ref
+// //   const firstRender = useRef<boolean>(true)
 
-//   useEffect(() => {
-//     firstRender.current = false
-//   }, [])
+// //   useEffect(() => {
+// //     firstRender.current = false
+// //   }, [])
 
-//   return <div />
-// }
+// //   return <div />
+// // }
 
-/****************************************
-  useReducer
-*****************************************/
+// /****************************************
+//   useReducer
+// *****************************************/
 
-// type Actions = {
-//   type: 'INCREMENT' | 'DECREMENT'
-//   [key: string]: any
-// }
-// // type Actions = { type: 'INCREMENT' } | { type: 'DECREMENT' }
+// // type Actions = {
+// //   type: 'INCREMENT' | 'DECREMENT'
+// //   [key: string]: any
+// // }
+
+// type Actions = { type: 'INCREMENT'} | { type: 'DECREMENT' }
 
 // interface State {
 //   count: number
@@ -198,7 +199,7 @@ import ReactDOM from 'react-dom'
 // //// or
 
 // function useToggle(value: boolean) {
-//   const [state, setState] = useState(value)
+//   const [state, setState] = useState<boolean>(value)
 //   function toggle() {
 //     setState(!value)
 //   }
@@ -220,8 +221,8 @@ import ReactDOM from 'react-dom'
 //   )
 // }
 
-// // Fixes:
-// // 1. Return: [boolean, () => void] to explicitly type a tuple
-// // 2. Do: `return [state, toggle] as const` // const assertion
+// Fixes:
+// 1. Return: [boolean, () => void] to explicitly type a tuple
+// 2. Do: `return [state, toggle] as const` // const assertion
 
-// // In this case, const assertion tells TypeScript these are constants and will not change
+// In this case, const assertion tells TypeScript these are constants and will not change

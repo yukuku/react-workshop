@@ -1,4 +1,5 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useReducer, useEffect } from 'react'
+import api from 'YesterTech/api'
 
 const AuthStateContext = React.createContext()
 
@@ -19,14 +20,18 @@ export function AuthStateProvider({ children }) {
     }
   }, initialState)
 
+  useEffect(() => {
+    api.auth.getAuthenticatedUser().then(user => {
+      dispatch({ type: 'LOGIN', user })
+    })
+  }, [])
+
   const value = {
     ...state,
     dispatch
   }
 
-  return (
-    <AuthStateContext.Provider value={value} children={children} />
-  )
+  return <AuthStateContext.Provider value={value} children={children} />
 }
 
 export function useAuthState() {
