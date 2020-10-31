@@ -4,9 +4,10 @@ import Heading from 'YesterTech/Heading'
 
 function CheckoutBilling({ onSubmit }) {
   const [sameAsBilling, setSameAsBilling] = useState(false)
-  const [billingName, setBillingName] = useState('')
-  const [billingAddress, setBillingAddress] = useState('')
-  const [shippingName, setShippingName] = useState('')
+
+  const [billingName, setBillingName] = useState(null)
+  const [billingAddress, setBillingAddress] = useState(null)
+  const [shippingName, setShippingName] = useState()
   const [shippingAddress, setShippingAddress] = useState('')
 
   function handleSubmit(event) {

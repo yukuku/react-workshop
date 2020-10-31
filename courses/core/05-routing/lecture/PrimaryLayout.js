@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useRouteMatch,
-  useParams
-} from 'react-router-dom'
+import { Switch, Route, Link, Redirect, useRouteMatch, useParams } from 'react-router-dom'
 import { Columns, Column } from 'react-flex-columns'
 
 import Logo from 'YesterTech/Logo'
@@ -26,10 +19,19 @@ export default function PrimaryLayout() {
     <div className="primary-layout">
       <div>
         <PrimaryHeader />
-        <ProductSubNav />
+        <Route path="/products">
+          <ProductSubNav />
+        </Route>
         <main className="primary-content">
-          <Home />
-          {/* Put other pages here */}
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/products">
+              <ProductsLayout />
+            </Route>
+            <Redirect to="/" />
+          </Switch>
         </main>
         <footer className="primary-footer spacing">
           <hr />
@@ -49,12 +51,12 @@ function PrimaryHeader() {
         <Logo />
       </div>
       <nav className="horizontal-spacing-large align-right">
-        <a href="/" className="primary-nav-item">
+        <Link to="/" className="primary-nav-item">
           Home
-        </a>
-        <a href="/products" className="primary-nav-item">
+        </Link>
+        <Link to="/products" className="primary-nav-item">
           Products
-        </a>
+        </Link>
       </nav>
     </header>
   )
@@ -69,6 +71,8 @@ function Home() {
 }
 
 function ProductsLayout() {
+  const match = useRouteMatch()
+
   return (
     <div className="products-layout">
       <aside className="spacing">
@@ -80,23 +84,28 @@ function ProductsLayout() {
         </section>
       </aside>
       <div>
-        <BrowseProducts />
-        {/* BrowseProducts is the page being shown, but other pages could go here like ProductProfile */}
+        <Switch>
+          <Route path={match.path} exact component={BrowseProducts} />
+          <Route path={`${match.path}/:productId`}>
+            <ProductProfile></ProductProfile>
+          </Route>
+        </Switch>
       </div>
     </div>
   )
 }
 
 function ProductProfile() {
+  const { productId } = useParams()
+  const match = useRouteMatch()
+
+  console.log(match.path, match.url)
+
   return (
     <div className="spacing">
       <Columns gutters>
         <Column>
-          <ProductImage
-            src="/images/products/mario-kart.jpg"
-            alt="Mario Kart"
-            size={15}
-          />
+          <ProductImage src="/images/products/mario-kart.jpg" alt="Mario Kart" size={15} />
         </Column>
         <Column flex className="spacing">
           <Heading>Mario Kart</Heading>
@@ -118,13 +127,13 @@ function BrowseProducts() {
     <div className="spacing">
       <ul>
         <li>
-          <a href="/products/1">Nintendo NES</a>
+          <Link to="/products/1">Nintendo NES</Link>
         </li>
         <li>
-          <a href="/products/2">Donkey Kong Country</a>
+          <Link to="/products/2">Donkey Kong Country</Link>
         </li>
         <li>
-          <a href="/products/3">Mario Kart</a>
+          <Link to="/products/3">Mario Kart</Link>
         </li>
       </ul>
     </div>

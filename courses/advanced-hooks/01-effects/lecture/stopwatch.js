@@ -9,11 +9,11 @@ export default function App() {
     if (active) {
       setInterval(() => {
         console.log('Set Seconds')
-        setSeconds(seconds + 1)
+        setSeconds(seconds => {
+          return seconds + 1
+        })
       }, 1000)
     }
-    // Show what happens when we add seconds to
-    // the dep array, or leave it out ?
   }, [active])
 
   return (
