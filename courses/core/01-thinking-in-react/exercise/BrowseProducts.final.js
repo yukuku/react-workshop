@@ -12,6 +12,14 @@ const products = [
     condition: 'new'
   },
   {
+    id: 1,
+    name: 'Mario Kart',
+    rating: 5,
+    brand: 'Nintendo',
+    condition: 'new',
+    special: true
+  },
+  {
     id: 2,
     name: 'Donkey Kong',
     rating: 3.5,
@@ -20,7 +28,7 @@ const products = [
   },
   {
     id: 3,
-    name: 'Nintendo NES',
+    name: 'Nintendo',
     rating: 4,
     brand: 'Nintendo',
     condition: 'fair'
@@ -31,7 +39,7 @@ export default function BrowseProducts() {
   return (
     <div>
       {products.map(product => (
-        <div key={`product-${product.id}`}>
+        <div key={`${product.id}-${product.special ? 's' : 'n'}`}>
           <Heading>{product.name}</Heading>
           <StarRatings rating={product.rating} />
           <div className="text-small">

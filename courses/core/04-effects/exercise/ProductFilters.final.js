@@ -7,11 +7,13 @@ function ProductFilters() {
 
   useEffect(() => {
     let isCurrent = true
-    getCategories().then(categories => {
+    getCategories().then(c => {
       if (!isCurrent) return
-      setCategories(categories)
+      setCategories(c)
     })
-    return () => (isCurrent = false)
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   if (!categories) return <div>Loading Filters...</div>

@@ -5,7 +5,7 @@ import Checkout from 'YesterTech/Checkout'
 // import { useShoppingCart } from './ShoppingCartState'
 import 'YesterTech/PrimaryLayout.scss'
 
-function PrimaryLayout() {
+function PrimaryLayout({ cart }) {
   return (
     <div className="primary-layout">
       <div>
@@ -19,7 +19,7 @@ function PrimaryLayout() {
               <BrowseProducts />
             </Route>
             <Route path="/checkout">
-              <Checkout cart={[]} />
+              <Checkout cart={cart} />
             </Route>
             <Redirect to="/products" />
           </Switch>

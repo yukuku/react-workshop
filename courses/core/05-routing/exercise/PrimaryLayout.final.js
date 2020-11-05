@@ -51,7 +51,9 @@ function PrimaryLayout() {
                 <Account />
               </Route>
             )}
-            <Redirect to="/" />
+            <Route>
+              <NotFound></NotFound>
+            </Route>
           </Switch>
         </main>
         <PrimaryFooter />

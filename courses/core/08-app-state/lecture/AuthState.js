@@ -19,14 +19,17 @@ export function AuthStateProvider({ children }) {
     }
   }, initialState)
 
+  const login = React.useCallback(user => {
+    dispatch({ type: 'LOGIN', user })
+  })
+
   const value = {
     ...state,
-    dispatch
+    dispatch,
+    login
   }
 
-  return (
-    <AuthStateContext.Provider value={value} children={children} />
-  )
+  return <AuthStateContext.Provider value={value} children={children} />
 }
 
 export function useAuthState() {

@@ -7,26 +7,58 @@ import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 
 function LoginForm({ onAuthenticated }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN': {
+          return { ...state, loading: true }
+        }
+        case 'LOGIN_FAILED': {
+          return { ...state, loading: false, error: action.error }
+        }
+        case 'TOGGLE_SHOW_PASSWORD': {
+          return { ...state, showPassword: !state.showPassword }
+        }
+        case 'CHANGE_FIELD': {
+          return { ...state, [action.field]: action.value }
+        }
+        default:
+          return state
+      }
+    },
+    {
+      username: '',
+      password: '',
+      error: null,
+      loading: false,
+      showPassword: false
+    }
+  )
+
+  const { username, password, error, loading, showPassword } = state
+
+  useEffect(() => {
+    if (loading) {
+      api.auth
+        .login(username, password)
+        .then(user => {
+          if (typeof onAuthenticated === 'function') {
+            onAuthenticated(user)
+          }
+        })
+        .catch(error => {
+          dispatch({ type: 'LOGIN_FAILED', error })
+        })
+    }
+  }, [loading])
 
   function handleLogin(event) {
     event.preventDefault()
-    setLoading(true)
-    api.auth
-      .login(username, password)
-      .then(user => {
-        if (typeof onAuthenticated === 'function') {
-          onAuthenticated(user)
-        }
-      })
-      .catch(error => {
-        setError(error)
-        setLoading(false)
-      })
+    dispatch({ type: 'LOGIN' })
+  }
+
+  function changeField(field, value) {
+    dispatch({ type: 'CHANGE_FIELD', field, value })
   }
 
   return (
@@ -44,7 +76,7 @@ function LoginForm({ onAuthenticated }) {
           <input
             aria-label="Username"
             onChange={e => {
-              setUsername(e.target.value)
+              changeField('username', e.target.value)
             }}
             type="text"
             placeholder="Username"
@@ -54,14 +86,16 @@ function LoginForm({ onAuthenticated }) {
           <input
             aria-label="Password"
             onChange={e => {
-              setPassword(e.target.value)
+              changeField('password', e.target.value)
             }}
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
           />
           <label>
             <input
-              onChange={() => setShowPassword(!showPassword)}
+              onChange={() => {
+                dispatch({ type: 'TOGGLE_SHOW_PASSWORD' })
+              }}
               defaultChecked={showPassword}
               className="passwordCheckbox"
               type="checkbox"
