@@ -10,26 +10,65 @@ import 'YesterTech/PrimaryLayout.scss'
 import Home from 'YesterTech/Home'
 import SignupForm from 'YesterTech/SignupForm'
 import LoginForm from 'YesterTech/LoginForm'
-import Account from 'YesterTech/Account'
 import ProductsLayout from 'YesterTech/ProductsLayout'
 import ProductSubNav from 'YesterTech/ProductSubNav'
 import Checkout from 'YesterTech/Checkout'
 import { useShoppingCart } from 'YesterTech/ShoppingCartState'
 
-export default function PrimaryLayout() {
-  const { authenticated } = useAuthState()
+// import Account from 'YesterTech/Account'
+const Account = React.lazy(() => import('YesterTech/Account'))
+
+function PrimaryLayout() {
+  const { authenticated, dispatch } = useAuthState()
   const { cart } = useShoppingCart()
 
   return (
     <div className="primary-layout">
       <div>
         <PrimaryHeader />
-        <ProductSubNav />
+        <Route path="/products">
+          <ProductSubNav />
+        </Route>
         <main className="primary-content">
-          <Home />
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <Switch>
+              <Route path="/" exact>
+                <Home />
+              </Route>
+              <Route path="/signup" exact>
+                <SignupForm />
+              </Route>
+              <Route path="/login" exact>
+                <LoginForm
+                  onAuthenticated={user => {
+                    dispatch({ type: 'LOGIN', user })
+                  }}
+                />
+              </Route>
+              <Route path="/products">
+                <ProductsLayout />
+              </Route>
+              {cart.length > 0 && (
+                <Route path="/checkout">
+                  <Checkout />
+                </Route>
+              )}
+              {authenticated && (
+                <Route
+                  path="/account"
+                  render={props => {
+                    return <Account {...props} />
+                  }}
+                />
+              )}
+              <Redirect to="/" />
+            </Switch>
+          </React.Suspense>
         </main>
         <PrimaryFooter />
       </div>
     </div>
   )
 }
+
+export default PrimaryLayout

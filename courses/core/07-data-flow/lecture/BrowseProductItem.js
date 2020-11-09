@@ -1,18 +1,35 @@
 import React, { useState } from 'react'
 import Quantity from './Quantity'
-// import { useShoppingCart } from './ShoppingCartState'
+import { useShoppingCart } from './ShoppingCartState'
 import ProductImage from 'YesterTech/ProductImage'
 
 function BrowseProductItem({ productId, name, price, imagePath }) {
+  const { getQuantity, addToCart, updateQuantity } = useShoppingCart()
+  const quantity = getQuantity(productId)
+
   return (
     <div className="browse-product-item">
       <ProductImage src={imagePath} size={7} alt={name} />
       <div>{name}</div>
       <div className="spacing-small">
-        <button className="button">Add To Cart</button>
-        <div className="align-right">
-          <Quantity />
-        </div>
+        <button
+          onClick={() => {
+            addToCart(productId, name, price)
+          }}
+          className="button"
+        >
+          Add To Cart
+        </button>
+        {quantity > 0 && (
+          <div className="align-right">
+            <Quantity
+              quantity={quantity}
+              setQuantity={newQuantity => {
+                updateQuantity(productId, newQuantity)
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
