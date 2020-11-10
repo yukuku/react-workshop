@@ -34,7 +34,7 @@ export const DisclosureButton = forwardRef(
         aria-controls={panelId}
         ref={forwardedRef}
       >
-        {children}
+        {typeof children === 'function' ? children(isOpen) : children}
       </button>
     )
   }

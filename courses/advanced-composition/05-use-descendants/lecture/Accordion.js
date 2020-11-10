@@ -83,25 +83,23 @@ AccordionItem.displayName = 'AccordionItem'
  * Accordion Button
  */
 
-export const AccordionButton = forwardRef(
-  ({ children, onClick, ...props }, forwardedRef) => {
-    const { panelId, selected, selectPanel } = useContext(AccordionContext)
+export const AccordionButton = forwardRef(({ children, onClick, ...props }, forwardedRef) => {
+  const { panelId, selected, selectPanel } = useContext(AccordionContext)
 
-    return (
-      <button
-        {...props}
-        onClick={wrapEvent(onClick, selectPanel)}
-        data-accordion-button=""
-        data-state={selected ? 'open' : 'collapsed'}
-        aria-expanded={selected}
-        aria-controls={panelId}
-        ref={forwardedRef}
-      >
-        {children}
-      </button>
-    )
-  }
-)
+  return (
+    <button
+      {...props}
+      onClick={wrapEvent(onClick, selectPanel)}
+      data-accordion-button=""
+      data-state={selected ? 'open' : 'collapsed'}
+      aria-expanded={selected}
+      aria-controls={panelId}
+      ref={forwardedRef}
+    >
+      {children}
+    </button>
+  )
+})
 
 AccordionButton.displayName = 'AccordionButton'
 

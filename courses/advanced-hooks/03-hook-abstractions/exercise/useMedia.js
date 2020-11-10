@@ -1,14 +1,20 @@
-import { useState } from 'react'
-
-// Some help with the matchMedia API:
-// `const media = window.matchMedia(query)`
-// `media` object has a `.matches` property (boolean)
-// The `query` is a string, resembling a CSS media-query rule
-// You can do `media.addEventListener('change', fn)`, or
-// `media.removeEventListener('change', fn)` to listen to changes
+import { useLayoutEffect, useState } from 'react'
 
 function useMedia(query) {
-  const [matches, setMatches] = useState(true)
+  const [matches, setMatches] = useState(() => {
+    return window.matchMedia(query).matches
+  })
+
+  useLayoutEffect(() => {
+    const media = window.matchMedia(query)
+    const listener = () => {
+      setMatches(media.matches)
+    }
+    media.addEventListener('change', listener)
+    return () => {
+      media.removeEventListener('change', listener)
+    }
+  }, [query])
 
   return matches
 }

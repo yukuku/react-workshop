@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import { FaSignInAlt, FaExclamationCircle } from 'react-icons/fa'
 
 import Heading from 'YesterTech/Heading'
@@ -6,27 +6,60 @@ import Notice from 'YesterTech/Notice'
 import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 
+function useState(defaultState) {
+  return useReducer((_, newState) => newState, defaultState)
+}
+
+const machine = {
+  idle: {
+    FETCH: 'loading'
+  },
+  loading: {
+    SUCCESS: 'success',
+    FAIL: 'fail'
+  },
+  success: {},
+  fail: {
+    RETRY: 'loading'
+  }
+}
+
 function LoginForm({ onAuthenticated }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+
+  const [state, dispatch] = useReducer(
+    (state, event) => {
+      const nextState = machine[state.current][event.type]
+      return nextState
+        ? {
+            current: nextState,
+            ...event.payload
+          }
+        : state
+    },
+    {
+      current: 'idle'
+    }
+  )
+
+  console.log(state)
+
+  const { error, loading } = state
 
   function handleLogin(event) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'FETCH' })
     api.auth
       .login(username, password)
       .then(user => {
         if (typeof onAuthenticated === 'function') {
           onAuthenticated(user)
         }
+        dispatch({ type: 'SUCCESS', payload: user })
       })
-      .catch(error => {
-        setError(error)
-        setLoading(false)
-      })
+      .catch(error => {})
   }
 
   return (
