@@ -39,7 +39,9 @@ function CheckoutBilling({ onSubmit }) {
           <input
             type="checkbox"
             defaultChecked={sameAsBilling}
-            onChange={() => setSameAsBilling(!sameAsBilling)}
+            onChange={() => {
+              setSameAsBilling(!sameAsBilling)
+            }}
           />{' '}
           <span>Same as Billing</span>
         </label>

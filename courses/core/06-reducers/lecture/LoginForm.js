@@ -7,15 +7,47 @@ import Notice from 'YesterTech/Notice'
 import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 
+const machine = {
+  idle: {
+    LOADING: 'loading'
+  },
+  loading: {
+    FAIL: 'fail',
+    SUCCESS: 'success'
+  },
+  fail: {
+    RETRY: 'loading'
+  },
+  success: {}
+}
+
 function LoginForm({ onAuthenticated }) {
   const usernameRef = useRef()
   const passwordRef = useRef()
   const [showPassword, setShowPassword] = useState(false)
 
-  // Change to reducer, then state machine
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [user, setUser] = useState(null)
+  const [state, dispatch] = useReducer(
+    (state, event) => {
+      const nextStatus = machine[state.current][event.type]
+      event.payload = event.payload || {}
+      return nextStatus
+        ? {
+            current: nextStatus,
+            user: event.payload.user || null,
+            error: event.payload.error || null
+          }
+        : state
+    },
+    {
+      current: 'idle',
+      user: null,
+      error: null
+    }
+  )
+
+  const loading = state.current === 'loading'
+  const error = state.error
+  const user = state.user
 
   useEffect(() => {
     let isCurrent = true
@@ -23,34 +55,35 @@ function LoginForm({ onAuthenticated }) {
       api.auth
         .login(usernameRef.current.value, passwordRef.current.value)
         .then(user => {
-          if (isCurrent) setUser(user)
+          console.log(user)
+          if (isCurrent) dispatch({ type: 'SUCCESS', payload: { user } })
         })
         .catch(error => {
           if (isCurrent) {
-            setError(error)
-            setLoading(false)
+            dispatch({ type: 'FAILED', payload: { error } })
           }
         })
     }
     return () => (isCurrent = false)
   }, [loading])
 
-  useEffect(() => {
-    if (user && typeof onAuthenticated === 'function') {
-      onAuthenticated(user)
-    }
-  }, [onAuthenticated, user])
+  // useEffect(() => {
+  //   if (user && typeof onAuthenticated === 'function') {
+  //     onAuthenticated(user)
+  //   }
+  // }, [onAuthenticated, user])
 
   function handleLogin(event) {
     event.preventDefault()
-    setLoading(true)
-    setError(null)
+    dispatch({ type: 'LOADING' })
   }
 
   return (
     <Centered className="spacing">
       <Heading>Login</Heading>
       <form onSubmit={handleLogin} className="spacing">
+        {user && <Notice>User: {user.name}</Notice>}
+
         {error && (
           <Notice type="error">
             <FaExclamationCircle />
