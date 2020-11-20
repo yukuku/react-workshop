@@ -24,9 +24,7 @@ export function AuthStateProvider({ children }) {
     dispatch
   }
 
-  return (
-    <AuthStateContext.Provider value={value} children={children} />
-  )
+  return <AuthStateContext.Provider value={value} children={children} />
 }
 
 export function useAuthState() {

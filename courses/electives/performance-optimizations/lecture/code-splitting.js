@@ -9,7 +9,7 @@ import ProductReviews from './utils/ProductReviews'
 
 // Then let's lazy load this via route change:
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
-import Account from './utils/Account'
+const Account = React.lazy(() => import('./utils/Account'))
 
 export default function PrimaryLayout() {
   return (
@@ -17,18 +17,20 @@ export default function PrimaryLayout() {
       <div className="spacing">
         <PrimaryNav />
         <hr />
-        <Switch>
-          <Route path="/" exact>
-            <HomePage />
-          </Route>
-          <Route path="/product">
-            <ProductProfile />
-          </Route>
-          <Route path="/account">
-            <Account />
-          </Route>
-          <Redirect to="/" />
-        </Switch>
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
+            <Route path="/product">
+              <ProductProfile />
+            </Route>
+            <Route path="/account">
+              <Account />
+            </Route>
+            <Redirect to="/" />
+          </Switch>
+        </React.Suspense>
       </div>
     </BrowserRouter>
   )

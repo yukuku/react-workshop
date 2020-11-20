@@ -5,15 +5,19 @@ export default function App() {
   const [active, setActive] = useState(false)
   const [seconds, setSeconds] = useState(0)
 
+  const secondsRef = useRef()
+  secondsRef.current = seconds
+
   useEffect(() => {
     if (active) {
-      setInterval(() => {
+      const id = setInterval(() => {
         console.log('Set Seconds')
-        setSeconds(seconds + 1)
+        setSeconds(secondsRef.current + 1)
       }, 1000)
+      return () => {
+        clearInterval(id)
+      }
     }
-    // Show what happens when we add seconds to
-    // the dep array, or leave it out ?
   }, [active])
 
   return (
