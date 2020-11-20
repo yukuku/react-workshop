@@ -8,17 +8,17 @@ import './styles.scss'
  * Basics
  */
 
-import './TypeScriptBasics.tsx'
+// import './TypeScriptBasics.tsx'
 
 /**
  * React Examples
  */
 
-// import { MyComponent } from './ReactExamples.tsx'
-// ReactDOM.render(
-//   <MyComponent message="Hello, React Component Interface!" />,
-//   document.getElementById('root')
-// )
+import { MyComponent } from './ReactExamples.tsx'
+ReactDOM.render(
+  <MyComponent message="Hello, React Component Interface!" />,
+  document.getElementById('root')
+)
 
 /**
  * Browse Product Item with Quantity

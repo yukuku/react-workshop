@@ -38,21 +38,33 @@ import ReactDOM from 'react-dom'
   useState: Numeric Value
 *****************************************/
 
-// export const MyComponent: React.FC = () => {
-//   // Explicit
-//   // const [count, setCount] = useState<number>(0)
+interface Stuff {
+  name: string
+}
 
-//   // Implicit number type
-//   const [count, setCount] = useState(0)
+export const MyComponent: React.FC = () => {
+  // Explicit
+  // const [count, setCount] = useState<number>(0)
 
-//   // remember you can always do unions like <string | null>
+  const [thing, setThing] = useState<Stuff[]>([])
 
-//   return (
-//     <button onClick={() => setCount(count + 1)} className="button">
-//       Count: {count}
-//     </button>
-//   )
-// }
+  // Implicit number type
+  const [count, setCount] = useState(0)
+
+  // remember you can always do unions like <string | null>
+
+  return (
+    <button
+      onClick={() => {
+        setCount(count + 1)
+        setThing([])
+      }}
+      className="button"
+    >
+      Count: {count}
+    </button>
+  )
+}
 
 /****************************************
   useState: Object
