@@ -19,7 +19,7 @@ function ClapButton() {
   }, [queueClaps])
 
   const clap = () => {
-    setQueueClaps(queueClaps + 1)
+    setQueueClaps(qC => qC + 1)
   }
 
   return (

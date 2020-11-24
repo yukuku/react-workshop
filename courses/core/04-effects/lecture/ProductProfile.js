@@ -16,7 +16,20 @@ function ProductProfile() {
   let { productId } = useParams()
   productId = parseInt(productId, 10)
 
-  const product = null
+  const [product, setProduct] = useState(null)
+
+  // Any variables that we "close over" that CAN CHANGE!
+  useEffect(() => {
+    let isCurrent = true
+    api.products.getProduct(productId).then(product => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [productId, setProduct])
 
   // Cart
   const { addToCart, updateQuantity, getQuantity } = useShoppingCart()
@@ -49,10 +62,7 @@ function ProductProfile() {
 
               {quantity > 0 && (
                 <div className="align-right">
-                  <Quantity
-                    onChange={q => updateQuantity(productId, q)}
-                    quantity={quantity}
-                  />
+                  <Quantity onChange={q => updateQuantity(productId, q)} quantity={quantity} />
                 </div>
               )}
             </Column>
