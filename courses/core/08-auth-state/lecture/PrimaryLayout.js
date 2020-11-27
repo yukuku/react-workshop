@@ -22,10 +22,14 @@ const Account = React.lazy(() => import('YesterTech/Account'))
 function PrimaryLayout() {
   const history = useHistory()
   const { cart } = useShoppingCart()
-  const { authenticated, dispatch } = useAuthState()
+  const { authenticated, dispatch, login } = useAuthState()
 
   // Logout from server, then logout front-end
-  // api.auth.getAuthenticatedUser().then(user => {})
+  useEffect(() => {
+    api.auth.getAuthenticatedUser().then(user => {
+      login(user)
+    })
+  }, [login])
 
   return (
     <div className="primary-layout">
@@ -35,7 +39,7 @@ function PrimaryLayout() {
           <ProductSubNav />
         </Route>
         <main className="primary-content">
-          <Suspense fallback={<div />}>
+          <React.Suspense fallback={<div>...</div>}>
             <Switch>
               <Route path="/" exact>
                 <Home />
@@ -43,8 +47,7 @@ function PrimaryLayout() {
               <Route path="/signup" exact>
                 <SignupForm
                   onSignup={user => {
-                    // dispatch login so the frontend is aware
-                    // then redirect:
+                    dispatch({ type: 'LOGIN', user })
                     history.push('/')
                   }}
                 />
@@ -52,8 +55,6 @@ function PrimaryLayout() {
               <Route path="/login" exact>
                 <LoginForm
                   onAuthenticated={user => {
-                    // dispatch login so the frontend is aware
-                    // then redirect:
                     dispatch({ type: 'LOGIN', user })
                     history.push('/')
                   }}
@@ -67,10 +68,14 @@ function PrimaryLayout() {
                   <Checkout />
                 </Route>
               )}
-              {authenticated && <Route path="/account" render={() => <Account />} />}
+              {authenticated && (
+                <Route path="/account">
+                  <Account></Account>
+                </Route>
+              )}
               <Redirect to="/" />
             </Switch>
-          </Suspense>
+          </React.Suspense>
         </main>
         <PrimaryFooter />
       </div>
