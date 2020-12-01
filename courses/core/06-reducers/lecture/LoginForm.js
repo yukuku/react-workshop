@@ -7,15 +7,42 @@ import Notice from 'YesterTech/Notice'
 import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 
+const machine = {
+  idle: {
+    FETCH: 'loading'
+  },
+  loading: {
+    SUCCESS: 'success',
+    ERROR: 'fail'
+  },
+  success: {},
+  fail: {
+    RETRY: 'loading'
+  }
+}
+
 function LoginForm({ onAuthenticated }) {
   const usernameRef = useRef()
   const passwordRef = useRef()
   const [showPassword, setShowPassword] = useState(false)
 
-  // Change to reducer, then state machine
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [user, setUser] = useState(null)
+  const [state, dispatch] = useReducer(
+    (state, event) => {
+      const nextState = machine[state.current][event.type]
+      return {
+        current: nextState,
+        ...event.payload
+      }
+    },
+    {
+      current: 'idle',
+      error: null,
+      user: null
+    }
+  )
+
+  const loading = state.current === 'loading'
+  const { error, user } = state
 
   useEffect(() => {
     let isCurrent = true
@@ -23,12 +50,13 @@ function LoginForm({ onAuthenticated }) {
       api.auth
         .login(usernameRef.current.value, passwordRef.current.value)
         .then(user => {
-          if (isCurrent) setUser(user)
+          if (isCurrent) {
+            dispatch({ type: 'SUCCESS', payload: { user } })
+          }
         })
         .catch(error => {
           if (isCurrent) {
-            setError(error)
-            setLoading(false)
+            dispatch({ type: 'ERROR', payload: { error } })
           }
         })
     }
@@ -43,8 +71,7 @@ function LoginForm({ onAuthenticated }) {
 
   function handleLogin(event) {
     event.preventDefault()
-    setLoading(true)
-    setError(null)
+    dispatch({ type: 'FETCH' })
   }
 
   return (

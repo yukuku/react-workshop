@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import { MdShoppingCart } from 'react-icons/md'
-import serializeForm from 'form-serialize'
 import Heading from 'YesterTech/Heading'
 
 function CheckoutBilling({ onSubmit }) {
-  const sameAsBilling = false
+  const [sameAsBilling, setSameAsBilling] = React.useState(false)
+
+  const billingNameRef = useRef()
 
   function handleSubmit(event) {
     event.preventDefault()
-    const fields = serializeForm(event.target, { hash: true })
+    const fields = {
+      billingName: billingNameRef.current.value
+    }
     onSubmit(fields)
   }
 
@@ -24,7 +27,13 @@ function CheckoutBilling({ onSubmit }) {
         <hr />
         <div className="form-field">
           <label htmlFor="billing:name">Name</label>
-          <input id="billing:name" type="text" name="billingName" autoComplete="off" />
+          <input
+            id="billing:name"
+            type="text"
+            name="billingName"
+            ref={billingNameRef}
+            autoComplete="off"
+          />
         </div>
         <div className="form-field">
           <label htmlFor="billing:address">Address</label>
@@ -35,20 +44,29 @@ function CheckoutBilling({ onSubmit }) {
           Shipping Info
         </Heading>
 
-        <label>
-          <input type="checkbox" /> <span>Same as Billing</span>
+        <label className="horizontal-spacing">
+          <input
+            type="checkbox"
+            defaultChecked={sameAsBilling}
+            onChange={() => {
+              setSameAsBilling(!sameAsBilling)
+            }}
+          />
+          <span>Same as Billing</span>
         </label>
 
-        <div className="spacing">
-          <div className="form-field">
-            <label htmlFor="shipping:name">Name</label>
-            <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
-          </div>
-          <div className="form-field">
-            <label htmlFor="shipping:address">Address</label>
-            <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
-          </div>
-        </div>
+        {!sameAsBilling && (
+          <>
+            <div className="form-field">
+              <label htmlFor="shipping:name">Name</label>
+              <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="shipping:address">Address</label>
+              <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
+            </div>
+          </>
+        )}
 
         <footer>
           <button type="submit" className="button">

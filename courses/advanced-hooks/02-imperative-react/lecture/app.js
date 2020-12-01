@@ -8,7 +8,7 @@ import './styles.scss'
 // setStyles(position(targetRect, popoverRect))
 
 function Popover({ children }) {
-  return <div className="popover">{children}</div>
+  return createPortal(<div className="popover">{children}</div>, document.getElementById('popover'))
 }
 
 function Define({ children }) {

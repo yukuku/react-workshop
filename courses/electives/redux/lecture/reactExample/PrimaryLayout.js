@@ -2,8 +2,12 @@ import React from 'react'
 import { connect, useSelector } from 'react-redux'
 import Counter from './Counter'
 
+// https://react-redux.js.org/api/hooks#useselector-examples
+
 function PrimaryLayout() {
-  const count = 0
+  const count = useSelector(({ counterState }) => {
+    return counterState.count
+  })
 
   return (
     <div>

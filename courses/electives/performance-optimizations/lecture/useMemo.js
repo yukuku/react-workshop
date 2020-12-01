@@ -7,7 +7,7 @@ export default function App() {
   const input = count >= 5 // Let's change the input to the slow function
 
   console.time()
-  const x = slowFunction(input)
+  const x = useMemo(() => slowFunction(input), [input])
   console.timeEnd()
 
   return (
