@@ -23,7 +23,7 @@ function PrimaryLayout() {
   return (
     <div className="primary-layout">
       <div>
-        <PrimaryHeader />
+        <header></header>
         <Route path="/products">
           <ProductSubNav />
         </Route>

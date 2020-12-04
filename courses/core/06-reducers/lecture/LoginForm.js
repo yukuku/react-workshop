@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect, useRef, useReducer } from 'react'
+import React, { useEffect, useRef, useReducer } from 'react'
 import { FaSignInAlt, FaExclamationCircle } from 'react-icons/fa'
 
 import Heading from 'YesterTech/Heading'
@@ -7,15 +7,45 @@ import Notice from 'YesterTech/Notice'
 import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 
+function useState(defaultState) {
+  return useReducer((_, newState) => newState, defaultState)
+}
+
+const machine = {
+  idle: {
+    FETCH: 'loading'
+  },
+  loading: {
+    SUCCESS: 'success',
+    FAIL: 'error'
+  },
+  success: {},
+  error: {
+    RETRY: 'loading'
+  }
+}
+
 function LoginForm({ onAuthenticated }) {
   const usernameRef = useRef()
   const passwordRef = useRef()
   const [showPassword, setShowPassword] = useState(false)
 
-  // Change to reducer, then state machine
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [user, setUser] = useState(null)
+  const [state, dispatch] = useReducer(
+    (state, event) => {
+      const nextState = machine[state.current][event.type]
+      return {
+        current: nextState,
+        ...event.payload
+      }
+    },
+    {
+      current: 'idle',
+      error: null,
+      user: null
+    }
+  )
+
+  const { loading, error, user } = state
 
   useEffect(() => {
     let isCurrent = true
@@ -23,12 +53,11 @@ function LoginForm({ onAuthenticated }) {
       api.auth
         .login(usernameRef.current.value, passwordRef.current.value)
         .then(user => {
-          if (isCurrent) setUser(user)
+          if (isCurrent) dispatch({ type: 'SUCCESS', payload: { user } })
         })
         .catch(error => {
           if (isCurrent) {
-            setError(error)
-            setLoading(false)
+            dispatch({ type: 'FAIL', payload: { error } })
           }
         })
     }
@@ -43,8 +72,7 @@ function LoginForm({ onAuthenticated }) {
 
   function handleLogin(event) {
     event.preventDefault()
-    setLoading(true)
-    setError(null)
+    dispatch({ type: 'FETCH' })
   }
 
   return (
@@ -70,9 +98,7 @@ function LoginForm({ onAuthenticated }) {
 
         <div className="form-field">
           <input
-            // You can pass the ref directly in like above with username,
-            // or we can pass a function in and assign the current ourselves
-            ref={node => (passwordRef.current = node)}
+            ref={passwordRef}
             aria-label="Password"
             disabled={loading}
             type={showPassword ? 'text' : 'password'}

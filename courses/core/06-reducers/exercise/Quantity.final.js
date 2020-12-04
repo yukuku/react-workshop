@@ -3,28 +3,21 @@ import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
 import 'YesterTech/Quantity.scss'
 
 function Quantity() {
-  const [state, dispatch] = useReducer(
-    (state, action) => {
-      switch (action.type) {
-        case 'SUBTRACT': {
-          return { quantity: state.quantity - 1 }
-        }
-        case 'ADD': {
-          return { quantity: state.quantity + 1 }
-        }
-        case 'INPUT': {
-          return { quantity: action.quantity }
-        }
-        default:
-          return state
+  const [quantity, dispatch] = useReducer((quantity, action) => {
+    switch (action.type) {
+      case 'SUBTRACT': {
+        return quantity - 1
       }
-    },
-    {
-      quantity: 0
+      case 'ADD': {
+        return quantity + 1
+      }
+      case 'INPUT': {
+        return action.quantity
+      }
+      default:
+        return state
     }
-  )
-
-  const { quantity } = state
+  }, 0)
 
   function subtract() {
     if (quantity > 0) {

@@ -1,6 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 // import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 // import Heading from 'YesterTech/Heading'
+
+import StarRatings from './StarRatings'
 
 const products = [
   {
@@ -27,11 +30,36 @@ const products = [
 ]
 
 export default function BrowseProducts() {
-  console.log(products)
-
   return (
     <div>
-      {/* Exercise code goes here! This is what comments look like in JSX */}
+      {products.map(product => {
+        return (
+          <BrowseProductItem
+            key={product.id}
+            name={product.name}
+            rating={product.rating}
+            brand={product.brand}
+          />
+        )
+      })}
     </div>
   )
+}
+
+function BrowseProductItem({ name, brand, rating }) {
+  return (
+    <div>
+      <h1>{name}</h1>
+      <div>
+        <StarRatings rating={rating} />
+      </div>
+      <div>{brand}</div>
+    </div>
+  )
+}
+
+BrowseProductItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  brand: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired
 }
