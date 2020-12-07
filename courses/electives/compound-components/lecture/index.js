@@ -5,49 +5,98 @@ import SignupForm from 'YesterTech/SignupForm'
 import 'YesterTech/styles/global-styles.scss'
 import './styles.scss'
 
-export function Tabs({ data, ...props }) {
+const TabsContext = React.createContext()
+
+export function Tabs({ children, ...props }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
+  const context = {
+    selectedIndex,
+    setSelectedIndex,
+  }
+
   return (
-    <div className="tabs">
-      <div className="tab-list">
-        {data.map((tab, index) => {
-          const selected = index === selectedIndex
-          return (
-            <button
-              key={index}
-              role="tab"
-              {...props}
-              aria-selected={selected}
-              className="tab"
-              data-selected={selected ? '' : undefined}
-              onClick={() => setSelectedIndex(index)}
-            >
-              {tab.label}
-            </button>
-          )
-        })}
+    <TabsContext.Provider value={context}>
+      <div className="tabs" {...props}>
+        {children}
       </div>
-      <div className="tab-panels">
-        <div className="tab-panel">{data[selectedIndex].content}</div>
-      </div>
+    </TabsContext.Provider>
+  )
+}
+
+const TabListContext = React.createContext()
+
+function TabList({ children, ...props }) {
+  const { selectedIndex, setSelectedIndex } = useContext(TabsContext)
+
+  children = React.Children.map(children, (child, index) => {
+    const context = {
+      selected: index === selectedIndex,
+      onClick: () => setSelectedIndex(index),
+    }
+    return <TabListContext.Provider value={context}>{child}</TabListContext.Provider>
+  })
+
+  return <div className="tab-list">{children}</div>
+}
+
+function Tab({ children, ...props }) {
+  const { selected, onClick } = useContext(TabListContext)
+  return (
+    <button
+      role="tab"
+      {...props}
+      aria-selected={selected}
+      className="tab"
+      data-selected={selected ? '' : undefined}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+
+function TabPanels({ children, ...props }) {
+  const { selectedIndex } = useContext(TabsContext)
+
+  children = React.Children.map(children, (child, index) => {
+    return React.cloneElement(child, {
+      selected: index === selectedIndex,
+    })
+  })
+
+  return (
+    <div className="tab-panels" {...props}>
+      {children}
+    </div>
+  )
+}
+
+function TabPanel({ children, selected, ...props }) {
+  return (
+    <div className="tab-panel" hidden={!selected} {...props}>
+      {children}
     </div>
   )
 }
 
 function App() {
-  const tabData = [
-    {
-      label: 'Login',
-      content: <LoginForm />
-    },
-    {
-      label: 'Signup',
-      content: <SignupForm />
-    }
-  ]
-
-  return <Tabs data={tabData} />
+  return (
+    <Tabs>
+      <TabList>
+        <Tab>Login</Tab>
+        <Tab>Signup</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <LoginForm />
+        </TabPanel>
+        <TabPanel>
+          <SignupForm />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))

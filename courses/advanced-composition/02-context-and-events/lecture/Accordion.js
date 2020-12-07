@@ -22,7 +22,7 @@ export const Accordion = forwardRef(
         selectPanel: () => {
           onChange && onChange(index)
           setSelectedIndex(index)
-        }
+        },
       })
     })
 
@@ -42,12 +42,12 @@ Accordion.displayName = 'Accordion'
 
 export const AccordionItem = forwardRef(
   ({ children, buttonId, panelId, selected, selectPanel, ...props }, forwardedRef) => {
-    children = React.Children.map(children, child => {
+    children = React.Children.map(children, (child) => {
       return React.cloneElement(child, {
         buttonId,
         panelId,
         selected,
-        selectPanel
+        selectPanel,
       })
     })
 
@@ -71,12 +71,12 @@ AccordionItem.displayName = 'AccordionItem'
  */
 
 export const AccordionButton = forwardRef(
-  ({ children, buttonId, panelId, selected, selectPanel, ...props }, forwardedRef) => {
+  ({ children, onClick, buttonId, panelId, selected, selectPanel, ...props }, forwardedRef) => {
     return (
       <button
         {...props}
         id={buttonId}
-        onClick={selectPanel}
+        onClick={wrapEvent(onClick, selectPanel)}
         data-accordion-button=""
         data-state={selected ? 'open' : 'collapsed'}
         aria-expanded={selected}

@@ -9,9 +9,14 @@ const AccordionContext = React.createContext()
  */
 
 export const Accordion = forwardRef(
-  ({ children, onChange, defaultIndex = 0, id, ...props }, forwardedRef) => {
+  (
+    { children, onChange, index: controlledIndex, defaultIndex = 0, id, ...props },
+    forwardedRef
+  ) => {
     const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
     const accordionId = useId(id)
+
+    const isControlled = controlledIndex != null
 
     children = React.Children.map(children, (child, index) => {
       const panelId = `accordion-${accordionId}-panel-${index}`
@@ -20,11 +25,11 @@ export const Accordion = forwardRef(
       const context = {
         buttonId,
         panelId,
-        selected: selectedIndex === index,
+        selected: isControlled ? controlledIndex === index : selectedIndex === index,
         selectPanel: () => {
           onChange && onChange(index)
           setSelectedIndex(index)
-        }
+        },
       }
       return <AccordionContext.Provider value={context} children={child} />
     })
@@ -64,25 +69,23 @@ AccordionItem.displayName = 'AccordionItem'
  * Accordion Button
  */
 
-export const AccordionButton = forwardRef(
-  ({ children, onClick, ...props }, forwardedRef) => {
-    const { panelId, selected, selectPanel } = useContext(AccordionContext)
+export const AccordionButton = forwardRef(({ children, onClick, ...props }, forwardedRef) => {
+  const { panelId, selected, selectPanel } = useContext(AccordionContext)
 
-    return (
-      <button
-        {...props}
-        onClick={wrapEvent(onClick, selectPanel)}
-        data-accordion-button=""
-        data-state={selected ? 'open' : 'collapsed'}
-        aria-expanded={selected}
-        aria-controls={panelId}
-        ref={forwardedRef}
-      >
-        {children}
-      </button>
-    )
-  }
-)
+  return (
+    <button
+      {...props}
+      onClick={wrapEvent(onClick, selectPanel)}
+      data-accordion-button=""
+      data-state={selected ? 'open' : 'collapsed'}
+      aria-expanded={selected}
+      aria-controls={panelId}
+      ref={forwardedRef}
+    >
+      {children}
+    </button>
+  )
+})
 
 AccordionButton.displayName = 'AccordionButton'
 

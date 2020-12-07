@@ -1,34 +1,63 @@
-import React, { useState, forwardRef } from 'react'
+import React, { useState, forwardRef, useContext } from 'react'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
 // Import or write our own:
-// import { useId } from '../../useId'
-// function useId() {}
+import { useId } from '../../useId'
 
-export function Disclosure({ children, label, defaultIsOpen = false }) {
+const Context = React.createContext()
+
+export function Disclosure({ children, onChange, defaultIsOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultIsOpen)
+
+  const disclosureId = useId()
 
   function onSelect() {
     setIsOpen(!isOpen)
+    onChange && onChange(!isOpen)
   }
 
-  // Notice how awful it is to compose class names. We'll fix it with data-attributes
+  const context = {
+    panelId: `disclosure-${disclosureId}-panel`,
+    onSelect,
+    isOpen,
+  }
 
   return (
-    <div className="disclosure">
-      <button
-        onClick={onSelect}
-        className={`disclosure-button ${isOpen ? 'open' : 'collapsed'}`}
-      >
-        {isOpen ? <FaAngleDown /> : <FaAngleRight />}
-        <span>{label}</span>
-      </button>
-      <div
-        className={`disclosure-panel ${isOpen ? 'open' : 'collapsed'}`}
-        hidden={!isOpen}
-      >
-        {children}
-      </div>
+    <Context.Provider value={context}>
+      <div className="disclosure">{children}</div>
+    </Context.Provider>
+  )
+}
+
+export const DisclosureButton = forwardRef(({ children, ...props }, ref) => {
+  const { isOpen, onSelect, panelId } = useContext(Context)
+
+  return (
+    <button
+      {...props}
+      ref={ref}
+      onClick={onSelect}
+      data-disclosure-button=""
+      aria-expanded={isOpen}
+      aria-controls={panelId}
+      data-state={isOpen ? 'open' : 'collapsed'}
+    >
+      {children}
+    </button>
+  )
+})
+
+DisclosureButton.displayName = DisclosureButton
+
+export const DisclosurePanel = ({ children }) => {
+  const { isOpen, panelId } = useContext(Context)
+  return (
+    <div
+      id={panelId}
+      className={`disclosure-panel ${isOpen ? 'open' : 'collapsed'}`}
+      hidden={!isOpen}
+    >
+      {children}
     </div>
   )
 }
