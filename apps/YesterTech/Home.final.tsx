@@ -1,4 +1,5 @@
 import React from 'react'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
 import Heading from 'YesterTech/Heading'

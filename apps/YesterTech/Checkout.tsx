@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useReducer } from 'react'
 import { Switch, Route, Redirect, useRouteMatch, useHistory } from 'react-router-dom'
 import Centered from 'YesterTech/Centered'
@@ -24,7 +25,7 @@ function Checkout() {
     },
     {
       sameAsBilling: false,
-      fields: {}
+      fields: {},
     }
   )
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext, useReducer, useEffect } from 'react'
 import * as storage from 'YesterTech/localStorage'
 
@@ -8,7 +9,7 @@ export function ShoppingCartProvider({ children }) {
     (state, action) => {
       switch (action.type) {
         case 'ADD': {
-          const found = state.cart.find(p => p.productId === parseInt(action.productId, 10))
+          const found = state.cart.find((p) => p.productId === parseInt(action.productId, 10))
           if (!found) {
             return {
               ...state,
@@ -16,8 +17,8 @@ export function ShoppingCartProvider({ children }) {
                 productId: parseInt(action.productId, 10),
                 quantity: 1,
                 name: action.name || '',
-                price: action.price || 0
-              })
+                price: action.price || 0,
+              }),
             }
           } else {
             return state
@@ -26,21 +27,21 @@ export function ShoppingCartProvider({ children }) {
         case 'UPDATE': {
           let cart
           if (action.quantity > 0) {
-            cart = state.cart.map(product => {
+            cart = state.cart.map((product) => {
               return product.productId === parseInt(action.productId, 10)
                 ? { ...product, quantity: parseInt(action.quantity, 10) }
                 : product
             })
           } else {
             cart = state.cart.filter(
-              product => product.productId !== parseInt(action.productId, 10)
+              (product) => product.productId !== parseInt(action.productId, 10)
             )
           }
           return { ...state, cart }
         }
         case 'REMOVE': {
           const c = state.cart
-          const index = c.findIndex(p => p.productId === action.productId)
+          const index = c.findIndex((p) => p.productId === action.productId)
           const updatedCart = [...c.slice(0, index), ...c.slice(index + 1)]
           return { ...state, cart: updatedCart }
         }
@@ -49,7 +50,7 @@ export function ShoppingCartProvider({ children }) {
       }
     },
     {
-      cart: storage.getCart() || []
+      cart: storage.getCart() || [],
     }
   )
 
@@ -66,7 +67,7 @@ export function ShoppingCartProvider({ children }) {
     },
     getQuantity(productId) {
       if (!Array.isArray(state.cart)) return 0
-      return (state.cart.filter(p => p.productId === productId)[0] || {}).quantity || 0
+      return (state.cart.filter((p) => p.productId === productId)[0] || {}).quantity || 0
     },
     getCartSize() {
       if (!Array.isArray(state.cart)) return 0
@@ -75,7 +76,7 @@ export function ShoppingCartProvider({ children }) {
     getCartTotal() {
       if (!Array.isArray(state.cart)) return 0
       return state.cart.reduce((total, item) => total + item.quantity * item.price, 0)
-    }
+    },
   }
 
   return <ShoppingCartContext.Provider value={value} children={children} />

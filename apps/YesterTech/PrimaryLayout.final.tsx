@@ -9,13 +9,13 @@ import { useShoppingCart } from 'YesterTech/ShoppingCartState.final'
 import 'YesterTech/PrimaryLayout.scss'
 
 // Route Targets
-import Home from 'YesterTech/Home'
+import Home from 'YesterTech/Home.final'
 import SignupForm from 'YesterTech/SignupForm.final'
 import LoginForm from 'YesterTech/LoginForm.final'
-import Account from 'YesterTech/Account'
-import ProductsLayout from 'YesterTech/ProductsLayout'
-import ProductSubNav from 'YesterTech/ProductSubNav'
-import Checkout from 'YesterTech/Checkout'
+import Account from 'YesterTech/Account.final'
+import ProductsLayout from 'YesterTech/ProductsLayout.final'
+import ProductSubNav from 'YesterTech/ProductSubNav.final'
+import Checkout from 'YesterTech/Checkout.final'
 
 function PrimaryLayout() {
   const history = useHistory()

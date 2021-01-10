@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
 import SearchBox from 'YesterTech/SearchBox'
 import SubNav from 'YesterTech/SubNav'
-import { useShoppingCart } from 'YesterTech/ShoppingCartState'
+import { useShoppingCart } from 'YesterTech/ShoppingCartState.final'
 
 function ProductSubNav() {
   const { getCartSize } = useShoppingCart()
