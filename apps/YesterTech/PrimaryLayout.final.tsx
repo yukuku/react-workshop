@@ -10,13 +10,12 @@ import 'YesterTech/PrimaryLayout.scss'
 
 // Route Targets
 import Home from 'YesterTech/Home'
-import SignupForm from 'YesterTech/SignupForm'
-import LoginForm from 'YesterTech/LoginForm'
+import SignupForm from 'YesterTech/SignupForm.final'
+import LoginForm from 'YesterTech/LoginForm.final'
 import Account from 'YesterTech/Account'
 import ProductsLayout from 'YesterTech/ProductsLayout'
 import ProductSubNav from 'YesterTech/ProductSubNav'
 import Checkout from 'YesterTech/Checkout'
-import { TODO } from './types'
 
 function PrimaryLayout() {
   const history = useHistory()
@@ -58,7 +57,7 @@ function PrimaryLayout() {
             </Route>
             <Route path="/signup" exact>
               <SignupForm
-                onSignup={(user: TODO) => {
+                onSignup={(user) => {
                   dispatch({ type: 'LOGIN', user })
                   history.push('/products')
                 }}
@@ -66,7 +65,7 @@ function PrimaryLayout() {
             </Route>
             <Route path="/login" exact>
               <LoginForm
-                onAuthenticated={(user: TODO) => {
+                onAuthenticated={(user) => {
                   dispatch({ type: 'LOGIN', user })
                   history.push('/')
                 }}
