@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { post } from './utils'
 
 export function registerUser(data) {

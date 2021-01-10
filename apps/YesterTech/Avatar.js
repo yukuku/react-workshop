@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import 'YesterTech/Avatar.scss'
 
-function Avatar({ src, size = 3, className, ...rest }) {
+function Avatar({ src, size = 3, className = undefined, ...rest }) {
   const Component = src ? 'img' : 'div'
   return (
     <Component

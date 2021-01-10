@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect } from 'react'
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom'
 
@@ -27,7 +28,7 @@ function PrimaryLayout() {
   useEffect(() => {
     let isCurrent = true
     if (!authenticated) {
-      api.auth.getAuthenticatedUser().then(user => {
+      api.auth.getAuthenticatedUser().then((user) => {
         if (user && isCurrent) {
           dispatch({ type: 'LOGIN', user })
         }
@@ -55,7 +56,7 @@ function PrimaryLayout() {
             </Route>
             <Route path="/signup" exact>
               <SignupForm
-                onSignup={user => {
+                onSignup={(user) => {
                   dispatch({ type: 'LOGIN', user })
                   history.push('/products')
                 }}
@@ -63,7 +64,7 @@ function PrimaryLayout() {
             </Route>
             <Route path="/login" exact>
               <LoginForm
-                onAuthenticated={user => {
+                onAuthenticated={(user) => {
                   dispatch({ type: 'LOGIN', user })
                   history.push('/')
                 }}
