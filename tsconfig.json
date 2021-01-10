@@ -2,6 +2,7 @@
   "include": ["apps", "courses"],
   "exclude": ["node_modules", "scripts", "config"],
   "compilerOptions": {
+    "baseUrl": "./",
     "rootDir": ".",
     "jsx": "react",
     "importHelpers": true,
@@ -11,8 +12,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-    // "allowJs": true,
-    // "checkJs: true
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    // "checkJs: true,
+    "paths": {
+      "YesterTech/*": ["apps/YesterTech/*"]
+    }
   }
 }
