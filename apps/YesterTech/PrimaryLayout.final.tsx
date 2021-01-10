@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom'
 
 import api from 'YesterTech/api'
-import PrimaryHeader from 'YesterTech/PrimaryHeader'
-import PrimaryFooter from 'YesterTech/PrimaryFooter'
+import PrimaryHeader from 'YesterTech/PrimaryHeader.final'
+import PrimaryFooter from 'YesterTech/PrimaryFooter.final'
 import { useAuthState } from 'YesterTech/AuthState.final'
-import { useShoppingCart } from 'YesterTech/ShoppingCartState'
+import { useShoppingCart } from 'YesterTech/ShoppingCartState.final'
 import 'YesterTech/PrimaryLayout.scss'
 
 // Route Targets
