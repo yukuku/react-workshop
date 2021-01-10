@@ -3,7 +3,7 @@ import React, { useState, useEffect, FormEvent } from 'react'
 import { Columns, Column } from 'react-flex-columns'
 
 import Heading from 'YesterTech/Heading'
-import Avatar from 'YesterTech/Avatar'
+import Avatar from 'YesterTech/Avatar.final'
 import Centered from 'YesterTech/Centered'
 import api from 'YesterTech/api'
 import { TODO } from './types'

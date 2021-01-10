@@ -4,7 +4,7 @@ import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-d
 import api from 'YesterTech/api'
 import PrimaryHeader from 'YesterTech/PrimaryHeader'
 import PrimaryFooter from 'YesterTech/PrimaryFooter'
-import { useAuthState } from 'YesterTech/AuthState'
+import { useAuthState } from 'YesterTech/AuthState.final'
 import { useShoppingCart } from 'YesterTech/ShoppingCartState'
 import 'YesterTech/PrimaryLayout.scss'
 
