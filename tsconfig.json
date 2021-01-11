@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    // "checkJs: true,
+    "noImplicitAny": true,
     "paths": {
       "YesterTech/*": ["apps/YesterTech/*"]
     }

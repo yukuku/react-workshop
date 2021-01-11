@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import 'YesterTech/Avatar.scss'
 
 interface AvatarProps {
-  src: string
+  src?: string
   /**
    * The font size (in rems)
    * @default 3

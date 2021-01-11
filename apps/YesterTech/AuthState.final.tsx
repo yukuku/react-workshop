@@ -1,7 +1,13 @@
 import React, { useContext, useReducer, useCallback } from 'react'
 import { UserData } from './types'
 
-const AuthStateContext = React.createContext(null as any)
+interface AuthStateContextValue {
+  dispatch: React.Dispatch<AuthStateEvent>
+  authenticated: boolean
+  user: UserData | null
+}
+
+const AuthStateContext = React.createContext<AuthStateContextValue>(null as any)
 
 interface AuthState {
   authenticated: boolean
@@ -15,7 +21,6 @@ const initialState = {
 
 interface LoginEvent {
   type: 'LOGIN'
-  authenticated: boolean
   user: UserData
 }
 

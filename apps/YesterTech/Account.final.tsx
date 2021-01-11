@@ -4,6 +4,11 @@ import { useAuthState } from 'YesterTech/AuthState.final'
 
 function Account() {
   const { user } = useAuthState()
+
+  if (!user) {
+    return null
+  }
+
   return (
     <div className="spacing">
       <Heading>My Account</Heading>

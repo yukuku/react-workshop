@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom'
 
-import api from 'YesterTech/api'
+import api from 'YesterTech/api/index.final'
 import PrimaryHeader from 'YesterTech/PrimaryHeader.final'
 import PrimaryFooter from 'YesterTech/PrimaryFooter.final'
 import { useAuthState } from 'YesterTech/AuthState.final'

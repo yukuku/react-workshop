@@ -1,3 +1,4 @@
+// @ts-nocheck
 import queryString from 'query-string'
 import { get, getRaw, post } from './utils'
 
@@ -11,7 +12,7 @@ export async function getProducts(search = {}, page = 1) {
     page: undefined,
     category: search.categories ? search.categories.split(',') : undefined,
     brand: search.brands ? search.brands.split(',') : undefined,
-    condition: search.conditions ? search.conditions.split(',') : undefined
+    condition: search.conditions ? search.conditions.split(',') : undefined,
   }
 
   const query = queryString.stringify(search || {})
@@ -20,7 +21,7 @@ export async function getProducts(search = {}, page = 1) {
   const products = await res.json()
   return {
     products,
-    totalResults: parseInt(res.headers.get('x-total-count'), 10)
+    totalResults: parseInt(res.headers.get('x-total-count'), 10),
   }
 }
 
@@ -33,13 +34,13 @@ export function addProduct(data) {
 }
 
 export function getMetaData() {
-  return get('/products').then(products => {
+  return get('/products').then((products) => {
     const categories = products.reduce((c, p) => c.concat([p.category || '']), [])
     const brands = products.reduce((b, p) => b.concat([p.brand || '']), [])
 
     return {
       categories: [...new Set(categories)],
-      brands: [...new Set(brands)]
+      brands: [...new Set(brands)],
     }
   })
 }

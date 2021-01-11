@@ -47,7 +47,7 @@ function PrimaryHeader() {
             {authenticated ? (
               <Menu>
                 <MenuButton className="primary-nav-item reset-button">
-                  <Avatar src={user && user.avatarUrl} size={1.5} />
+                  <Avatar src={user?.avatarUrl} size={1.5} />
                 </MenuButton>
                 <MenuList className="nav-user-dropdown">
                   <MenuLink to="/account" as={Link}>

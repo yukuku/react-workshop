@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { get } from './utils'
 import * as storage from 'YesterTech/localStorage'
 
@@ -6,7 +7,7 @@ import * as storage from 'YesterTech/localStorage'
 // set a session or JWT
 
 export function login(username, password) {
-  return get(`/users?username=${username}&password=${password}`).then(results => {
+  return get(`/users?username=${username}&password=${password}`).then((results) => {
     if (results.length > 0) {
       const user = results[0]
       delete user.password
@@ -31,5 +32,5 @@ export function logout() {
 }
 
 export function getGitHubUser(username) {
-  return fetch(`https://api.github.com/users/${username}`).then(res => res.json())
+  return fetch(`https://api.github.com/users/${username}`).then((res) => res.json())
 }

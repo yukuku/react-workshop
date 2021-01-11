@@ -2,17 +2,19 @@
  * Auth
  */
 
+import { TODO, UserData } from './types'
+
 const LOCAL_STORAGE_KEY_AUTH = 'reacttraining-workshop-auth'
 
-export function login(user) {
+export function login(user: UserData) {
   localStorage.setItem(LOCAL_STORAGE_KEY_AUTH, JSON.stringify(user))
 }
 
 export function logout() {
-  localStorage.setItem(LOCAL_STORAGE_KEY_AUTH, null)
+  localStorage.removeItem(LOCAL_STORAGE_KEY_AUTH)
 }
 
-export function getAuthenticatedUser() {
+export function getAuthenticatedUser(): UserData | undefined {
   try {
     const localStorageUser = localStorage.getItem(LOCAL_STORAGE_KEY_AUTH)
     if (!localStorageUser) return
@@ -28,7 +30,7 @@ export function getAuthenticatedUser() {
 
 const LOCAL_STORAGE_KEY_CART = 'reacttraining-workshop-cart'
 
-export function updateCart(cart) {
+export function updateCart(cart: TODO) {
   localStorage.setItem(LOCAL_STORAGE_KEY_CART, JSON.stringify(cart))
 }
 
@@ -48,7 +50,7 @@ export function getCart() {
 
 const LOCAL_STORAGE_KEY_FAVORITES = 'reacttraining-workshop-favorites'
 
-export function updateFavorites(favorites) {
+export function updateFavorites(favorites: TODO) {
   localStorage.setItem(LOCAL_STORAGE_KEY_FAVORITES, JSON.stringify(favorites))
 }
 
