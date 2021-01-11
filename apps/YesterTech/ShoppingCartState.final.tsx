@@ -35,7 +35,7 @@ interface ShoppingCartAddEvent {
 interface ShoppingCartUpdateEvent {
   type: 'UPDATE'
   productId: string
-  quantity: string
+  quantity: number
 }
 
 interface ShoppingCartRemoveEvent {
@@ -68,7 +68,7 @@ const shoppingCartReducer = (
     }
     case 'UPDATE': {
       let cart
-      const quantity = parseInt(action.quantity, 10)
+      const quantity = parseInt(action.quantity + '', 10)
       if (quantity > 0) {
         cart = state.cart.map((product) => {
           return product.productId === parseInt(action.productId, 10)
@@ -99,10 +99,7 @@ export const ShoppingCartProvider: React.FC = ({ children }) => {
     addToCart(productId: string, name: string, price: number) {
       dispatch({ type: 'ADD', productId, name, price })
     },
-    updateQuantity(
-      productId: ShoppingCartUpdateEvent['productId'],
-      quantity: ShoppingCartUpdateEvent['quantity']
-    ) {
+    updateQuantity(productId: ShoppingCartUpdateEvent['productId'], quantity: number) {
       dispatch({ type: 'UPDATE', productId, quantity })
     },
     removeFromCart(productId: ShoppingCartRemoveEvent['productId']) {

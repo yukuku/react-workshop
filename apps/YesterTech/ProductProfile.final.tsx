@@ -1,25 +1,26 @@
 import React, { useCallback } from 'react'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 import { useParams } from 'react-router-dom'
 
-import api from 'YesterTech/api'
-import usePromise from 'YesterTech/usePromise'
-import Heading from 'YesterTech/Heading'
-import Quantity from 'YesterTech/Quantity'
-import Tiles from 'YesterTech/Tiles'
-import StarRatings from 'YesterTech/StarRatings'
-import ProductImage from 'YesterTech/ProductImage'
-import ShoppingCartButton from 'YesterTech/ShoppingCartButton'
-import { useShoppingCart } from 'YesterTech/ShoppingCartState'
-import ProductTile from 'YesterTech/ProductTile'
+import api from 'YesterTech/api/index.final'
+import usePromise from 'YesterTech/usePromise.final'
+import Heading from 'YesterTech/Heading.final'
+import Quantity from 'YesterTech/Quantity.final'
+import Tiles from 'YesterTech/Tiles.final'
+import StarRatings from 'YesterTech/StarRatings.final'
+import ProductImage from 'YesterTech/ProductImage.final'
+import ShoppingCartButton from 'YesterTech/ShoppingCartButton.final'
+import { useShoppingCart } from 'YesterTech/ShoppingCartState.final'
+import ProductTile from 'YesterTech/ProductTile.final'
 
 function ProductProfile() {
-  let { productId } = useParams()
-  productId = parseInt(productId, 10)
+  const { productId: productIdString } = useParams<{ productId: string }>()
+  const productId = parseInt(productIdString, 10)
 
   // Cart
   const { addToCart, updateQuantity, getQuantity } = useShoppingCart()
-  const quantity = getQuantity(productId)
+  const quantity = getQuantity(productIdString)
 
   // Get Product
   const getProduct = useCallback(() => api.products.getProduct(productId), [productId])
@@ -50,12 +51,15 @@ function ProductProfile() {
             </Column>
             <Column className="spacing-small">
               <ShoppingCartButton
-                onClick={() => addToCart(productId, product.name, product.price)}
+                onClick={() => addToCart(productIdString, product.name, product.price)}
                 quantity={quantity}
               />
               {quantity > 0 && (
                 <div className="align-right">
-                  <Quantity onChange={q => updateQuantity(productId, q)} quantity={quantity} />
+                  <Quantity
+                    onChange={(q) => updateQuantity(productIdString, q)}
+                    quantity={quantity}
+                  />
                 </div>
               )}
             </Column>
@@ -72,8 +76,8 @@ function ProductProfile() {
               Related Products
             </Heading>
             <Tiles>
-              {product.relatedProducts.map(productId => (
-                <ProductTile key={productId} productId={productId} />
+              {product.relatedProducts.map((relatedProductId) => (
+                <ProductTile key={relatedProductId} productId={relatedProductId} />
               ))}
             </Tiles>
           </div>

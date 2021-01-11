@@ -1,18 +1,6 @@
 import queryString from 'query-string'
-import { TODO } from 'YesterTech/types'
+import { Product, TODO } from 'YesterTech/types'
 import { get, getRaw } from './utils.final'
-
-interface Product {
-  category?: string
-  brand?: string
-  imagePath: string
-  name: string
-  id: string
-  price: number
-  year: string
-  condition: string
-  rating: number
-}
 
 interface ProductMetaData {
   categories: string[]

@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 
 import ProductsSidebar from 'YesterTech/ProductsSidebar.final'
 import BrowseProducts from 'YesterTech/BrowseProducts.final'
-import ProductProfile from 'YesterTech/ProductProfile'
+import ProductProfile from 'YesterTech/ProductProfile.final'
 import './ProductsLayout.scss'
 
 function ProductsLayout() {

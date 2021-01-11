@@ -12,6 +12,20 @@ export type CartItem = {
 
 export type Cart = CartItem[]
 
+export interface Product {
+  category?: string
+  brand?: string
+  imagePath: string
+  name: string
+  id: string
+  price: number
+  year: string
+  condition: string
+  rating: number
+  description: string
+  relatedProducts: number[]
+}
+
 export interface EventObject {
   type: string
 }

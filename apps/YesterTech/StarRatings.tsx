@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { FaRegStar, FaStarHalfAlt, FaStar } from 'react-icons/fa'
 

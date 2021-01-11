@@ -70,7 +70,7 @@ function BrowseProductItem({
           {quantity > 0 && (
             <div className="align-right">
               <Quantity
-                onChange={(q: string) => updateQuantity(productId, q)}
+                onChange={(q: string) => updateQuantity(productId, +q)}
                 quantity={quantity}
               />
             </div>
