@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useCallback } from 'react'
+import React, { useContext, useReducer } from 'react'
 import { UserData } from './types'
 
 interface AuthStateContextValue {

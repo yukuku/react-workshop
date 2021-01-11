@@ -5,6 +5,8 @@ import { get, getRaw } from './utils.final'
 interface Product {
   category?: string
   brand?: string
+  imagePath: string
+  name: string
 }
 
 interface ProductMetaData {

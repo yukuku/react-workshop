@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useReducer, useEffect } from 'react'
 
 export default function usePromise(promise) {
@@ -17,7 +18,7 @@ export default function usePromise(promise) {
     {
       loading: false,
       response: null,
-      error: null
+      error: null,
     }
   )
 
@@ -25,11 +26,11 @@ export default function usePromise(promise) {
     let isCurrent = true
     dispatch({ type: 'LOADING' })
     promise()
-      .then(response => {
+      .then((response) => {
         if (!isCurrent) return
         dispatch({ type: 'RESOLVED', response })
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({ type: 'ERROR', error })
       })
     return () => (isCurrent = false)

@@ -9,7 +9,15 @@ import Tiles from 'YesterTech/Tiles'
 import Centered from 'YesterTech/Centered'
 import 'YesterTech/ProductCategories.scss'
 
-function CategoryTile({ children, icon: Icon, ...rest }) {
+interface SpecificCategoryTileProps {
+  to: string
+}
+
+interface CategoryTileProps extends SpecificCategoryTileProps {
+  icon: React.FC
+}
+
+const CategoryTile: React.FC<CategoryTileProps> = ({ children, icon: Icon, ...rest }) => {
   return (
     <Link className="category-tile" {...rest}>
       <span className="category-icon">
@@ -20,7 +28,7 @@ function CategoryTile({ children, icon: Icon, ...rest }) {
   )
 }
 
-export function CategoryComputers(props) {
+export const CategoryComputers: React.FC<SpecificCategoryTileProps> = (props) => {
   return (
     <CategoryTile {...props} icon={FaDesktop}>
       Computers
@@ -28,7 +36,7 @@ export function CategoryComputers(props) {
   )
 }
 
-export function CategoryAccessories(props) {
+export const CategoryAccessories: React.FC<SpecificCategoryTileProps> = (props) => {
   return (
     <CategoryTile {...props} icon={GiKeyboard}>
       Gadgets
@@ -36,14 +44,14 @@ export function CategoryAccessories(props) {
   )
 }
 
-export function CategoryStorage(props) {
+export const CategoryStorage: React.FC<SpecificCategoryTileProps> = (props) => {
   return (
     <CategoryTile {...props} icon={IoIosSave}>
       Storage
     </CategoryTile>
   )
 }
-export function CategoryGaming(props) {
+export const CategoryGaming: React.FC<SpecificCategoryTileProps> = (props) => {
   return (
     <CategoryTile {...props} icon={FaGamepad}>
       Games
@@ -51,7 +59,7 @@ export function CategoryGaming(props) {
   )
 }
 
-export function CategoryMusic(props) {
+export const CategoryMusic: React.FC<SpecificCategoryTileProps> = (props) => {
   return (
     <CategoryTile {...props} icon={MdSpeaker}>
       Music

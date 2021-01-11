@@ -1,13 +1,18 @@
 import React, { useCallback } from 'react'
 import { Link } from 'react-router-dom'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
-import Heading from 'YesterTech/Heading'
-import ProductImage from 'YesterTech/ProductImage'
-import usePromise from 'YesterTech/usePromise'
-import api from 'YesterTech/api'
+import Heading from 'YesterTech/Heading.final'
+import ProductImage from 'YesterTech/ProductImage.final'
+import usePromise from 'YesterTech/usePromise.final'
+import api from 'YesterTech/api/index.final'
 
-function ProductTile({ productId }) {
+interface ProductTileProps {
+  productId: string
+}
+
+function ProductTile({ productId }: ProductTileProps) {
   const getProduct = useCallback(() => api.products.getProduct(productId), [productId])
   const [product] = usePromise(getProduct)
 

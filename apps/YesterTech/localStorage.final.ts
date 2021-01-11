@@ -2,7 +2,7 @@
  * Auth
  */
 
-import { TODO, UserData } from './types'
+import { Cart, TODO, UserData } from './types'
 
 const LOCAL_STORAGE_KEY_AUTH = 'reacttraining-workshop-auth'
 
@@ -30,11 +30,11 @@ export function getAuthenticatedUser(): UserData | undefined {
 
 const LOCAL_STORAGE_KEY_CART = 'reacttraining-workshop-cart'
 
-export function updateCart(cart: TODO) {
+export function updateCart(cart: Cart) {
   localStorage.setItem(LOCAL_STORAGE_KEY_CART, JSON.stringify(cart))
 }
 
-export function getCart() {
+export function getCart(): Cart | undefined {
   try {
     const cart = localStorage.getItem(LOCAL_STORAGE_KEY_CART)
     if (!cart) return

@@ -1,5 +1,6 @@
 import React, { useContext, useReducer, useEffect } from 'react'
-import * as storage from 'YesterTech/localStorage'
+import * as storage from 'YesterTech/localStorage.final'
+import { CartItem } from './types'
 
 interface ShoppingCartContextValue {
   addToCart(productId: string, name: string, price: number): void
@@ -16,18 +17,11 @@ interface ShoppingCartContextValue {
 
 const ShoppingCartContext = React.createContext<ShoppingCartContextValue>(null as any)
 
-type CartItem = {
-  productId: number
-  quantity: number
-  name: string
-  price: number
-}
-
 interface ShoppingCartState {
   cart: CartItem[]
 }
 
-const initialShoppingCartState = {
+const initialShoppingCartState: ShoppingCartState = {
   cart: storage.getCart() || [],
 }
 

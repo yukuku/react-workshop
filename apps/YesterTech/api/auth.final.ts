@@ -1,4 +1,4 @@
-import { get } from './utils'
+import { get } from './utils.final'
 import * as storage from 'YesterTech/localStorage.final'
 import { TODO, UserData } from 'YesterTech/types'
 
@@ -13,7 +13,7 @@ function assertUser(user: any): asserts user is UserData {
 // set a session or JWT
 
 export function login(username: string, password: string): Promise<UserData> {
-  return get(`/users?username=${username}&password=${password}`).then((results) => {
+  return get<UserData[]>(`/users?username=${username}&password=${password}`).then((results) => {
     if (results.length > 0) {
       const user = results[0]
       assertUser(user)

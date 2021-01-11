@@ -5,11 +5,11 @@ import { Columns, Column } from 'react-flex-columns'
 import { Menu, MenuList, MenuButton, MenuItem, MenuLink } from '@reach/menu-button'
 import { MdShoppingCart } from 'react-icons/md'
 
-import api from 'YesterTech/api'
+import api from 'YesterTech/api/index.final'
 import { useAuthState } from 'YesterTech/AuthState.final'
 import { useShoppingCart } from 'YesterTech/ShoppingCartState.final'
 import Avatar from 'YesterTech/Avatar.final'
-import Logo from 'YesterTech/Logo'
+import Logo from 'YesterTech/Logo.final'
 import 'YesterTech/PrimaryHeader.scss'
 import '@reach/menu-button/styles.css'
 

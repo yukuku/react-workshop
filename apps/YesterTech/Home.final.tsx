@@ -2,10 +2,10 @@ import React from 'react'
 // @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
-import Heading from 'YesterTech/Heading'
-import Tiles from 'YesterTech/Tiles'
-import Hero from 'YesterTech/Hero'
-import ProductCategories from 'YesterTech/ProductCategories'
+import Heading from 'YesterTech/Heading.final'
+import Tiles from 'YesterTech/Tiles.final'
+import Hero from 'YesterTech/Hero.final'
+import ProductCategories from 'YesterTech/ProductCategories.final'
 import ProductTile from 'YesterTech/ProductTile'
 
 function Home() {
