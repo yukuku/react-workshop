@@ -5,11 +5,11 @@ import queryString from 'query-string'
 import { Columns, Column } from 'react-flex-columns'
 
 import Heading from 'YesterTech/Heading.final'
-import { Pagination, PaginationRange } from 'YesterTech/Pagination'
-import NoResults from 'YesterTech/NoResults'
+import { Pagination, PaginationRange } from 'YesterTech/Pagination.final'
+import NoResults from 'YesterTech/NoResults.final'
 import api from 'YesterTech/api/index.final'
 import usePromise from 'YesterTech/usePromise.final'
-import BrowseProductItem from 'YesterTech/BrowseProductItem'
+import BrowseProductItem from 'YesterTech/BrowseProductItem.final'
 
 function BrowseProducts() {
   const urlQuery = useLocation().search

@@ -1,5 +1,7 @@
+// @ts-nocheck
 import React from 'react'
 import { Link } from 'react-router-dom'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
 import Heading from 'YesterTech/Heading'
@@ -20,7 +22,7 @@ function BrowseProductItem({
   condition = 'n/a',
   brand = 'n/a',
   category = 'n/a',
-  rating
+  rating,
 }) {
   // Cart
   const { addToCart, updateQuantity, getQuantity } = useShoppingCart()
@@ -56,7 +58,7 @@ function BrowseProductItem({
           />
           {quantity > 0 && (
             <div className="align-right">
-              <Quantity onChange={q => updateQuantity(productId, q)} quantity={quantity} />
+              <Quantity onChange={(q) => updateQuantity(productId, q)} quantity={quantity} />
             </div>
           )}
         </div>
