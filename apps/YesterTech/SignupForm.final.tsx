@@ -2,10 +2,10 @@ import React, { useState, useEffect, FormEvent } from 'react'
 // @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
-import Heading from 'YesterTech/Heading'
+import Heading from 'YesterTech/Heading.final'
 import Avatar from 'YesterTech/Avatar.final'
-import Centered from 'YesterTech/Centered'
-import api from 'YesterTech/api'
+import Centered from 'YesterTech/Centered.final'
+import api from 'YesterTech/api/index.final'
 import { TODO } from './types'
 
 interface SignupFormProps {

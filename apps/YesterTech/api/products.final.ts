@@ -7,6 +7,11 @@ interface Product {
   brand?: string
   imagePath: string
   name: string
+  id: string
+  price: number
+  year: string
+  condition: string
+  rating: number
 }
 
 interface ProductMetaData {
@@ -14,7 +19,13 @@ interface ProductMetaData {
   brands: string[]
 }
 
-export async function getProducts(search: TODO = {}, page = 1) {
+export async function getProducts(
+  search: TODO = {},
+  page = 1
+): Promise<{
+  products: Product[]
+  totalResults: number
+}> {
   // If setting up this search object seems a little weird, we're
   // just conforming to the funky API or JSON-Server
   search = {
@@ -37,7 +48,7 @@ export async function getProducts(search: TODO = {}, page = 1) {
   }
 }
 
-export function getProduct(productId: string): Promise<Product> {
+export function getProduct(productId: number): Promise<Product> {
   return get(`/products/${productId}`)
 }
 

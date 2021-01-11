@@ -1,14 +1,14 @@
 import React, { FormEvent, useState } from 'react'
 import { FaSignInAlt, FaExclamationCircle } from 'react-icons/fa'
 
-import Heading from 'YesterTech/Heading'
-import Notice from 'YesterTech/Notice'
-import Centered from 'YesterTech/Centered'
-import api from 'YesterTech/api'
-import { TODO } from './types'
+import Heading from 'YesterTech/Heading.final'
+import Notice from 'YesterTech/Notice.final'
+import Centered from 'YesterTech/Centered.final'
+import api from 'YesterTech/api/index.final'
+import { UserData } from './types'
 
 interface LoginFormProps {
-  onAuthenticated: (user: TODO) => void
+  onAuthenticated: (user: UserData) => void
 }
 
 function LoginForm({ onAuthenticated }: LoginFormProps) {

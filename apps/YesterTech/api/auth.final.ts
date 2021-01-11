@@ -38,6 +38,11 @@ export function logout(): Promise<void> {
   return Promise.resolve()
 }
 
-export function getGitHubUser(username: string): TODO {
+interface GitHubUser {
+  name?: string
+  avatar_url?: string
+}
+
+export function getGitHubUser(username: string): Promise<GitHubUser> {
   return fetch(`https://api.github.com/users/${username}`).then((res) => res.json())
 }

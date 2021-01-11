@@ -9,7 +9,7 @@ import usePromise from 'YesterTech/usePromise.final'
 import api from 'YesterTech/api/index.final'
 
 interface ProductTileProps {
-  productId: string
+  productId: number
 }
 
 function ProductTile({ productId }: ProductTileProps) {

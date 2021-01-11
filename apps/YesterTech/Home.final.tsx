@@ -6,7 +6,7 @@ import Heading from 'YesterTech/Heading.final'
 import Tiles from 'YesterTech/Tiles.final'
 import Hero from 'YesterTech/Hero.final'
 import ProductCategories from 'YesterTech/ProductCategories.final'
-import ProductTile from 'YesterTech/ProductTile'
+import ProductTile from 'YesterTech/ProductTile.final'
 
 function Home() {
   return (

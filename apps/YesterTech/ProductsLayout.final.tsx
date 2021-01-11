@@ -1,8 +1,8 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import ProductsSidebar from 'YesterTech/ProductsSidebar'
-import BrowseProducts from 'YesterTech/BrowseProducts'
+import ProductsSidebar from 'YesterTech/ProductsSidebar.final'
+import BrowseProducts from 'YesterTech/BrowseProducts.final'
 import ProductProfile from 'YesterTech/ProductProfile'
 import './ProductsLayout.scss'
 

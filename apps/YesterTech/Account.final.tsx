@@ -1,5 +1,5 @@
 import React from 'react'
-import Heading from 'YesterTech/Heading'
+import Heading from 'YesterTech/Heading.final'
 import { useAuthState } from 'YesterTech/AuthState.final'
 
 function Account() {

@@ -1,6 +1,8 @@
+// @ts-nocheck
 import React, { useMemo, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import queryString from 'query-string'
+// @ts-ignore
 import { Columns, Column } from 'react-flex-columns'
 
 import Heading from 'YesterTech/Heading'
@@ -28,7 +30,7 @@ function BrowseProducts() {
           <Heading size={1}>Products</Heading>
         </Column>
         <Column>
-          {Array.isArray(products) > 0 && (
+          {products?.length > 0 && (
             <PaginationRange
               resultsPerPage={10}
               page={page}
@@ -39,9 +41,9 @@ function BrowseProducts() {
         </Column>
       </Columns>
 
-      {Array.isArray(products) && products.length > 0 ? (
+      {products?.length > 0 ? (
         <div className="spacing">
-          {products.map(product => (
+          {products.map((product) => (
             <BrowseProductItem
               key={product.id}
               productId={product.id}
