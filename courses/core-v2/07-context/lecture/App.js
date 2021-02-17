@@ -1,33 +1,71 @@
-import React, { useContext, useRef, useLayoutEffect } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Heading } from 'ProjectPlanner/Heading'
 import { getTheme } from './utils'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-/**
- * This is JS and not TS on purpose to help explain context
- * without the extra noise TS brings to it.
- */
+const AuthContext = React.createContext()
+
+function AuthProvider({ children }) {
+  const [logged, setlogged] = useState(true)
+  const [user, setUser] = useState('brad')
+  // const [state, dispatch] = useReducer((state, action) => {
+  //   switch(action.type) {
+  //     case '': {
+  //       return { ...state }
+  //     }
+  //     default: return state
+  //   }
+  // }, {})
+
+  // function fake() {
+
+  // }
+  const context = { user, logged }
+
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
+}
+
+export function useAuth() {
+  return useContext(AuthContext)
+}
+
+//////////
+
+const ThemeContext = React.createContext()
 
 export const App = () => {
-  const colors = getTheme()
-  console.log(colors)
+  const [colors, setColors] = React.useState(getTheme())
 
-  return <PrimaryLayout colors={colors} />
+  return (
+    <ThemeContext.Provider value={colors}>
+      <AuthProvider>
+        <PrimaryLayout />
+      </AuthProvider>
+    </ThemeContext.Provider>
+  )
 }
 
-const PrimaryLayout = ({ colors }) => {
-  return <Board colors={colors} />
+const PrimaryLayout = () => {
+  return <Board />
 }
 
-const Board = ({ colors }) => {
-  return <TaskCard colors={colors} />
+const Board = () => {
+  return (
+    <ThemeContext.Provider value={{ blue: 'orange' }}>
+      <TaskCard />
+    </ThemeContext.Provider>
+  )
 }
 
-const TaskCard = ({ colors }) => {
+const TaskCard = () => {
+  const colors = useContext(ThemeContext)
   const taskRef = useRef()
+  const { user } = useAuth()
 
-  useLayoutEffect(() => {
+  console.log(user)
+
+  useEffect(() => {
     taskRef.current.style.setProperty(`--taskColor`, colors.blue)
   }, [colors])
 
