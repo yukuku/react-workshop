@@ -31,6 +31,7 @@ export const Task = () => {
     event.preventDefault()
     setTask(initialTask)
     console.log(task)
+
     nameRef.current?.focus()
   }
 

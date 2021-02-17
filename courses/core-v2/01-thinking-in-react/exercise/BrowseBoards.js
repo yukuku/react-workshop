@@ -13,28 +13,35 @@ export const BrowseBoards = () => {
 
   return (
     <div className="spacing">
-      <h1 className="heading size-1">Browse Boards</h1>
+      <Heading>Browse Boards</Heading>
       <div className="spacing">
-        {/* This JSX needs to be created once for each board in the array */}
-        <div className="browse-board-item flex items-center">
-          <BsKanban className="board-icon" color="var(--purple)" />
-          <div className="spacing-small flex-1">
-            <h2 className="heading size-2">Board Name</h2>
-          </div>
-          <button className="button button-outline">Remove</button>
-        </div>
-        {/* end */}
+        {boards.map(function (board) {
+          return (
+            <div key={board.id} className="browse-board-item flex items-center">
+              <BsKanban className="board-icon" color="var(--purple)" />
+              <div className="spacing-small flex-1">
+                <h2 className="heading size-2">Board Name</h2>
+              </div>
+              <button
+                className="button button-outline"
+                onClick={() => {
+                  removeBoard(board.id)
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
 }
 
-function Heading({ children, size = 1 }) {
-  // For the bonus task, see if you can program this component to be used
-  // instead of <h1> and <h2>. See the README for more info.
+function Heading({ as: HTag = 'h1', children, size = 4, ...rest }) {
   return (
-    <h1 {...rest} className="heading size-1">
+    <HTag {...rest} className={`heading size-${size}`}>
       {children}
-    </h1>
+    </HTag>
   )
 }
