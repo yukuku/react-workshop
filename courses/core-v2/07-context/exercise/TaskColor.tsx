@@ -22,6 +22,7 @@ export const TaskColor: React.FC<Props> = ({ task, children }) => {
           statusColor = colors.blue
         }
       }
+
       divRef.current.style.setProperty(`--taskColor`, statusColor)
     }
   }, [colors, task])
