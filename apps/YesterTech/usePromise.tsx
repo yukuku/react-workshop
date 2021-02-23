@@ -1,8 +1,13 @@
 import * as React from 'react'
 
-export function usePromise<T, E = any>(promise: () => Promise<T>): [T | null, boolean, any] {
+export function usePromise<ResponseType, ErrorType = any>(
+  promise: () => Promise<ResponseType>
+): [ResponseType | null, boolean, any] {
   const [state, dispatch] = React.useReducer(
-    function promiseReducer(state: PromiseState<T>, action: PromiseActions<T, E>): PromiseState<T> {
+    function promiseReducer(
+      state: PromiseState<ResponseType>,
+      action: PromiseActions<ResponseType, ErrorType>
+    ): PromiseState<ResponseType> {
       switch (action.type) {
         case 'LOADING':
           return { ...state, loading: true }
@@ -54,13 +59,13 @@ export function usePromise<T, E = any>(promise: () => Promise<T>): [T | null, bo
 
 export default usePromise
 
-type PromiseState<T> = {
+type PromiseState<ResponseType> = {
   loading: boolean
-  response: null | T
+  response: null | ResponseType
   error: null | any
 }
 
-type PromiseActions<T, E> =
+type PromiseActions<ResponseType, ErrorType> =
   | { type: 'LOADING' }
-  | { type: 'RESOLVED'; response: T }
-  | { type: 'ERROR'; error: E }
+  | { type: 'RESOLVED'; response: ResponseType }
+  | { type: 'ERROR'; error: ErrorType }
