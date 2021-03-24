@@ -20,8 +20,6 @@
 
 [data-rbd-draggable-context-id] {
   &:focus {
-    outline: none;
-
     .task-card {
       box-shadow: 0 0 0 1px var(--taskColor);
     }
