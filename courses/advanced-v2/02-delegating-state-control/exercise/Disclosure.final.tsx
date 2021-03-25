@@ -11,7 +11,7 @@ export const Disclosure = React.forwardRef<HTMLDivElement, DisclosureProps>(
     let id = makeId('disclosure', useId())
     let panelId = makeId('panel', id)
 
-    let isControlled = useLazyRef(externalOpen !== undefined)
+    let isControlled = React.useRef(externalOpen !== undefined).current
     let isCurrentlyControlled = externalOpen !== undefined
     let controlledStateChanged = isControlled !== isCurrentlyControlled
 
@@ -183,11 +183,3 @@ type DisclosurePanelProps = Omit<
   keyof DisclosurePanelOwnProps
 > &
   DisclosurePanelOwnProps
-
-function useLazyRef<T>(val: T): T {
-  let lazyRef = React.useRef<T>()
-  if (lazyRef.current === undefined) {
-    lazyRef.current = val
-  }
-  return lazyRef.current
-}

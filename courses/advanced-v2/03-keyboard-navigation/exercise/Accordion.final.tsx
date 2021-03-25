@@ -43,7 +43,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
     let [buttonFocused, setButtonFocused] = React.useState(false)
     let id = makeId('accordion', useId())
 
-    let isControlled = useLazyRef(externalValue !== undefined)
+    let isControlled = React.useRef(externalValue !== undefined).current
     let isCurrentlyControlled = externalValue !== undefined
     let controlledStateChanged = isControlled !== isCurrentlyControlled
 
@@ -290,7 +290,7 @@ export const Disclosure = React.forwardRef<HTMLDivElement, DisclosureProps>(
     let id = makeId('disclosure', useId())
     let panelId = makeId('panel', id)
 
-    let isControlled = useLazyRef(externalOpen !== undefined)
+    let isControlled = React.useRef(externalOpen !== undefined).current
     let isCurrentlyControlled = externalOpen !== undefined
     let controlledStateChanged = isControlled !== isCurrentlyControlled
 
@@ -462,14 +462,6 @@ type DisclosurePanelProps = Omit<
   keyof DisclosurePanelOwnProps
 > &
   DisclosurePanelOwnProps
-
-function useLazyRef<T>(val: T): T {
-  let lazyRef = React.useRef<T>()
-  if (lazyRef.current === undefined) {
-    lazyRef.current = val
-  }
-  return lazyRef.current
-}
 
 function isButtonInCurrentAccordion(elementToCheck: Element, accordionElement: HTMLElement) {
   return (

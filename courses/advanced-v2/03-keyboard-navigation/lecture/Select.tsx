@@ -254,20 +254,12 @@ type SelectOptionBaseProps = Omit<React.ComponentPropsWithRef<'div'>, keyof Sele
 
 type SelectOptionProps = SelectOptionOwnProps
 
-function useLazyRef<T>(val: T): T {
-  let lazyRef = React.useRef<T>()
-  if (lazyRef.current === undefined) {
-    lazyRef.current = val
-  }
-  return lazyRef.current
-}
-
 function useControlledState<T>(
   externalValue: T | undefined,
   defaultValue: T | undefined,
   onValueChange: ((T: T) => void) | undefined
 ): [T, (T: T) => void, boolean] {
-  let isControlled = useLazyRef(externalValue !== undefined)
+  let isControlled = React.useRef(externalValue !== undefined).current
 
   let isCurrentlyControlled = externalValue !== undefined
   let controlledStateChanged = isControlled !== isCurrentlyControlled
