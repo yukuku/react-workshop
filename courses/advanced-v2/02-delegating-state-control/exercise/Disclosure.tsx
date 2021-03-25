@@ -156,3 +156,11 @@ type DisclosurePanelProps = Omit<
   keyof DisclosurePanelOwnProps
 > &
   DisclosurePanelOwnProps
+
+function useLazyRef<T>(val: T): T {
+  let lazyRef = React.useRef<T>()
+  if (lazyRef.current === undefined) {
+    lazyRef.current = val
+  }
+  return lazyRef.current
+}

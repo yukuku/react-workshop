@@ -4,14 +4,41 @@ import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 const DisclosureContext = React.createContext<DisclosureContextValue>({} as any)
 
 export const Disclosure = React.forwardRef<HTMLDivElement, DisclosureProps>(
-  ({ children, defaultOpen = false, onChange, className, ...domProps }, forwardedRef) => {
+  (
+    { children, open: externalOpen, defaultOpen = false, onChange, className, ...domProps },
+    forwardedRef
+  ) => {
     let id = makeId('disclosure', useId())
     let panelId = makeId('panel', id)
-    let [open, setOpen] = React.useState(defaultOpen)
+
+    let isControlled = useLazyRef(externalOpen !== undefined)
+    let isCurrentlyControlled = externalOpen !== undefined
+    let controlledStateChanged = isControlled !== isCurrentlyControlled
+
+    React.useEffect(() => {
+      if (process.env.NODE_ENV === 'development') {
+        if (controlledStateChanged) {
+          console.warn(
+            `Heyyyyy that custom disclosure is changing between controlled and uncontrolled states. You shouldn't do that or you're going to have a bad time! Check the value prop and make sure you're doing it right.`
+          )
+        }
+      }
+    }, [controlledStateChanged])
+
+    let [internalOpen, setInternalOpen] = React.useState(defaultOpen)
+    let open = isControlled ? externalOpen! : internalOpen
+
+    function setOpen(newState: boolean) {
+      if (!isControlled) {
+        setInternalOpen(newState)
+      }
+      if (onChange && newState !== open) {
+        onChange(newState)
+      }
+    }
 
     function toggle() {
-      onChange && onChange()
-      setOpen((open) => !open)
+      setOpen(!open)
     }
 
     let context: DisclosureContextValue = {
@@ -131,7 +158,7 @@ interface DisclosureOwnProps {
   children: React.ReactNode
   open?: boolean
   defaultOpen?: boolean
-  onChange?(): void
+  onChange?(newState: boolean): void
 }
 
 type DisclosureProps = Omit<React.ComponentPropsWithRef<'div'>, keyof DisclosureOwnProps> &
@@ -156,3 +183,11 @@ type DisclosurePanelProps = Omit<
   keyof DisclosurePanelOwnProps
 > &
   DisclosurePanelOwnProps
+
+function useLazyRef<T>(val: T): T {
+  let lazyRef = React.useRef<T>()
+  if (lazyRef.current === undefined) {
+    lazyRef.current = val
+  }
+  return lazyRef.current
+}
