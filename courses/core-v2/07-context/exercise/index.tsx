@@ -3,22 +3,15 @@ import ReactDOM from 'react-dom'
 import { TaskDialog } from './TaskDialog'
 import { TaskCard } from './TaskCard'
 import { getTheme } from './utils'
-// import { ThemeProvider } from './ThemeContext'
+import { ThemeProvider } from './ThemeContext'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-type Colors = {
-  [key: string]: string
-}
-export const ThemeContext = React.createContext<Colors | null>(null)
-
 const App: React.FC = () => {
-  const colors = getTheme()
-
   return (
-    <ThemeContext.Provider value={colors}>
+    <ThemeProvider>
       <PrimaryLayout />
-    </ThemeContext.Provider>
+    </ThemeProvider>
   )
 }
 
@@ -33,11 +26,6 @@ const Board: React.FC = () => {
 const TaskGroup: React.FC = () => {
   const [expandTask, setExpandTask] = useState(false)
 
-  // Instead of TaskDialog and TaskGroup each doing their own network
-  // requests and operating on their own state, here we have some lifted
-  // state that they will each use. Let's just have each component work
-  // with this state and forget about network requests for this context
-  // exercise:
   const [task, setTask] = useState({
     name: 'Context',
     content: 'Learn about React Context',

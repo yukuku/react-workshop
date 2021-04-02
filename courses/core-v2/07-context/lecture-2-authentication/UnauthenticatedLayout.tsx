@@ -7,11 +7,7 @@ import { User } from 'ProjectPlanner/types'
 import 'ProjectPlanner/UnauthorizedLayout.scss'
 
 export const UnauthenticatedLayout: React.FC = () => {
-  const { dispatch } = useAuth()
-
-  function login(user: User) {
-    dispatch({ type: 'LOGIN', user })
-  }
+  const { login } = useAuth()
 
   return (
     <div className="unauthorized-layout">

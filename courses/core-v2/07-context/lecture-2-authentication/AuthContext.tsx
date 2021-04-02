@@ -11,8 +11,8 @@ type State = {
 
 type Context = State & {
   dispatch: React.Dispatch<AuthContextActions>
-  // login(user: User): void
-  // logout(): void
+  login(user: User): void
+  logout(): void
 }
 
 const AuthStateContext = React.createContext<Context | null>(null)
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     let isCurrent = true
     api.auth.getAuthenticatedUser().then((user) => {
       if (user && isCurrent) {
-        dispatch({ type: 'LOGIN', user })
+        login(user)
       } else {
         dispatch({ type: 'LOGOUT' })
       }
@@ -54,11 +54,18 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, [])
 
+  const login = (user: User) => {
+    dispatch({ type: 'LOGIN', user })
+  }
+  const logout = () => {
+    dispatch({ type: 'LOGOUT' })
+  }
+
   const context: Context = {
     ...state,
     dispatch,
-    // login,
-    // logout,
+    login,
+    logout,
   }
 
   return <AuthStateContext.Provider value={context} children={children} />

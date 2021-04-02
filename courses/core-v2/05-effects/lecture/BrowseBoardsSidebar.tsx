@@ -3,13 +3,24 @@ import { RecentBoards } from 'ProjectPlanner/RecentBoards'
 import { ActiveUsers } from 'ProjectPlanner/ActiveUsers'
 import 'ProjectPlanner/BrowseBoardsSidebar.scss'
 
-export const BrowseBoardsSidebar: React.FC = () => {
-  const [isWide, setIsWide] = useState(true)
+type Props = {
+  width?: number
+}
 
-  // What if we didn't want to show the sidebar if the screen was less than
-  // 900px? We could use a CSS media query, but then we'd still get "side effects"
-  // that are doing network requests in these children components even when the
-  // user can't see the UI for them
+export const BrowseBoardsSidebar: React.FC<Props> = ({ width = 900 }) => {
+  const query = `(min-width: ${width}px)`
+  const [isWide, setIsWide] = useState(window.matchMedia(query).matches)
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    const listener = () => {
+      setIsWide(media.matches)
+    }
+    media.addEventListener('change', listener)
+    return () => {
+      media.removeEventListener('change', listener)
+    }
+  }, [query])
 
   return isWide ? (
     <aside className="browse-boards-sidebar spacing">

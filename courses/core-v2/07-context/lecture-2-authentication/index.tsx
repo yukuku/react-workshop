@@ -8,15 +8,21 @@ import { AuthProvider, useAuth } from './AuthContext'
 import 'ProjectPlanner/styles/global-styles.scss'
 
 const App = () => {
-  const authenticated = false
+  const { authenticated } = useAuth()
+  if (authenticated === null) {
+    return <div>Loading...</div>
+  }
 
-  return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>{authenticated ? <PrimaryLayout /> : <UnauthenticatedLayout />}</AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  )
+  return authenticated ? <PrimaryLayout /> : <UnauthenticatedLayout />
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
+  </BrowserRouter>,
+  document.getElementById('root')
+)

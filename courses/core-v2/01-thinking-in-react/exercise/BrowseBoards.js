@@ -5,6 +5,7 @@ export const BrowseBoards = () => {
   const boards = [
     { id: 1, name: 'Board One' },
     { id: 2, name: 'Board Two' },
+    { id: 3, name: 'Board Three' },
   ]
 
   function removeBoard(boardId) {
@@ -13,28 +14,30 @@ export const BrowseBoards = () => {
 
   return (
     <div className="spacing">
-      <h1 className="heading size-1">Browse Boards</h1>
+      <Heading>Browse Boards</Heading>
       <div className="spacing">
-        {/* This JSX needs to be created once for each board in the array */}
-        <div className="browse-board-item flex items-center">
-          <BsKanban className="board-icon" color="var(--purple)" />
-          <div className="spacing-small flex-1">
-            <h2 className="heading size-2">Board Name</h2>
-          </div>
-          <button className="button button-outline">Remove</button>
-        </div>
-        {/* end */}
+        {boards.map((board) => {
+          return (
+            <div key={board.id} className="browse-board-item flex items-center">
+              <BsKanban className="board-icon" color="var(--purple)" />
+              <div className="spacing-small flex-1">
+                <h2 className="heading size-2">{board.name}</h2>
+              </div>
+            </div>
+          )
+        })}
       </div>
+      <form>
+        <input type="text" />
+      </form>
     </div>
   )
 }
 
-function Heading({ children, size = 1, ...rest }) {
-  // For the bonus task, see if you can program this component to be used
-  // instead of <h1> and <h2>. See the README for more info.
+function Heading({ as: Comp = 'h1', children, size = 1, ...props }) {
   return (
-    <h1 {...rest} className="heading size-1">
+    <Comp {...props} className={`heading size-${size}`}>
       {children}
-    </h1>
+    </Comp>
   )
 }
