@@ -23,5 +23,3 @@ Board
 ## ✅ Task 2: Custom Hook
 
 4. Since we now have the same useEffect logic twice, refactor `TaskCard` and `TaskDialog` to use the existing `useTask.ts` custom hook.
-
-Remember, the main reason for custom hooks is code-reuse.

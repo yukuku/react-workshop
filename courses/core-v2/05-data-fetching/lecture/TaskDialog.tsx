@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -23,7 +23,7 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
+  const task = null
 
   // api.boards.getTask(taskId)
 
@@ -33,8 +33,7 @@ export const TaskDialog: React.FC<Props> = ({
   const nextTaskId = i < siblingTaskIds.length - 1 && siblingTaskIds[i + 1]
 
   function update(partialTask: Partial<Task>) {
-    if (!task) return
-    setTask({ ...task, ...partialTask })
+    // update our task state
   }
 
   return (

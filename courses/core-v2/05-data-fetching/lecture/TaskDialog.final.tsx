@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useReducer, useRef, useCallback, useEffect } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -10,7 +10,7 @@ import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
 
-type Props = {
+interface TaskDialogProps {
   taskId: number
   siblingTaskIds: number[]
   onChangeTaskId(taskId: number): void
@@ -18,7 +18,7 @@ type Props = {
 }
 
 function useTask(taskId: number) {
-  const [task, setTask] = useState<Task | null>(null)
+  let [task, setTask] = useState<Task | null>(null)
 
   useEffect(() => {
     let isCurrent = true
@@ -32,10 +32,16 @@ function useTask(taskId: number) {
     }
   }, [taskId])
 
+  useEffect(() => {
+    if (task) {
+      api.boards.updateTask(task.id, task)
+    }
+  }, [task])
+
   return [task, setTask] as const
 }
 
-export const TaskDialog: React.FC<Props> = ({
+export const TaskDialog: React.FC<TaskDialogProps> = ({
   taskId,
   siblingTaskIds,
   onChangeTaskId,

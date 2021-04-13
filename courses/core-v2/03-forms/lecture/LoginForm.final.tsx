@@ -20,33 +20,40 @@ type StateType = {
 type ActionTypes =
   | { type: 'FETCH' }
   | { type: 'ERROR'; error: string }
+  | { type: 'SUCCESS' }
   | { type: 'TOGGLE_SHOW_PASSWORD' }
   | { type: 'CHANGE_FIELD'; field: string; value: string }
 
-export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [state, dispatch] = useReducer(
-    (state: StateType, action: ActionTypes) => {
-      switch (action.type) {
-        case 'FETCH':
-          return { ...state, loading: true, error: null }
-        case 'ERROR':
-          return { ...state, error: action.error, loading: false }
-        case 'TOGGLE_SHOW_PASSWORD':
-          return { ...state, showPassword: !state.showPassword }
-        case 'CHANGE_FIELD':
-          return { ...state, [action.field]: action.value }
-        default:
-          return state
+const initialState = {
+  username: '',
+  password: '',
+  showPassword: false,
+  error: null,
+  loading: false,
+}
+
+function stateReducer(state: StateType, action: ActionTypes): StateType {
+  switch (action.type) {
+    case 'FETCH':
+      return { ...state, error: null, loading: true }
+    case 'ERROR':
+      return { ...state, error: action.error, loading: false }
+    case 'SUCCESS':
+      return { ...state, error: null, loading: false }
+    case 'TOGGLE_SHOW_PASSWORD':
+      return { ...state, showPassword: !state.showPassword }
+    case 'CHANGE_FIELD':
+      if (!state.loading) {
+        return { ...state, [action.field]: action.value }
       }
-    },
-    {
-      username: '',
-      password: '',
-      showPassword: false,
-      error: null,
-      loading: false,
-    }
-  )
+      return state
+    default:
+      return state
+  }
+}
+
+export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
+  const [state, dispatch] = useReducer(stateReducer, initialState)
 
   const { username, password, showPassword, error, loading } = state
 
@@ -56,6 +63,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
     api.auth
       .login(username, password)
       .then((user: UserType) => {
+        dispatch({ type: 'SUCCESS' })
         onAuthenticated(user)
       })
       .catch((error) => {
