@@ -82,9 +82,10 @@ Which Course?
 
 [1] advanced-composition
 [2] advanced-hooks
-[3] core-v1
-[4] core-v2
-[5] electives
+[3] advanced-v2
+[4] core-v1
+[5] core-v2
+[6] electives
 [0] CANCEL
 
 Choose one from list [1...5 / 0]: 4

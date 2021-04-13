@@ -12,6 +12,11 @@ html {
   width: 100%;
   cursor: pointer;
 
+  &:focus {
+    outline: 1px auto Highlight;
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+
   > * {
     vertical-align: middle;
   }
