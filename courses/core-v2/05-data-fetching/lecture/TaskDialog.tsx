@@ -33,6 +33,7 @@ export const TaskDialog: React.FC<Props> = ({
   const nextTaskId = i < siblingTaskIds.length - 1 && siblingTaskIds[i + 1]
 
   function update(partialTask: Partial<Task>) {
+    if (!task) return
     // update our task state
   }
 

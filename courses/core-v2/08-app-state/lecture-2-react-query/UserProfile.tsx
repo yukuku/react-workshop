@@ -22,7 +22,7 @@ export const UserProfile: React.FC = () => {
     <Centered size={50}>
       <div className="flex">
         <aside className="mr-4 w-40 spacing-large">
-          <img src={user?.avatarUrl!} alt={`Picture of ${user?.name}`} style={{ width: '100%' }} />
+          <img src={user?.avatarUrl!} alt={`${user?.name} avatar`} style={{ width: '100%' }} />
           <div className="spacing-small">
             <Fake />
             <Fake />

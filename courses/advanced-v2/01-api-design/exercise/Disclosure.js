@@ -5,24 +5,33 @@ export function Disclosure() {
   return null
 }
 
-interface DisclosureProps {
-  // What will your props look like? 👀
-}
-
 // Some handy utils that might be useful if you want them!
-function slugify(string: string): string {
+
+/**
+ * @param {string} string
+ * @return {string}
+ */
+function slugify(string) {
   return string.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
-function composeClassNames(...classNames: string[]): string {
+/**
+ * @param {...string} classNames
+ * @return {string}  {string}
+ */
+function composeClassNames(...classNames) {
   return classNames.filter(Boolean).join(' ')
 }
 
-function composeEventHandlers<
-  EventType extends React.SyntheticEvent<any>,
-  Handler extends React.EventHandler<EventType>
->(userEventHandler: Handler, internalEventHandler: Handler) {
-  return function (event: EventType): void {
+/**
+ * @template {React.SyntheticEvent<any>} EventType
+ * @template {React.EventHandler<EventType>} Handler
+ * @param {Handler} userEventHandler
+ * @param {Handler} internalEventHandler
+ * @return {(event: EventType) => void}
+ */
+function composeEventHandlers(userEventHandler, internalEventHandler) {
+  return function (event) {
     userEventHandler?.(event)
     if (!event.defaultPrevented) {
       internalEventHandler?.(event)
@@ -30,14 +39,26 @@ function composeEventHandlers<
   }
 }
 
-function useComposedRefs<Ref extends React.Ref<Value>, Value = any>(...refs: Ref[]) {
+/**
+ * @template {React.Ref<Value>} Ref
+ * @template Value
+ * @param {...Ref} refs
+ * @return {(...refs: Ref[]) => void}
+ */
+function useComposedRefs(...refs) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   return React.useCallback(composeRefs(...refs), refs)
 }
 
-function composeRefs<Ref extends React.Ref<Value>, Value = any>(...refs: Ref[]) {
+/**
+ * @template {React.Ref<Value>} Ref
+ * @template Value
+ * @param {...Ref} refs
+ * @return {(...refs: Ref[]) => void}
+ */
+function composeRefs(...refs) {
   // accept multiple refs and return a singular callback ref
-  return function composedCallbackRef(node: Value) {
+  return function composedCallbackRef(node) {
     for (let ref of refs) {
       if (typeof ref === 'function') {
         // @ts-ignore
@@ -50,12 +71,19 @@ function composeRefs<Ref extends React.Ref<Value>, Value = any>(...refs: Ref[]) 
   }
 }
 
-function makeId(...parts: string[]) {
+/**
+ * @param {...string} parts
+ * @return {string}
+ */
+function makeId(...parts) {
   return parts.map(slugify).join('-')
 }
 
+/**
+ * @return {string}
+ */
 function useId() {
-  let valueRef = React.useRef<string>()
+  let valueRef = React.useRef()
   if (valueRef.current === undefined) {
     valueRef.current = String(uniqueId())
   }
