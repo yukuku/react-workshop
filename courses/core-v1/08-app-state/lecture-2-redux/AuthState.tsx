@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { UserNoPassword } from 'YesterTech/types'
 
-// Might need to convert to a function for redux, unsure why 🧐
+// Convert to a function, authReducer will be hoisted
 const initialState: AuthState = {
   authenticated: false,
   user: null,

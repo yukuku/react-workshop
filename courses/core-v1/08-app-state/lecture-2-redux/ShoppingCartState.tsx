@@ -3,7 +3,7 @@ import * as storage from 'YesterTech/localStorage'
 import { CartProduct } from 'YesterTech/types'
 import { getInt } from 'YesterTech/utils'
 
-// Might need to convert to a function for redux, unsure why 🧐
+// Convert to a function, cartReducer will be hoisted
 const initialState: ShoppingCartState = {
   cart: storage.getCart() || [],
 }
