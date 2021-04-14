@@ -9,8 +9,6 @@ const initialState: AuthState = {
 const AuthStateContext = React.createContext<AuthState>(initialState)
 const AuthDispatchContext = React.createContext<AuthDispatch>(function dispatch() {})
 
-export type AuthActionTypes = 'LOGIN' | 'LOGOUT'
-
 export const AuthStateProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(function authReducer(
     state: AuthState,
@@ -44,7 +42,7 @@ export function useAuthState(): AuthState {
   return React.useContext(AuthStateContext)
 }
 
-export interface AuthState {
+type AuthState = {
   authenticated: boolean
   user: null | UserNoPassword
 }

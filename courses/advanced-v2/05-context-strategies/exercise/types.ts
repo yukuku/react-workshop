@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-export type AuthActionTypes = 'LOGIN' | 'LOGOUT'
-
 export type AuthState = {
   authenticated: boolean
   user: null | UserNoPassword

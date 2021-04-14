@@ -1,20 +1,21 @@
 import { useCallback } from 'react'
 import { UserNoPassword } from 'YesterTech/types'
-import { useSelector, useDispatch } from './store'
+import { useSelector, useDispatch } from './store.final'
 
-export const initialState: AuthState = {
-  authenticated: false,
-  user: null,
+function getInitialState(): AuthState {
+  return {
+    authenticated: false,
+    user: null,
+  }
 }
 
-export function authReducer(state: AuthState = initialState, action: AuthActions): AuthState {
-  state = state || initialState
+export function authReducer(state: AuthState = getInitialState(), action: AuthActions): AuthState {
   switch (action.type) {
     case 'auth/LOGIN': {
       return { ...state, authenticated: true, user: action.user }
     }
     case 'auth/LOGOUT': {
-      return { ...initialState }
+      return getInitialState()
     }
     default:
       return state
@@ -35,21 +36,10 @@ export function useAuthState(): AuthState {
   return useSelector((state) => state.auth)
 }
 
-export type AuthActionTypes = 'auth/LOGIN' | 'auth/LOGOUT'
-
 export interface AuthState {
   authenticated: boolean
   user: null | UserNoPassword
 }
-
-type AuthActions =
-  | {
-      type: 'auth/LOGIN'
-      user: UserNoPassword
-    }
-  | {
-      type: 'auth/LOGOUT'
-    }
 
 type LocalAuthActions =
   | {
@@ -59,3 +49,8 @@ type LocalAuthActions =
   | {
       type: 'LOGOUT'
     }
+
+type MappedRootAction<P extends string, T> = T extends { type: string }
+  ? { type: `${P}/${T['type']}` } & Omit<T, 'type'>
+  : never
+type AuthActions = MappedRootAction<'auth', LocalAuthActions>

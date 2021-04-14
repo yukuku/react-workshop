@@ -3,60 +3,57 @@ import * as storage from 'YesterTech/localStorage'
 import { CartProduct } from 'YesterTech/types'
 import { getInt } from 'YesterTech/utils'
 
+// Might need to convert to a function for redux, unsure why 🧐
+const initialState: ShoppingCartState = {
+  cart: storage.getCart() || [],
+}
+
+function cartReducer(state: ShoppingCartState, action: ShoppingCartActions): ShoppingCartState {
+  switch (action.type) {
+    case 'ADD': {
+      const found = state.cart.find((p) => p.productId === getInt(action.productId, 10))
+      if (!found) {
+        return {
+          ...state,
+          cart: state.cart.concat({
+            productId: getInt(action.productId, 10),
+            quantity: 1,
+            name: action.name || '',
+            price: action.price || 0,
+          }),
+        }
+      } else {
+        return state
+      }
+    }
+    case 'UPDATE': {
+      let cart
+      if (action.quantity > 0) {
+        cart = state.cart.map((product) => {
+          return product.productId === getInt(action.productId, 10)
+            ? { ...product, quantity: getInt(action.quantity, 10) }
+            : product
+        })
+      } else {
+        cart = state.cart.filter((product) => product.productId !== getInt(action.productId, 10))
+      }
+      return { ...state, cart }
+    }
+    case 'REMOVE': {
+      const c = state.cart
+      const index = c.findIndex((p) => p.productId === action.productId)
+      const updatedCart = [...c.slice(0, index), ...c.slice(index + 1)]
+      return { ...state, cart: updatedCart }
+    }
+    default:
+      return state
+  }
+}
+
 const ShoppingCartContext = React.createContext({} as ShoppingCartContextValue)
 
 export const ShoppingCartProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = React.useReducer(
-    function shoppingCartReducer(
-      state: ShoppingCartState,
-      action: ShoppingCartActions
-    ): ShoppingCartState {
-      switch (action.type) {
-        case 'ADD': {
-          const found = state.cart.find((p) => p.productId === getInt(action.productId, 10))
-          if (!found) {
-            return {
-              ...state,
-              cart: state.cart.concat({
-                productId: getInt(action.productId, 10),
-                quantity: 1,
-                name: action.name || '',
-                price: action.price || 0,
-              }),
-            }
-          } else {
-            return state
-          }
-        }
-        case 'UPDATE': {
-          let cart
-          if (action.quantity > 0) {
-            cart = state.cart.map((product) => {
-              return product.productId === getInt(action.productId, 10)
-                ? { ...product, quantity: getInt(action.quantity, 10) }
-                : product
-            })
-          } else {
-            cart = state.cart.filter(
-              (product) => product.productId !== getInt(action.productId, 10)
-            )
-          }
-          return { ...state, cart }
-        }
-        case 'REMOVE': {
-          const c = state.cart
-          const index = c.findIndex((p) => p.productId === action.productId)
-          const updatedCart = [...c.slice(0, index), ...c.slice(index + 1)]
-          return { ...state, cart: updatedCart }
-        }
-        default:
-          return state
-      }
-    },
-    {
-      cart: storage.getCart() || [],
-    }
-  )
+  const [state, dispatch] = React.useReducer(cartReducer, initialState)
 
   const value: ShoppingCartContextValue = {
     ...state,

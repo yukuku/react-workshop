@@ -3,14 +3,16 @@ import * as storage from 'YesterTech/localStorage'
 
 import { CartProduct } from 'YesterTech/types'
 import { getInt } from 'YesterTech/utils'
-import { useSelector, useDispatch } from './store'
+import { useSelector, useDispatch } from './store.final'
 
-export const initialState: ShoppingCartState = {
-  cart: storage.getCart() || [],
+function getInitialState(): ShoppingCartState {
+  return {
+    cart: storage.getCart() || [],
+  }
 }
 
 export function cartReducer(
-  state: ShoppingCartState = initialState,
+  state = getInitialState(),
   action: ShoppingCartActions
 ): ShoppingCartState {
   switch (action.type) {
@@ -107,19 +109,6 @@ type ShoppingCartActions =
 
 export interface ShoppingCartState {
   cart: CartProduct[]
-}
-
-// actions
-export function addToCart(productId: number, name: string, price: number) {
-  return { type: 'cart/ADD' as const, productId, name, price }
-}
-
-export function updateQuantity(productId: number, quantity: number) {
-  return { type: 'cart/UPDATE', productId, quantity }
-}
-
-export function removeFromCart(productId: number) {
-  return { type: 'cart/REMOVE', productId }
 }
 
 interface ShoppingCartContextValue {
