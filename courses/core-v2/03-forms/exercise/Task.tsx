@@ -27,6 +27,8 @@ export const Task = () => {
     console.log(task)
   }
 
+  // update({ name: event.target.value })
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex">

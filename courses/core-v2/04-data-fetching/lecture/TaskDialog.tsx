@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
-import { api } from 'ProjectPlanner/api'
 import { Task } from 'ProjectPlanner/types'
 import { Dialog } from 'ProjectPlanner/Dialog'
 import { AvatarGroup } from 'ProjectPlanner/AvatarGroup'
@@ -9,6 +8,7 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
+import { api } from 'ProjectPlanner/api'
 
 type Props = {
   taskId: number
@@ -25,7 +25,18 @@ export const TaskDialog: React.FC<Props> = ({
 }) => {
   const [task, setTask] = useState<Task | null>(null)
 
-  // api.boards.getTask(taskId)
+  // Anything that we "close over" that CAN CHANGE!!!
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [taskId])
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
