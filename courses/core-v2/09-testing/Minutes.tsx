@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
 import 'ProjectPlanner/Minutes.scss'
 
+// Jest (JSDOM, Testing Framework, Assertion Library)
+
 type Props = {
   minutes: number
   min?: number

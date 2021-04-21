@@ -7,15 +7,17 @@ type Props = {
   width?: number
 }
 
-function useMedia(query) {
-  const [matches, setMatches] = useState(() => {
+export const BrowseBoardsSidebar: React.FC<Props> = ({ width = 900 }) => {
+  const query = `(min-width: ${width}px)`
+
+  const [isWide, setIsWide] = useState(() => {
     return window.matchMedia(query).matches
   })
 
   useEffect(() => {
     const media = window.matchMedia(query)
     const listener = () => {
-      setMatches(media.matches)
+      setIsWide(media.matches)
     }
     media.addEventListener('change', listener)
     return () => {
@@ -23,35 +25,10 @@ function useMedia(query) {
     }
   }, [query])
 
-  return matches
-}
-
-export const BrowseBoardsSidebar: React.FC<Props> = ({ width = 900 }) => {
-  const isWide = useMedia(`(min-width: ${width}px)`)
-  const darkMode = useMedia('(prefers-color-scheme: dark)')
-
   return isWide ? (
     <aside className="browse-boards-sidebar spacing">
       <RecentBoards />
       <ActiveUsers />
     </aside>
   ) : null
-}
-
-function Minutes() {
-  // behavior
-  // behavior
-  // behavior
-  // behavior
-  // behavior
-  // behavior
-  // behavior
-
-  return (
-    <div>
-      <Button></Button>
-
-      <button></button>
-    </div>
-  )
 }

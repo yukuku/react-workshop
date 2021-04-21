@@ -4,9 +4,19 @@ import Heading from 'YesterTech/Heading'
 export default function App() {
   const [count, setCount] = React.useState(0)
 
-  // const onUpdate = () => {
+  // // useCallback DOES NOT call that function
+  // const onUpdate = React.useCallback(() => {
   //   console.log('User was updated')
-  // }
+  // }, [])
+
+  // // useMemo calls the function and memoizes the response
+  // const user = React.useMemo(() => {
+  //   return {}
+  // }, [])
+
+  const user = {}
+
+  const update = () => {}
 
   return (
     <div className="align-center spacing">
@@ -15,29 +25,20 @@ export default function App() {
         Count: {count}
       </button>
       <hr />
-      <UserProfile
-        userId={5}
-        // onUpdate={onUpdate}
-      />
+      <UserProfile user={user} userId={5} onUpdate={onUpdate} />
     </div>
   )
 }
 
-class UserProfile extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return true
-  }
+const UserProfile = () => {
+  console.log('Render')
 
-  render() {
-    console.log('Render')
-
-    return (
-      <div>
-        <Heading size={4}>Child Component (UserProfile)</Heading>
-        <p className="text-small">
-          Check the console to see how many times I render when the parent state changes
-        </p>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Heading size={4}>Child Component (UserProfile)</Heading>
+      <p className="text-small">
+        Check the console to see how many times I render when the parent state changes
+      </p>
+    </div>
+  )
 }

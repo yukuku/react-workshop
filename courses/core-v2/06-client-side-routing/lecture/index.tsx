@@ -26,11 +26,20 @@ const App: React.FC = () => {
 }
 
 const PrimaryLayout: React.FC = () => {
+  const [user, setUser] = React.useState(null)
+
   return (
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards">
+            <BoardsSubLayout setUser={setUser} />
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
     </div>
@@ -41,9 +50,7 @@ const PrimaryHeader: React.FC = () => {
   return (
     <header className="primary-header spacing">
       <div className="flex-split">
-        <div>
-          <Logo />
-        </div>
+        <div>Logo</div>
         <div>
           <nav className="horizontal-spacing-large">
             <NavLink to="/" exact className="primary-nav-item">
@@ -67,8 +74,38 @@ const Dashboard: React.FC = () => {
   )
 }
 
+function getUser() {
+  return Promise.resolve('brad')
+}
+
+const BoardsSubLayout: React.FC = ({ setUser }) => {
+  React.useEffect(() => {
+    getUser().then((name) => {
+      setUser(name)
+    })
+  }, [])
+
+  return (
+    <div>
+      <aside>special</aside>
+      <div>
+        <Switch>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+        </Switch>
+      </div>
+    </div>
+  )
+}
+
 const BrowseBoards: React.FC = () => {
   const boards = useBoards()
+
+  // when that finishes, start another api here?
 
   return (
     <Centered size={50}>
@@ -102,7 +139,7 @@ const BrowseBoards: React.FC = () => {
 }
 
 const Board: React.FC = () => {
-  const { boardId } = useParams<{ boardId: string }>()
+  const boardId = parseInt(useParams<{ boardId: string }>().boardId)
 
   return (
     <Centered size={50}>

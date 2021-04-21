@@ -65,7 +65,7 @@ describe('Minutes', () => {
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
 
-describe('Quantity', () => {
+describe('Minutes', () => {
   let container
   beforeEach(() => {
     container = document.createElement('div')
