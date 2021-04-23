@@ -1,14 +1,18 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
-import { Disclosure, DisclosureButton, DisclosurePanel } from './Disclosure'
+import { Disclosure, DisclosureButton, DisclosurePanel } from './Disclosure.final'
 import './styles.scss'
 
 function App() {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(null)
+
+  React.useEffect(() => {
+    setOpen(true)
+  }, [])
 
   return (
-    <Disclosure onChange={() => setOpen(!open)}>
+    <Disclosure open={open} onChange={() => setOpen(!open)}>
       <DisclosureButton>
         {open ? <FaAngleDown /> : <FaAngleRight />}
         <span>Click Me</span>

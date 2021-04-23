@@ -9,14 +9,7 @@ function App() {
 
   return (
     <div>
-      <p>
-        Want to read more about{' '}
-        <button onClick={() => null} className="as-link">
-          a11y
-        </button>
-      </p>
-
-      <Accordion onChange={setIndex}>
+      <Accordion>
         <AccordionItem>
           <AccordionButton>
             {index === 0 ? <FaAngleDown /> : <FaAngleRight />}
