@@ -30,28 +30,32 @@ export const Accordion = React.forwardRef(
       console.warn('Cannot change from controlled to uncontrolled or vice versa.')
     }
 
-    children = React.Children.map(children, (child, index) => {
-      const panelId = `accordion-${accordionId}-panel-${index}`
-      const buttonId = `accordion-${accordionId}-button-${index}`
+    const itemsRef = React.useRef(-1)
 
-      const context = {
-        buttonId,
-        panelId,
-        selected: isControlled ? controlledIndex === index : selectedIndex === index,
-        selectPanel: () => {
-          onChange && onChange(index)
-          if (!isControlled) {
-            setSelectedIndex(index)
-          }
-        },
-      }
-      return <AccordionContext.Provider value={context} children={child} />
-    })
+    const context = {
+      accordionId,
+      selected: (index) => (isControlled ? controlledIndex === index : selectedIndex === index),
+      selectPanel: (index) => {
+        onChange && onChange(index)
+        if (!isControlled) {
+          setSelectedIndex(index)
+        }
+      },
+      registerItem(ref) {
+        if (!ref.current) {
+          const index = ++itemsRef.current
+          ref.current = index
+        }
+        return ref.current
+      },
+    }
 
     return (
-      <div data-accordion="" ref={forwardedRef} {...props}>
-        {children}
-      </div>
+      <AccordionContext.Provider value={context}>
+        <div data-accordion="" ref={forwardedRef} {...props}>
+          {children}
+        </div>
+      </AccordionContext.Provider>
     )
   }
 )
@@ -62,18 +66,36 @@ Accordion.displayName = 'Accordion'
  * Accordion Item
  */
 
+const AccordionItemContext = React.createContext()
+
 export const AccordionItem = React.forwardRef(({ children, ...props }, forwardedRef) => {
-  const { selected } = React.useContext(AccordionContext)
+  const { selected, accordionId, registerItem, selectPanel } = React.useContext(AccordionContext)
+
+  const itemRef = React.useRef(false)
+  const index = registerItem(itemRef)
+
+  console.log(index)
+
+  const context = {
+    panelId: `accordion-${accordionId}-panel-${index}`,
+    buttonId: `accordion-${accordionId}-button-${index}`,
+    onClick: () => {
+      selectPanel(index)
+    },
+    isSelected: selected(index),
+  }
 
   return (
-    <div
-      {...props}
-      data-accordion-item=""
-      data-state={selected ? 'open' : 'collapsed'}
-      ref={forwardedRef}
-    >
-      {children}
-    </div>
+    <AccordionItemContext.Provider value={context}>
+      <div
+        {...props}
+        data-accordion-item=""
+        data-state={selected ? 'open' : 'collapsed'}
+        ref={forwardedRef}
+      >
+        {children}
+      </div>
+    </AccordionItemContext.Provider>
   )
 })
 
@@ -84,15 +106,18 @@ AccordionItem.displayName = 'AccordionItem'
  */
 
 export const AccordionButton = React.forwardRef(({ children, onClick, ...props }, forwardedRef) => {
-  const { panelId, selected, selectPanel } = React.useContext(AccordionContext)
+  const { panelId, buttonId, onClick: ourOnClick, isSelected } = React.useContext(
+    AccordionItemContext
+  )
 
   return (
     <button
       {...props}
-      onClick={wrapEvent(onClick, selectPanel)}
+      id={buttonId}
+      onClick={wrapEvent(onClick, ourOnClick)}
       data-accordion-button=""
-      data-state={selected ? 'open' : 'collapsed'}
-      aria-expanded={selected}
+      data-state={isSelected ? 'open' : 'collapsed'}
+      aria-expanded={isSelected}
       aria-controls={panelId}
       ref={forwardedRef}
     >
@@ -108,7 +133,7 @@ AccordionButton.displayName = 'AccordionButton'
  */
 
 export const AccordionPanel = React.forwardRef(({ children, ...props }, forwardedRef) => {
-  const { buttonId, panelId, selected } = React.useContext(AccordionContext)
+  const { panelId, buttonId, isSelected } = React.useContext(AccordionItemContext)
 
   return (
     <div
@@ -116,9 +141,9 @@ export const AccordionPanel = React.forwardRef(({ children, ...props }, forwarde
       {...props}
       id={panelId}
       aria-labelledby={buttonId}
-      hidden={!selected}
+      hidden={!isSelected}
       data-accordion-panel=""
-      data-state={selected ? 'open' : 'collapsed'}
+      data-state={isSelected ? 'open' : 'collapsed'}
       ref={forwardedRef}
     >
       {children}
