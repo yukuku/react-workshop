@@ -97,5 +97,9 @@ export const BoardProvider: React.FC<Props> = ({ boardId, children }) => {
 }
 
 export const useBoardContext = () => {
-  return useContext(BoardContext)
+  const context = useContext(BoardContext)
+  if (!context) {
+    // throw error
+  }
+  return context
 }

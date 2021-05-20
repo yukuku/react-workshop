@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { TaskDialog } from './TaskDialog'
-import { TaskCard } from './TaskCard'
+import { TaskCard } from './TaskCard.final'
 import { getTheme } from './utils'
 // import { ThemeProvider } from './ThemeContext'
 import 'ProjectPlanner/styles/global-styles.scss'

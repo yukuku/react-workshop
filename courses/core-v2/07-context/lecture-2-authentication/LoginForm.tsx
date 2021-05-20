@@ -28,9 +28,9 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
     (state: StateType, action: ActionTypes) => {
       switch (action.type) {
         case 'FETCH':
-          return { ...state }
+          return { ...state, loading: true }
         case 'ERROR':
-          return { ...state, error: action.error }
+          return { ...state, error: action.error, loading: false }
         case 'TOGGLE_SHOW_PASSWORD':
           return { ...state, showPassword: !state.showPassword }
         case 'CHANGE_FIELD':
@@ -53,15 +53,20 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     dispatch({ type: 'FETCH' })
-    api.auth
-      .login(username, password)
-      .then((user: UserType) => {
-        onAuthenticated(user)
-      })
-      .catch((error) => {
-        dispatch({ type: 'ERROR', error })
-      })
   }
+
+  React.useEffect(() => {
+    if (loading) {
+      api.auth
+        .login(username, password)
+        .then((user: UserType) => {
+          onAuthenticated(user)
+        })
+        .catch((error) => {
+          dispatch({ type: 'ERROR', error })
+        })
+    }
+  }, [loading, onAuthenticated, password, username])
 
   function handleShowPassword() {
     dispatch({ type: 'TOGGLE_SHOW_PASSWORD' })
@@ -89,6 +94,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            disabled={loading}
             onChange={(event) => changeField('username', event.target.value)}
           />
         </div>

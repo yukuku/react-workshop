@@ -1,7 +1,6 @@
 import React from 'react'
 import { Heading } from 'ProjectPlanner/Heading'
-import { useTask } from './useTask'
-// import { useBoardContext } from './BoardContext'
+import { useBoardContext } from './BoardContext'
 // import { Task } from 'ProjectPlanner/types'
 import { TaskColor } from 'ProjectPlanner/TaskColor'
 import 'ProjectPlanner/TaskCard.scss'
@@ -13,7 +12,8 @@ type Props = {
 }
 
 export const TaskCard: React.FC<Props> = ({ taskId, onClick }) => {
-  const [task] = useTask(taskId)
+  const { getTask } = useBoardContext()
+  const task = getTask(taskId)
 
   return (
     <TaskColor task={task}>

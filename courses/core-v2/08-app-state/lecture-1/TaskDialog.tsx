@@ -7,8 +7,7 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 import { TaskColor } from 'ProjectPlanner/TaskColor'
-// import { useBoardContext } from './BoardContext'
-import { useTask } from './useTask'
+import { useBoardContext } from './BoardContext'
 import { Task } from 'ProjectPlanner/types'
 import 'ProjectPlanner/TaskDialog.scss'
 
@@ -17,8 +16,6 @@ type Props = {
   siblingTaskIds: number[]
   onChangeTaskId(taskId: number): void
   onClose(): void
-  // tasks: Task[] | null
-  // updateTask: (taskId: number, task: Task) => void
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -27,7 +24,22 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useTask(taskId)
+  const { getTask, updateTask } = useBoardContext()
+  const [task, setTask] = useState(() => getTask(taskId))
+
+  const firstRenderRef = React.useRef(true)
+
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      const id = setTimeout(() => {
+        updateTask(taskId, task)
+      }, 1000)
+      return () => {
+        clearTimeout(id)
+      }
+    }
+    firstRenderRef.current = false
+  }, [task, taskId, updateTask])
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

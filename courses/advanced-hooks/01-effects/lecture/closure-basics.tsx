@@ -4,13 +4,23 @@ import './styles.scss'
 export default function App() {
   const [count, setCount] = React.useState(0)
   const [message, setMessage] = React.useState<string | null>(null)
+  const [saving, setSaving] = React.useState(false)
+
+  const countRef = React.useRef<number>()
+  countRef.current = count
+
+  React.useEffect(() => {
+    if (saving) {
+      setTimeout(() => {
+        setMessage(
+          `We saved a count of ${count}, but I want to know the latest count of ${countRef.current}`
+        )
+      }, 3000)
+    }
+  }, [saving])
 
   function saveToDatabase() {
-    setTimeout(() => {
-      setMessage(
-        `We saved a count of ${count}, but it is stale since the count state may have changed`
-      )
-    }, 3000)
+    setSaving(true)
   }
 
   return (

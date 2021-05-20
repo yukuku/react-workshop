@@ -4,27 +4,40 @@ import { getTheme } from './utils'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-/**
- * This is JS and not TS on purpose to help explain context
- * without the extra noise TS brings to it.
- */
+//////////
+
+const Context = React.createContext()
+
+export function ThemeProvider({ children }) {
+  const colors = getTheme()
+
+  return <Context.Provider value={colors}>{children}</Context.Provider>
+}
+
+export function useTheme() {
+  return useContext(Context)
+}
+
+///////////
 
 export const App = () => {
-  const colors = getTheme()
-  console.log(colors)
-
-  return <PrimaryLayout colors={colors} />
+  return (
+    <ThemeProvider>
+      <PrimaryLayout />
+    </ThemeProvider>
+  )
 }
 
-const PrimaryLayout = ({ colors }) => {
-  return <Board colors={colors} />
+const PrimaryLayout = () => {
+  return <Board />
 }
 
-const Board = ({ colors }) => {
-  return <TaskCard colors={colors} />
+const Board = () => {
+  return <TaskCard />
 }
 
-const TaskCard = ({ colors }) => {
+const TaskCard = () => {
+  const colors = useTheme()
   const taskRef = useRef()
 
   useEffect(() => {

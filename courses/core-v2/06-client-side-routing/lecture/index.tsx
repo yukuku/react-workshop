@@ -15,7 +15,6 @@ import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // Lazy load this component and demonstrate suspense
-import { UserProfile } from 'ProjectPlanner/UserProfile'
 
 const App: React.FC = () => {
   return (
@@ -30,7 +29,20 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards">
+            <BoardsSubLayout />
+          </Route>
+
+          <Route path="/" element={<Dashboard />}>
+            <Route path="/foo">
+              <Route path="/bar"></Route>
+            </Route>
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
     </div>
@@ -64,6 +76,24 @@ const Dashboard: React.FC = () => {
     <Centered size={50}>
       <Heading>Welcome to your Dashboard</Heading>
     </Centered>
+  )
+}
+
+function BoardsSubLayout() {
+  return (
+    <div>
+      <aside>aside</aside>
+      <div>
+        <Switch>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+        </Switch>
+      </div>
+    </div>
   )
 }
 
@@ -103,6 +133,8 @@ const BrowseBoards: React.FC = () => {
 
 const Board: React.FC = () => {
   const { boardId } = useParams<{ boardId: string }>()
+
+  // useEffect
 
   return (
     <Centered size={50}>
