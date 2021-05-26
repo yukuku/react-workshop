@@ -9,29 +9,65 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
+type ReducerState = {
+  username: string
+  password: string
+  error: null | string
+  loading: boolean
+  showPassword: boolean
+}
+
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state: ReducerState, action) => {
+      switch (action.type) {
+        case 'LOGIN': {
+          return { ...state, loading: true }
+        }
+        case 'LOGIN_FAILED': {
+          return { ...state, loading: false, error: action.error }
+        }
+        case 'TOGGLE_SHOW_PASSWORD': {
+          return { ...state, showPassword: !state.showPassword }
+        }
+        case 'CHANGE_FIELD': {
+          return { ...state, [action.field]: action.value }
+        }
+        default:
+          return state
+      }
+    },
+    {
+      username: '',
+      password: '',
+      error: null,
+      loading: false,
+      showPassword: false,
+    }
+  )
+
+  const { username, password, error, loading, showPassword } = state
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'LOGIN' })
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
       })
   }
 
-  function handleShowPassword(event: React.ChangeEvent) {
-    // Explain generics for React.ChangeEvent or .checked wont work
-    // console.log(event.target.checked)
-    // Ultimately we don't need the event if we have "source of truth"
-    // state for the checkbox.
+  function handleShowPassword() {
+    dispatch({ type: 'TOGGLE_SHOW_PASSWORD' })
+  }
+
+  function changeField(field, value) {
+    dispatch({ type: 'CHANGE_FIELD', field, value })
   }
 
   return (
@@ -52,6 +88,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(event) => {
+              changeField('username', event.target.value)
+            }}
           />
         </div>
         <div>
@@ -59,11 +99,21 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             required
             className="form-field"
             aria-label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
+            value={password}
+            onChange={(event) => {
+              changeField('password', event.target.value)
+            }}
           />
           <label>
-            <input className="passwordCheckbox" type="checkbox" /> show password
+            <input
+              defaultChecked={showPassword}
+              onChange={handleShowPassword}
+              className="passwordCheckbox"
+              type="checkbox"
+            />{' '}
+            show password
           </label>
         </div>
 

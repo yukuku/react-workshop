@@ -6,7 +6,18 @@ import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
 function App() {
-  return <Minutes />
+  const [minutes, setMinutes] = React.useState(0)
+
+  return (
+    <>
+      <Minutes minutes={minutes} setMinutes={setMinutes} />
+      <Report minutes={minutes} />
+    </>
+  )
+}
+
+function Report({ minutes }) {
+  return <div>Minutes: {minutes}</div>
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))

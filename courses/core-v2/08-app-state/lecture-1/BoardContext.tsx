@@ -41,7 +41,7 @@ export const BoardProvider: React.FC<Props> = ({ boardId, children }) => {
     (state: State, action: Actions) => {
       switch (action.type) {
         case 'LOAD_DATA': {
-          return { ...state, ...action.payload }
+          return { ...state, ...action.payload, current: 'success' }
         }
         case 'UPDATE_TASK': {
           const { tasks } = state

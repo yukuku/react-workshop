@@ -4,18 +4,24 @@ import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 
 type TaskType = {
-  // name: string
-  // content: string
+  name: string
+  content: string
   minutes: number
   completedMinutes: number
 }
 
+const initialState = {
+  name: '',
+  content: '',
+  minutes: 20,
+  completedMinutes: 0,
+}
+
 export const Task = () => {
-  const [task, setTask] = useState<TaskType>({
-    minutes: 20,
-    completedMinutes: 0,
-  })
+  const [task, setTask] = useState<TaskType>(initialState)
   const complete = task.minutes > 0 && task.minutes === task.completedMinutes
+
+  const taskRef = useRef<HTMLInputElement>()
 
   function update(partialTask: Partial<TaskType>) {
     if (!task) return
@@ -25,14 +31,30 @@ export const Task = () => {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     console.log(task)
+    setTask(initialState)
+    taskRef.current.focus()
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex">
         <div className="flex-1 spacing">
-          <input className="form-field" type="text" placeholder="Task Name" required />
-          <textarea className="form-field" placeholder="Task" required />
+          <input
+            onChange={(event) => update({ name: event.target.value })}
+            value={task.name}
+            className="form-field"
+            type="text"
+            placeholder="Task Name"
+            required
+            ref={taskRef}
+          />
+          <textarea
+            value={task.content}
+            onChange={(event) => update({ content: event.target.value })}
+            className="form-field"
+            placeholder="Task"
+            required
+          />
         </div>
         <div className="spacing w-40 ml-4">
           <div className="spacing-small">
