@@ -10,28 +10,47 @@ type Props = {
 }
 
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN':
+          return { ...state, loading: true }
+        case 'LOGIN_FAILED':
+          return { ...state, loading: false, error: action.error }
+        case 'TOGGLE_SHOW_PASSWORD':
+          return { ...state, showPassword: !state.showPassword }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      showPassword: false,
+    }
+  )
+
+  const { error, loading, showPassword } = state
+
+  const usernameRef = useRef<HTMLInputElement>()
+  const passwordRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'LOGIN' })
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(usernameRef.current.value, passwordRef.current.value)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
       })
   }
 
-  function handleShowPassword(event: React.ChangeEvent) {
-    // Explain generics for React.ChangeEvent or .checked wont work
-    // console.log(event.target.checked)
-    // Ultimately we don't need the event if we have "source of truth"
-    // state for the checkbox.
+  function handleShowPassword(event) {
+    dispatch({ type: 'TOGGLE_SHOW_PASSWORD' })
   }
 
   return (
@@ -52,6 +71,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -59,16 +79,23 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             required
             className="form-field"
             aria-label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
+            ref={passwordRef}
           />
           <label>
-            <input className="passwordCheckbox" type="checkbox" /> show password
+            <input
+              defaultChecked={showPassword}
+              onChange={handleShowPassword}
+              className="passwordCheckbox"
+              type="checkbox"
+            />{' '}
+            <span>show password</span>
           </label>
         </div>
 
         <footer>
-          <button type="submit" className="button">
+          <button type="submit" className="button" disabled={loading}>
             {!loading ? (
               <>
                 <FaSignInAlt /> <span>Login</span>
