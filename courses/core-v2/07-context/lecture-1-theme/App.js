@@ -1,40 +1,69 @@
-import React, { useContext, useRef, useEffect } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react'
 import { Heading } from 'ProjectPlanner/Heading'
 import { getTheme } from './utils'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-/**
- * This is JS and not TS on purpose to help explain context
- * without the extra noise TS brings to it.
- */
+//////////
+
+const Context = React.createContext()
+
+export const ThemeProvider = ({ children }) => {
+  const [colors, setColors] = React.useState(() => getTheme())
+  const [count, setCount] = useState(0)
+
+  const click = React.useCallback(() => {
+    setCount(count + 1)
+  }, [])
+
+  const context = React.useMemo(() => {
+    return {
+      colors,
+      setColors,
+      click,
+      count,
+    }
+  }, [click, colors, count])
+
+  return <Context.Provider value={context}>{children}</Context.Provider>
+}
+
+export const useTheme = () => {
+  return useContext(Context)
+}
+
+/////////
 
 export const App = () => {
-  const colors = getTheme()
-  console.log(colors)
-
-  return <PrimaryLayout colors={colors} />
+  return (
+    <ThemeProvider>
+      <PrimaryLayout />
+    </ThemeProvider>
+  )
 }
 
-const PrimaryLayout = ({ colors }) => {
-  return <Board colors={colors} />
+const PrimaryLayout = React.memo(() => {
+  return <Board />
+})
+
+const Board = () => {
+  return <TaskCard />
 }
 
-const Board = ({ colors }) => {
-  return <TaskCard colors={colors} />
-}
-
-const TaskCard = ({ colors }) => {
+const TaskCard = () => {
   const taskRef = useRef()
 
+  const { colors, click, count } = useTheme()
+
   useEffect(() => {
-    taskRef.current.style.setProperty(`--taskColor`, colors.blue)
+    taskRef.current.style.setProperty(`--taskColor`, colors.red)
   }, [colors])
 
   return (
     <div className="task-card spacing" ref={taskRef}>
       <Heading>Task Card</Heading>
       <span>{colors?.blue}</span>
+      <button onClick={click}>Click {count}</button>
     </div>
   )
 }

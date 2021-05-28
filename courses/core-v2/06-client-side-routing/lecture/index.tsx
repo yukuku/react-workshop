@@ -14,8 +14,7 @@ import 'ProjectPlanner/BrowseBoardItem.scss'
 import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
-// Lazy load this component and demonstrate suspense
-import { UserProfile } from 'ProjectPlanner/UserProfile'
+const UserProfile = React.lazy(() => import('./UserProfile'))
 
 const App: React.FC = () => {
   return (
@@ -30,7 +29,22 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <React.Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route exact path="/boards">
+              <BrowseBoards />
+            </Route>
+            <Route exact path="/boards/:boardId">
+              <Board />
+            </Route>
+            <Route path="/users/:userId">
+              <UserProfile />
+            </Route>
+          </Switch>
+        </React.Suspense>
       </main>
       <PrimaryFooter />
     </div>
@@ -101,8 +115,10 @@ const BrowseBoards: React.FC = () => {
   )
 }
 
+type Params = { boardId: string }
+
 const Board: React.FC = () => {
-  const { boardId } = useParams<{ boardId: string }>()
+  const { boardId } = useParams<Params>()
 
   return (
     <Centered size={50}>
