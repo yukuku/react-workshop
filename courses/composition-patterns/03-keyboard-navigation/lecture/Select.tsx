@@ -4,9 +4,15 @@
 import * as React from 'react'
 
 const SelectContext = React.createContext<SelectContextValue>({} as any)
-const OptionsContext = React.createContext<OptionsContextValue>({} as any)
+const OptionsRegistrationContext = React.createContext<OptionsRegistrationContextValue>({} as any)
 
 interface OptionsContextValue {
+  options: string[]
+}
+
+const OptionsContext = React.createContext<OptionsContextValue>(null!)
+
+interface OptionsRegistrationContextValue {
   addOption(value: string): void
   removeOption(value: string): void
 }
@@ -63,31 +69,68 @@ function SelectBase({
 
   return (
     <div className={composeClassNames(className, 'select')} {...domProps}>
-      <OptionsContext.Provider value={{ addOption, removeOption }}>
-        <SelectContext.Provider
-          value={{
-            listRef,
-            buttonRef,
-            isOpen,
-            setIsOpen,
-            value,
-            onValueChange: setValue,
-          }}
-        >
-          {children}
-        </SelectContext.Provider>
-      </OptionsContext.Provider>
+      <OptionsRegistrationContext.Provider value={{ addOption, removeOption }}>
+        <OptionsContext.Provider value={{ options }}>
+          <SelectContext.Provider
+            value={{
+              listRef,
+              buttonRef,
+              isOpen,
+              setIsOpen,
+              value,
+              onValueChange: setValue,
+            }}
+          >
+            {children}
+          </SelectContext.Provider>
+        </OptionsContext.Provider>
+      </OptionsRegistrationContext.Provider>
     </div>
   )
 }
 
 const SelectButton = React.forwardRef<HTMLButtonElement, SelectButtonBaseProps>(
-  ({ className, onClick, children, ...domProps }, ref) => {
-    let { buttonRef, listRef, setIsOpen, value } = React.useContext(SelectContext)
+  ({ className, onClick, onKeyDown, children, ...domProps }, ref) => {
+    let { buttonRef, listRef, onValueChange, setIsOpen, value } = React.useContext(SelectContext)
+    let { options } = React.useContext(OptionsContext)
     return (
       <button
         ref={useComposedRefs(buttonRef, ref)}
         onClick={composeEventHandlers(onClick, () => setIsOpen(true))}
+        onKeyDown={composeEventHandlers(onKeyDown, (event) => {
+          switch (event.key) {
+            case 'ArrowDown': {
+              let nextOption = findNextOption(options, value)
+              if (nextOption) {
+                onValueChange(nextOption)
+              }
+              setIsOpen(true)
+              break
+            }
+
+            case 'ArrowUp': {
+              let previousOption = findPreviousOption(options, value)
+              if (previousOption) {
+                onValueChange(previousOption)
+              }
+              setIsOpen(true)
+              break
+            }
+            case 'Enter': {
+              setIsOpen(true)
+              break
+            }
+            default:
+              if (event.key.length === 1) {
+                let optionToSelect = findOptionFromCharKey(options, value, event.key)
+                if (optionToSelect) {
+                  onValueChange(optionToSelect)
+                }
+                setIsOpen(true)
+              }
+              return
+          }
+        })}
         className={composeClassNames(className, 'select-button')}
         aria-haspopup="listbox"
         id="select-button"
@@ -101,7 +144,10 @@ const SelectButton = React.forwardRef<HTMLButtonElement, SelectButtonBaseProps>(
 
 const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
   ({ children, className, onBlur, onKeyDown, ...domProps }, ref) => {
-    let { isOpen, listRef, setIsOpen, value } = React.useContext(SelectContext)
+    let { isOpen, listRef, setIsOpen, onValueChange, value } = React.useContext(SelectContext)
+
+    let { options } = React.useContext(OptionsContext)
+
     return (
       <div
         id="select-list"
@@ -117,10 +163,51 @@ const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
         })}
         onKeyDown={composeEventHandlers(onKeyDown, (event) => {
           switch (event.key) {
-            case 'Escape':
+            case 'Escape': {
               setIsOpen(false)
               break
+            }
+            case 'ArrowUp': {
+              // select the PREVIOUS item
+              let previousOption = findPreviousOption(options, value)
+              if (previousOption) {
+                onValueChange(previousOption)
+              }
+              break
+            }
+            case 'ArrowDown': {
+              // select the PREVIOUS item
+              let nextOption = findNextOption(options, value)
+              if (nextOption) {
+                onValueChange(nextOption)
+              }
+              break
+            }
+            case 'Home': {
+              let firstOption = options[0]
+              if (firstOption) {
+                onValueChange(firstOption)
+              }
+              break
+            }
+            case 'End': {
+              let lastOption = options[options.length - 1]
+              if (lastOption) {
+                onValueChange(lastOption)
+              }
+              break
+            }
+            case 'Enter': {
+              setIsOpen(false)
+              break
+            }
             default:
+              if (event.key.length === 1) {
+                let optionToSelect = findOptionFromCharKey(options, value, event.key)
+                if (optionToSelect) {
+                  onValueChange(optionToSelect)
+                }
+              }
               break
           }
         })}
@@ -135,7 +222,7 @@ const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
 const SelectOptionBase = React.forwardRef<HTMLDivElement, SelectOptionBaseProps>(
   ({ value, className, onClick, children, ...domProps }, ref) => {
     let { onValueChange, setIsOpen, value: selectedValue } = React.useContext(SelectContext)
-    let { addOption, removeOption } = React.useContext(OptionsContext)
+    let { addOption, removeOption } = React.useContext(OptionsRegistrationContext)
 
     React.useLayoutEffect(() => {
       addOption(value)

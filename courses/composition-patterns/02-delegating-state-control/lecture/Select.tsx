@@ -6,15 +6,22 @@ import * as React from 'react'
 const SelectContext = React.createContext<SelectContextValue>({} as any)
 
 function SelectBase({
-  selectedOption,
-  setSelectedOption,
+  value: valueProp,
+  onChange,
   children,
   className,
+  defaultValue,
   ...domProps
 }: SelectBaseProps) {
   let [isOpen, setIsOpen] = React.useState(false)
   let listRef = React.useRef<HTMLDivElement>()
   let buttonRef = React.useRef<HTMLButtonElement>()
+
+  let [selectedOption, setSelectedOption] = useControlledState<string>({
+    defaultValue,
+    controlledValue: valueProp,
+    onChange,
+  })
 
   // Re-focus the select button when the menu closes, but since it's initially
   // closed we need to skip the initial render
@@ -126,9 +133,9 @@ const SelectOptionBase = React.forwardRef<HTMLDivElement, SelectOptionBaseProps>
   }
 )
 
-export function Select({ selectedOption, setSelectedOption, children }: SelectProps) {
+export function Select({ children, ...props }: SelectProps) {
   return (
-    <SelectBase selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
+    <SelectBase {...props}>
       <SelectButton />
       <SelectList>{children}</SelectList>
     </SelectBase>
@@ -140,7 +147,7 @@ export function SelectOption({ value }: SelectOptionProps) {
 }
 
 function slugify(string: string): string {
-  return string.trim().toLowerCase().replace(/\s+/g, '-')
+  return string?.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
 function composeClassNames(...classNames: string[]): string {
@@ -191,8 +198,9 @@ interface SelectContextValue {
 }
 
 interface SelectOwnProps {
-  selectedOption: string
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>
+  defaultValue?: string
+  value?: string
+  onChange?(nextValue: string): void
   children: React.ReactNode
 }
 
@@ -213,3 +221,30 @@ type SelectOptionBaseProps = Omit<React.ComponentPropsWithRef<'div'>, keyof Sele
   SelectOptionOwnProps
 
 type SelectOptionProps = SelectOptionOwnProps
+
+interface ControlledStateOptions<T> {
+  defaultValue: null | undefined | T
+  controlledValue: null | undefined | T
+  onChange: null | undefined | ((state: T) => any)
+}
+
+function useControlledState<T>({
+  defaultValue,
+  controlledValue,
+  onChange,
+}: ControlledStateOptions<T>): [T, (val: T) => void] {
+  let [internalState, setInternalState] = React.useState(defaultValue)
+
+  let isControlled = React.useRef(controlledValue !== undefined).current
+  let state = isControlled ? controlledValue! : internalState
+
+  let setState = React.useCallback(
+    (nextValue: T) => {
+      setInternalState(nextValue)
+      onChange?.(nextValue)
+    },
+    [onChange]
+  )
+
+  return [state, setState]
+}

@@ -21,6 +21,7 @@ function App() {
           </h3>
           <AccordionPanel>
             <p>To seek the Holy Grail.</p>
+            <input type="text" placeholder="test" />
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem value="color">

@@ -1,13 +1,23 @@
 import * as React from 'react'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
+let external = 0
+
 const DisclosureContext = React.createContext<DisclosureContextValue>({} as any)
 
 export const Disclosure = React.forwardRef<HTMLDivElement, DisclosureProps>(
-  ({ children, defaultOpen = false, onChange, className, ...domProps }, forwardedRef) => {
+  (
+    { children, open: openProp, defaultOpen = false, onChange, className, ...domProps },
+    forwardedRef
+  ) => {
     let id = makeId('disclosure', useId())
     let panelId = makeId('panel', id)
-    let [open, setOpen] = React.useState(defaultOpen)
+
+    let [open, setOpen] = useControlledState({
+      defaultValue: defaultOpen,
+      controlledValue: openProp,
+      onChange,
+    })
 
     function toggle() {
       onChange && onChange()
@@ -131,7 +141,7 @@ interface DisclosureOwnProps {
   children: React.ReactNode
   open?: boolean
   defaultOpen?: boolean
-  onChange?(): void
+  onChange?: any
 }
 
 type DisclosureProps = Omit<React.ComponentPropsWithRef<'div'>, keyof DisclosureOwnProps> &
@@ -156,3 +166,37 @@ type DisclosurePanelProps = Omit<
   keyof DisclosurePanelOwnProps
 > &
   DisclosurePanelOwnProps
+
+interface ControlledStateOptions<T> {
+  defaultValue: null | undefined | T
+  controlledValue: null | undefined | T
+  onChange: null | undefined | ((state: T) => any)
+}
+
+function useControlledState<T>({
+  defaultValue,
+  controlledValue,
+  onChange,
+}: ControlledStateOptions<T>): [T, (val: T | ((prevValue: T) => T)) => void] {
+  let [internalState, setInternalState] = React.useState(defaultValue)
+
+  let isControlled = React.useRef(controlledValue !== undefined).current
+
+  let state = isControlled ? controlledValue! : internalState
+
+  let stateRef = React.useRef(state)
+  React.useEffect(() => {
+    stateRef.current = state
+  }, [state])
+
+  let setState = React.useCallback(
+    (nextValue: T | ((prevValue: T) => T)) => {
+      setInternalState(nextValue)
+      // @ts-ignore
+      onChange?.(typeof nextValue === 'function' ? nextValue(state) : nextValue)
+    },
+    [onChange, state]
+  )
+
+  return [state, setState]
+}

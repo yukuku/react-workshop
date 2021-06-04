@@ -16,6 +16,10 @@ html {
   border-radius: 6px;
 }
 
+.select-button:focus {
+    outline: 2px solid blue;
+}
+
 .select-list {
   position: absolute;
   border: 1px solid #888;

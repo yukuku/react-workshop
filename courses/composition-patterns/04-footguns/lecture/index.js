@@ -15,8 +15,15 @@ ReactDOM.render(<App />, document.getElementById('root'))
 function Count() {
   const [count, setCount] = React.useState(0)
 
+  let countRef = useStableRef(count)
+
   React.useEffect(() => {
-    // alert with the current count on an interval
+    let id = window.setInterval(() => {
+      console.log(`Current count is ${countRef.current}`)
+    }, 2000)
+    return () => {
+      window.clearInterval(id)
+    }
   }, [])
 
   return (
@@ -27,4 +34,12 @@ function Count() {
       </button>
     </div>
   )
+}
+
+function useStableRef(value) {
+  let valueRef = React.useRef(value)
+  React.useEffect(() => {
+    valueRef.current = value
+  }, [value])
+  return valueRef
 }

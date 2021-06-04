@@ -176,7 +176,7 @@ export function SelectOption({ value }: SelectOptionProps) {
 }
 
 function slugify(string: string): string {
-  return string.trim().toLowerCase().replace(/\s+/g, '-')
+  return string?.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
 function composeClassNames(...classNames: string[]): string {

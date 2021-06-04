@@ -97,9 +97,11 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
 
 export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
   ({ children, value, className, onChange, ...domProps }, forwardedRef) => {
-    let { accordionId, value: accordionValue, setValue: setAccordionValue } = React.useContext(
-      AccordionContext
-    )
+    let {
+      accordionId,
+      value: accordionValue,
+      setValue: setAccordionValue,
+    } = React.useContext(AccordionContext)
     let { addItem, removeItem } = React.useContext(ItemRegistrationContext)
     let buttonId = makeId(accordionId, 'button', useId())
     let buttonRef = React.useRef<HTMLButtonElement>()
@@ -137,9 +139,12 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps
 export const AccordionButton = React.forwardRef<HTMLButtonElement, AccordionButtonProps>(
   ({ children, className, onBlur, onFocus, onKeyDown, ...domProps }, forwardedRef) => {
     let { buttonId, buttonRef, value } = React.useContext(AccordionItemContext)
-    let { setButtonFocused, accordionId, setValue: setAccordionValue } = React.useContext(
-      AccordionContext
-    )
+    let {
+      setButtonFocused,
+      accordionId,
+      setValue: setAccordionValue,
+      value: selectedValue,
+    } = React.useContext(AccordionContext)
     let { items } = React.useContext(ItemsContext)
 
     return (
@@ -159,6 +164,34 @@ export const AccordionButton = React.forwardRef<HTMLButtonElement, AccordionButt
         onKeyDown={composeEventHandlers(onKeyDown, (event) => {
           switch (event.key) {
             // https://www.w3.org/TR/wai-aria-practices-1.2/examples/accordion/accordion.html#kbd_label
+            case 'ArrowDown': {
+              event.preventDefault()
+              // When focus is on an accordion header, moves focus to the next accordion header.
+              // When focus is on last accordion header, moves focus to first accordion header.
+              let nextButton = findNextItem(items, selectedValue)
+              nextButton.buttonElement.focus()
+              break
+            }
+            case 'ArrowUp': {
+              event.preventDefault()
+              // When focus is on an accordion header, moves focus to the previous accordion header.
+              // When focus is on first accordion header, moves focus to last accordion header.
+              let prevButton = findPreviousItem(items, selectedValue)
+              prevButton.buttonElement.focus()
+              break
+            }
+            case 'Home': {
+              let firstButton = items[0].buttonElement
+              firstButton.focus()
+              event.preventDefault()
+              break
+            }
+            case 'End': {
+              let lastButton = items[items.length - 1].buttonElement
+              lastButton.focus()
+              event.preventDefault()
+              break
+            }
 
             default:
               break
