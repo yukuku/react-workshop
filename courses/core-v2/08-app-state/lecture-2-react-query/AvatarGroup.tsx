@@ -13,20 +13,20 @@ export const AvatarGroup: React.FC<Props> = ({ userIds }) => {
     The "vanilla" React way with useEffect
   *****************************************/
 
-  const [users, setUsers] = useState<User[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  // const [users, setUsers] = useState<User[]>([])
+  // const [isLoading, setIsLoading] = useState(true)
 
-  React.useEffect(() => {
-    let isCurrent = true
-    api.users.getUsersByIds(userIds).then((users) => {
-      if (!isCurrent) return
-      setIsLoading(false)
-      setUsers(users)
-    })
-    return () => {
-      isCurrent = false
-    }
-  }, [userIds])
+  // React.useEffect(() => {
+  //   let isCurrent = true
+  //   api.users.getUsersByIds(userIds).then((users) => {
+  //     if (!isCurrent) return
+  //     setIsLoading(false)
+  //     setUsers(users)
+  //   })
+  //   return () => {
+  //     isCurrent = false
+  //   }
+  // }, [userIds])
 
   /****************************************
     useQuery from the `react-query` lib
@@ -41,19 +41,19 @@ export const AvatarGroup: React.FC<Props> = ({ userIds }) => {
     useQueries
   *****************************************/
 
-  // const queries = useQueries(
-  //   userIds.map((id) => {
-  //     return {
-  //       queryKey: ['user', id],
-  //       queryFn: () => api.users.getUser(id),
-  //       staleTime: 1000 * 15,
-  //     }
-  //   })
-  // )
+  const queries = useQueries(
+    userIds.map((id) => {
+      return {
+        queryKey: ['user', id],
+        queryFn: () => api.users.getUser(id),
+        staleTime: 1000 * 15,
+      }
+    })
+  )
 
-  // const users = queries.filter((q) => q.isLoading !== true).map((q) => q.data) as User[]
-  // console.log(users)
-  // const isLoading = queries.reduce((loading, next) => (next.isLoading ? true : loading), false)
+  const users = queries.filter((q) => q.isLoading !== true).map((q) => q.data) as User[]
+  console.log(users)
+  const isLoading = queries.reduce((loading, next) => (next.isLoading ? true : loading), false)
 
   return (
     <div className="avatar-group">

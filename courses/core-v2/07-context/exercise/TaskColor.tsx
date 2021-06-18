@@ -7,7 +7,7 @@ type Props = {
 }
 
 export const TaskColor: React.FC<Props> = ({ task, children }) => {
-  const divRef = React.useRef<HTMLDivElement>(null!)
+  const divRef = React.useRef<HTMLDivElement>()
   const colors = useTheme()
 
   useEffect(() => {

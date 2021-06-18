@@ -1,5 +1,4 @@
-import React, { useContext, useReducer, useEffect } from 'react'
-import { api } from 'ProjectPlanner/api'
+import React, { useContext, useReducer } from 'react'
 import { User } from 'ProjectPlanner/types'
 
 type AuthContextActions = { type: 'LOGIN'; user: User } | { type: 'LOGOUT' }
@@ -11,7 +10,7 @@ type State = {
 
 type Context = State & {
   dispatch: React.Dispatch<AuthContextActions>
-  // login(user: User): void
+  login(user: User): void
   // logout(): void
 }
 
@@ -40,24 +39,14 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   )
 
-  useEffect(() => {
-    let isCurrent = true
-    api.auth.getAuthenticatedUser().then((user) => {
-      if (user && isCurrent) {
-        dispatch({ type: 'LOGIN', user })
-      } else {
-        dispatch({ type: 'LOGOUT' })
-      }
-    })
-    return () => {
-      isCurrent = false
-    }
+  const login = React.useCallback((user) => {
+    dispatch({ type: 'LOGIN', user })
   }, [])
 
   const context: Context = {
     ...state,
     dispatch,
-    // login,
+    login,
     // logout,
   }
 
