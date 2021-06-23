@@ -4,7 +4,7 @@ import { BsKanban } from 'react-icons/bs'
 export const BrowseBoards = () => {
   const boards = [
     { id: 1, name: 'Board One' },
-    { id: 2, name: 'Board Two' },
+    { id: 3, name: 'Board Three' },
   ]
 
   function removeBoard(boardId) {
@@ -15,15 +15,19 @@ export const BrowseBoards = () => {
     <div className="spacing">
       <h1 className="heading size-1">Browse Boards</h1>
       <div className="spacing">
-        {/* This JSX needs to be created once for each board in the array */}
-        <div className="browse-board-item flex items-center">
-          <BsKanban className="board-icon" color="var(--purple)" />
-          <div className="spacing-small flex-1">
-            <h2 className="heading size-2">Board Name</h2>
-          </div>
-          <button className="button button-outline">Remove</button>
-        </div>
-        {/* end */}
+        {boards.map((board) => {
+          return (
+            <div key={board.id} className="browse-board-item flex items-center">
+              <BsKanban className="board-icon" color="var(--purple)" />
+              <div className="spacing-small flex-1">
+                <h2 className="heading size-2">{board.name}</h2>
+              </div>
+              <button onClick={() => removeBoard(board.id)} className="button button-outline">
+                Remove
+              </button>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

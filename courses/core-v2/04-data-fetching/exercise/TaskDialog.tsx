@@ -7,8 +7,7 @@ import { AvatarGroup } from 'ProjectPlanner/AvatarGroup'
 import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
-import { api } from 'ProjectPlanner/api'
-// import { useTask } from './useTask'
+import { useTask } from './useTask'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
@@ -24,19 +23,7 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  useEffect(() => {
-    let isCurrent = true
-    api.boards.getTask(taskId).then((task) => {
-      if (isCurrent) {
-        setTask(task)
-      }
-    })
-    return () => {
-      isCurrent = false
-    }
-  }, [taskId])
+  const [task, setTask] = useTask(taskId)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

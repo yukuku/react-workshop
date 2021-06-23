@@ -4,28 +4,51 @@ import { getTheme } from './utils'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-/**
- * This is JS and not TS on purpose to help explain context
- * without the extra noise TS brings to it.
- */
+////////
+const ThemeContext = React.createContext()
+
+function ThemeProvider({ children }) {
+  const [colors, setColors] = React.useState(getTheme())
+
+  const context = {
+    colors,
+    setColors,
+  }
+
+  return <ThemeContext.Provider value={context}>{children}</ThemeContext.Provider>
+}
+
+function useTheme() {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw Error()
+  }
+  return context
+}
+
+///////
 
 export const App = () => {
-  const colors = getTheme()
-  console.log(colors)
-
-  return <PrimaryLayout colors={colors} />
+  return (
+    <ThemeProvider>
+      <PrimaryLayout />
+    </ThemeProvider>
+  )
 }
 
-const PrimaryLayout = ({ colors }) => {
-  return <Board colors={colors} />
+const PrimaryLayout = React.memo(() => {
+  console.log('render primary layout')
+  return <Board />
+})
+
+const Board = () => {
+  return <TaskCard />
 }
 
-const Board = ({ colors }) => {
-  return <TaskCard colors={colors} />
-}
-
-const TaskCard = ({ colors }) => {
+const TaskCard = () => {
   const taskRef = useRef()
+
+  const { colors, setColors } = useTheme()
 
   useEffect(() => {
     taskRef.current.style.setProperty(`--taskColor`, colors.blue)
@@ -34,6 +57,7 @@ const TaskCard = ({ colors }) => {
   return (
     <div className="task-card spacing" ref={taskRef}>
       <Heading>Task Card</Heading>
+      <button onClick={() => setColors({ ...colors, blue: 'blue' })}>Dark Blue</button>
       <span>{colors?.blue}</span>
     </div>
   )
