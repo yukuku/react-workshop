@@ -8,21 +8,20 @@ import { useQuery } from 'react-query'
 
 export const UserProfile: React.FC = () => {
   const userId = parseInt(useParams<{ userId: string }>().userId)
-  const user = useUser(userId)
 
   // Instead of useUser, use react-query to cache the `['user', userId]` key to align
   // with `AvatarGroup`:
 
-  // const query = useQuery(['user', userId], () => api.users.getUser(userId), {
-  //   staleTime: 1000 * 15, // good for demonstrating
-  // })
-  // const { data: user } = query
+  const query = useQuery(['user', userId], () => api.users.getUser(userId), {
+    staleTime: 1000 * 15, // good for demonstrating
+  })
+  const { data: user } = query
 
   return (
     <Centered size={50}>
       <div className="flex">
         <aside className="mr-4 w-40 spacing-large">
-          <img src={user?.avatarUrl!} alt={`Picture of ${user?.name}`} style={{ width: '100%' }} />
+          <img src={user?.avatarUrl!} alt={`${user?.name}`} style={{ width: '100%' }} />
           <div className="spacing-small">
             <Fake />
             <Fake />

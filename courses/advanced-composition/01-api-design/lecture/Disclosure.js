@@ -1,28 +1,60 @@
 import * as React from 'react'
-import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
 // Import or write our own:
-// import { useId } from '../../useId'
-// function useId() {}
+import { useId } from '../../useId'
 
-export function Disclosure({ children, label, defaultIsOpen = false }) {
+export const Disclosure = ({ children, onChange, defaultIsOpen = false }) => {
   const [isOpen, setIsOpen] = React.useState(defaultIsOpen)
+
+  const id = useId()
+  const panelId = `disclosure-panel-${id}`
 
   function onSelect() {
     setIsOpen(!isOpen)
+    typeof onChange === 'function' && onChange(!isOpen)
   }
 
-  // Notice how awful it is to compose class names. We'll fix it with data-attributes
+  children = React.Children.map(children, (child) => {
+    return React.cloneElement(child, {
+      isOpen,
+      onSelect,
+      panelId,
+    })
+  })
 
-  return (
-    <div className="disclosure">
-      <button onClick={onSelect} className={`disclosure-button ${isOpen ? 'open' : 'collapsed'}`}>
-        {isOpen ? <FaAngleDown /> : <FaAngleRight />}
-        <span>{label}</span>
-      </button>
-      <div className={`disclosure-panel ${isOpen ? 'open' : 'collapsed'}`} hidden={!isOpen}>
+  return children
+}
+
+export const DisclosureButton = React.forwardRef(
+  ({ children, onSelect, isOpen, panelId, ...props }, forwardedRef) => {
+    return (
+      <button
+        {...props}
+        onClick={onSelect}
+        aria-controls={panelId}
+        data-disclosure-button=""
+        aria-expanded={isOpen}
+        data-state={isOpen ? 'open' : 'collapsed'}
+        ref={forwardedRef}
+      >
         {children}
-      </div>
+      </button>
+    )
+  }
+)
+
+DisclosureButton.displayName = 'DisclosureButton'
+
+export const DisclosurePanel = ({ children, panelId, isOpen, ...props }) => {
+  return (
+    <div
+      {...props}
+      id={panelId}
+      data-disclosure-panel=""
+      data-state={isOpen ? 'open' : 'collapsed'}
+      hidden={!isOpen}
+    >
+      {children}
     </div>
   )
 }
