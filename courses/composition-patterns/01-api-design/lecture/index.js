@@ -1,13 +1,31 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { Select } from './Select'
+import { Select, Option } from './Select'
 // import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 import './styles.scss'
 
 function App() {
+  let ref = React.useRef()
+
   return (
     <div>
-      <Select></Select>
+      <p>What is your favorite fruit?</p>
+
+      <Select defaultValue="kiwi" ref={ref}>
+
+          <Option
+            className="apple"
+            value="apple"
+            onClick={(event) => {
+              window.alert('Apples are not allowed!')
+            }}
+          >
+            Apple
+          </Option>
+          <Option value="kiwi">Kiwi</Option>
+          <Option value="banana">Banana</Option>
+        </SelectList>
+      </Select>
     </div>
   )
 }

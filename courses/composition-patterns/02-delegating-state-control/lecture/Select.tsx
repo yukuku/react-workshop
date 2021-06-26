@@ -6,12 +6,46 @@ import * as React from 'react'
 const SelectContext = React.createContext<SelectContextValue>({} as any)
 
 function SelectBase({
-  selectedOption,
-  setSelectedOption,
+  defaultValue,
+  value: externalValue,
+  onChange,
   children,
   className,
   ...domProps
 }: SelectBaseProps) {
+  let [internalValue, setInternalValue] = React.useState(defaultValue)
+
+  let isControlled = React.useRef(externalValue != null).current
+  let value = isControlled ? externalValue : internalValue
+
+  React.useEffect(() => {
+    if (isControlled && externalValue == null) {
+      console.warn("Don't do that!")
+    }
+  }, [isControlled, value, externalValue])
+
+  let [options, setOptions] = React.useState<{ value: string; label: React.ReactNode }[]>([])
+
+  const registerOption = React.useCallback(function registerOption({ value, label }) {
+    setOptions((options) => [...options, { value, label }])
+  }, [])
+
+  const deregisterOption = React.useCallback(function deregisterOption(value) {
+    setOptions((options) => options.filter((option) => option.value !== value))
+  }, [])
+
+  React.useEffect(() => {
+    if (!value && options.length > 0) {
+      let value = options[0].value
+      setInternalValue(value)
+    }
+  }, [value, options])
+
+  function setSelectedOption(newOption: string) {
+    setInternalValue(newOption)
+    onChange?.(newOption)
+  }
+
   let [isOpen, setIsOpen] = React.useState(false)
   let listRef = React.useRef<HTMLDivElement>()
   let buttonRef = React.useRef<HTMLButtonElement>()
@@ -37,8 +71,10 @@ function SelectBase({
           buttonRef,
           isOpen,
           setIsOpen,
-          selectedOption,
-          setSelectedOption,
+          selectedOption: value,
+          setSelectedOption: setSelectedOption,
+          registerOption,
+          deregisterOption,
         }}
       >
         {children}
@@ -104,8 +140,23 @@ const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
 )
 
 const SelectOptionBase = React.forwardRef<HTMLDivElement, SelectOptionBaseProps>(
-  ({ value, className, onClick, children, ...domProps }, ref) => {
-    let { setSelectedOption, setIsOpen, selectedOption } = React.useContext(SelectContext)
+  ({ value, className, onClick, children = value, ...domProps }, ref) => {
+    let { setSelectedOption, setIsOpen, selectedOption, registerOption, deregisterOption } =
+      React.useContext(SelectContext)
+
+    React.useEffect(() => {
+      registerOption({ value, label: children })
+      return () => {
+        deregisterOption(value)
+      }
+    }, [
+      value,
+      children,
+      // These should be stable!
+      registerOption,
+      deregisterOption,
+    ])
+
     return (
       <div
         ref={ref}
@@ -126,9 +177,9 @@ const SelectOptionBase = React.forwardRef<HTMLDivElement, SelectOptionBaseProps>
   }
 )
 
-export function Select({ selectedOption, setSelectedOption, children }: SelectProps) {
+export function Select({ defaultValue, value, onChange, children }: SelectProps) {
   return (
-    <SelectBase selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
+    <SelectBase value={value} onChange={onChange} defaultValue={defaultValue}>
       <SelectButton />
       <SelectList>{children}</SelectList>
     </SelectBase>
@@ -140,7 +191,7 @@ export function SelectOption({ value }: SelectOptionProps) {
 }
 
 function slugify(string: string): string {
-  return string.trim().toLowerCase().replace(/\s+/g, '-')
+  return string?.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
 function composeClassNames(...classNames: string[]): string {
@@ -188,11 +239,14 @@ interface SelectContextValue {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   selectedOption: string
   setSelectedOption: React.Dispatch<React.SetStateAction<string>>
+  registerOption: (option: { label: React.ReactNode; value: any }) => void
+  deregisterOption: (value: any) => void
 }
 
 interface SelectOwnProps {
-  selectedOption: string
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>
+  defaultValue?: string
+  value?: string
+  onChange?: (newValue: string) => void
   children: React.ReactNode
 }
 

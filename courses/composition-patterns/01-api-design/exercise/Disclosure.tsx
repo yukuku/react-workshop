@@ -1,13 +1,75 @@
 import * as React from 'react'
-import { FaAngleRight } from 'react-icons/fa'
+import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
-export function Disclosure() {
-  return null
-}
+const DisclosureContext = React.createContext<DisclosureContextValue>({
+  open: false,
+  toggle() {},
+})
 
-interface DisclosureProps {
-  // What will your props look like? 👀
-}
+interface DisclosureProps extends React.ComponentPropsWithRef<'div'> {}
+
+export const Disclosure = React.forwardRef<HTMLDivElement, DisclosureProps>(function Disclosure(
+  { className, children, ...domProps },
+  forwardedRef
+) {
+  let [open, setOpen] = React.useState(false)
+  function toggle() {
+    setOpen((open) => !open)
+  }
+
+  return (
+    <div className={composeClassNames(className, 'disclosure')} ref={forwardedRef} {...domProps}>
+      <DisclosureContext.Provider value={{ open, toggle }}>{children}</DisclosureContext.Provider>
+    </div>
+  )
+})
+
+interface DisclosureButtonProps extends React.ComponentPropsWithRef<'button'> {}
+
+export const DisclosureButton = React.forwardRef<HTMLButtonElement, DisclosureButtonProps>(
+  ({ className, onClick, children, ...props }, forwardedRef) => {
+    let { open, toggle } = React.useContext(DisclosureContext)
+
+    return (
+      <button
+        {...props}
+        aria-controls="disclosure-panel"
+        aria-expanded={open}
+        data-state={open ? 'open' : 'collapsed'}
+        className={composeClassNames(className, 'disclosure__button')}
+        onClick={composeEventHandlers(onClick, toggle)}
+        ref={forwardedRef}
+      >
+        <span className="disclosure__button-icon" aria-hidden>
+          {open ? <FaAngleDown /> : <FaAngleRight />}
+        </span>
+        {children}
+      </button>
+    )
+  }
+)
+
+interface DisclosurePanelProps extends React.ComponentPropsWithRef<'div'> {}
+
+export const DisclosurePanel = React.forwardRef<HTMLDivElement, DisclosurePanelProps>(
+  ({ className, children, ...props }, forwardedRef) => {
+    let { open } = React.useContext(DisclosureContext)
+
+    return (
+      <div
+        {...props}
+        hidden={!open}
+        className={composeClassNames(className, 'disclosure__panel')}
+        data-state={open ? 'open' : 'collapsed'}
+        id="disclosure-panel"
+        tabIndex={-1}
+        ref={forwardedRef}
+      >
+        {children}
+      </div>
+    )
+  }
+)
 
 // Some handy utils that might be useful if you want them!
 function slugify(string: string): string {
@@ -66,4 +128,9 @@ function useId() {
 let instance = -1
 function uniqueId() {
   return ++instance
+}
+
+interface DisclosureContextValue {
+  open: boolean
+  toggle(): void
 }

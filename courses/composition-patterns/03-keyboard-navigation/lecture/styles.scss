@@ -37,3 +37,7 @@ html {
   background: hsl(225, 73%, 57%);
   color: white;
 }
+
+*:focus {
+    outline: 2px solid crimson !important;
+}

@@ -7,6 +7,7 @@ const SelectContext = React.createContext<SelectContextValue>({} as any)
 const OptionsContext = React.createContext<OptionsContextValue>({} as any)
 
 interface OptionsContextValue {
+  options: string[]
   addOption(value: string): void
   removeOption(value: string): void
 }
@@ -61,9 +62,15 @@ function SelectBase({
     rendered.current = true
   }, [isOpen])
 
+  let context = {
+    options,
+    addOption,
+    removeOption,
+  }
+
   return (
     <div className={composeClassNames(className, 'select')} {...domProps}>
-      <OptionsContext.Provider value={{ addOption, removeOption }}>
+      <OptionsContext.Provider value={context}>
         <SelectContext.Provider
           value={{
             listRef,
@@ -82,12 +89,38 @@ function SelectBase({
 }
 
 const SelectButton = React.forwardRef<HTMLButtonElement, SelectButtonBaseProps>(
-  ({ className, onClick, children, ...domProps }, ref) => {
-    let { buttonRef, listRef, setIsOpen, value } = React.useContext(SelectContext)
+  ({ className, onClick, children, onKeyDown, ...domProps }, ref) => {
+    let { buttonRef, listRef, setIsOpen, value, onValueChange } = React.useContext(SelectContext)
+    let { options } = React.useContext(OptionsContext)
     return (
       <button
         ref={useComposedRefs(buttonRef, ref)}
         onClick={composeEventHandlers(onClick, () => setIsOpen(true))}
+        onKeyDown={composeEventHandlers(onKeyDown, (event) => {
+          switch (event.key) {
+            case 'ArrowDown':
+              let previousOption = findPreviousOption(options, value)
+              if (previousOption) {
+                onValueChange(previousOption)
+              }
+              setIsOpen(true)
+              break
+            case 'ArrowUp':
+              let nextOption = findNextOption(options, value)
+              if (nextOption) {
+                onValueChange(nextOption)
+              }
+              setIsOpen(true)
+              break
+          }
+
+          if (event.key.trim().length === 1) {
+            let optionToSelect = findOptionFromCharKey(options, value, event.key)
+            if (optionToSelect) {
+              onValueChange(optionToSelect)
+            }
+          }
+        })}
         className={composeClassNames(className, 'select-button')}
         aria-haspopup="listbox"
         id="select-button"
@@ -101,7 +134,8 @@ const SelectButton = React.forwardRef<HTMLButtonElement, SelectButtonBaseProps>(
 
 const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
   ({ children, className, onBlur, onKeyDown, ...domProps }, ref) => {
-    let { isOpen, listRef, setIsOpen, value } = React.useContext(SelectContext)
+    let { isOpen, listRef, setIsOpen, value, onValueChange } = React.useContext(SelectContext)
+    let { options } = React.useContext(OptionsContext)
     return (
       <div
         id="select-list"
@@ -120,8 +154,48 @@ const SelectList = React.forwardRef<HTMLDivElement, SelectListBaseProps>(
             case 'Escape':
               setIsOpen(false)
               break
+            case 'Enter':
+              setIsOpen(false)
+              break
+            case 'ArrowDown': {
+              // Moves focus to and selects the next option.
+              let nextOption = findNextOption(options, value)
+              if (nextOption) {
+                onValueChange(nextOption)
+              }
+              break
+            }
+            case 'ArrowUp': {
+              let previousOption = findPreviousOption(options, value)
+              if (previousOption) {
+                onValueChange(previousOption)
+              }
+              break
+            }
+            case 'Home': {
+              let firstOption = options[0]
+              if (firstOption) {
+                onValueChange(firstOption)
+              }
+              break
+            }
+            case 'End': {
+              let lastOption = options[options.length - 1]
+              if (lastOption) {
+                onValueChange(lastOption)
+              }
+              // select last item in list
+              break
+            }
             default:
               break
+          }
+
+          if (event.key.trim().length === 1) {
+            let optionToSelect = findOptionFromCharKey(options, value, event.key)
+            if (optionToSelect) {
+              onValueChange(optionToSelect)
+            }
           }
         })}
         {...domProps}

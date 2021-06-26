@@ -16,6 +16,7 @@ function PrimaryLayout() {
   let { pathname } = useLocation()
   let pageData = useRecordData(pathname)
   let content = pageData.content || pageData.error || 'Loading content...'
+
   return (
     <div className="primary-layout">
       <Nav />

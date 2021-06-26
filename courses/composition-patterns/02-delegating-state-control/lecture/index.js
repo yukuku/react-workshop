@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <p>What is you favorite fruit?</p>
-      <Select>
+      <Select defaultValue="Banana">
         <SelectOption value="Banana" />
         <SelectOption value="Kiwi" />
         <SelectOption value="Apple" />

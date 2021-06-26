@@ -29,18 +29,15 @@ async function getRecordData(pathname: string) {
 
 export function useRecordData(pathname: string) {
   let [data, setData] = React.useState<{ content?: string; error?: any }>({})
-  let [oldPathname, setOldPathname] = React.useState('')
 
   React.useEffect(() => {
     let cancelled = false
-    if (pathname && pathname !== oldPathname) {
-      if (Object.keys(data).length) {
-        setData({})
-      }
+    if (pathname) {
+      setData((currentData) => (Object.keys(currentData).length ? {} : currentData))
+
       getRecordData(pathname)
         .then((recordData) => {
           if (!cancelled) {
-            setOldPathname(pathname)
             setData(recordData)
           }
         })
@@ -52,11 +49,10 @@ export function useRecordData(pathname: string) {
 
     function sendError(response: any) {
       if (!cancelled) {
-        setOldPathname(pathname)
         setData({ error: response })
       }
     }
-  }, [pathname, oldPathname, data])
+  }, [pathname])
 
   return data
 }

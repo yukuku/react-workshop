@@ -97,9 +97,11 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
 
 export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
   ({ children, value, className, onChange, ...domProps }, forwardedRef) => {
-    let { accordionId, value: accordionValue, setValue: setAccordionValue } = React.useContext(
-      AccordionContext
-    )
+    let {
+      accordionId,
+      value: accordionValue,
+      setValue: setAccordionValue,
+    } = React.useContext(AccordionContext)
     let { addItem, removeItem } = React.useContext(ItemRegistrationContext)
     let buttonId = makeId(accordionId, 'button', useId())
     let buttonRef = React.useRef<HTMLButtonElement>()
@@ -137,9 +139,12 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps
 export const AccordionButton = React.forwardRef<HTMLButtonElement, AccordionButtonProps>(
   ({ children, className, onBlur, onFocus, onKeyDown, ...domProps }, forwardedRef) => {
     let { buttonId, buttonRef, value } = React.useContext(AccordionItemContext)
-    let { setButtonFocused, accordionId, setValue: setAccordionValue } = React.useContext(
-      AccordionContext
-    )
+    let {
+      setButtonFocused,
+      accordionId,
+      setValue: setAccordionValue,
+      value: selectedValue,
+    } = React.useContext(AccordionContext)
     let { items } = React.useContext(ItemsContext)
 
     return (
@@ -157,11 +162,57 @@ export const AccordionButton = React.forwardRef<HTMLButtonElement, AccordionButt
           }
         })}
         onKeyDown={composeEventHandlers(onKeyDown, (event) => {
+          let flag = true
+
           switch (event.key) {
+            // Check enter and spacebar key
+
+            case 'ArrowDown': {
+              let nextButton = findNextItem(items, value)
+              if (nextButton) {
+                nextButton.buttonElement.focus()
+              }
+              break
+            }
+
+            case 'ArrowUp': {
+              let prevButton = findPreviousItem(items, value)
+              if (prevButton) {
+                prevButton.buttonElement.focus()
+              }
+
+              // FOCUS PREV BUTTOn
+              break
+            }
+
+            case 'Home': {
+              let firstButton = items[0]
+              if (firstButton) {
+                firstButton.buttonElement.focus()
+              }
+
+              // FOCUS FIRST BUTTOn
+              break
+            }
+
+            case 'End': {
+              // FOCUS LAST BUTTOn
+              let lastButton = items[items.length - 1]
+              if (lastButton) {
+                lastButton.buttonElement.focus()
+              }
+              break
+            }
+
             // https://www.w3.org/TR/wai-aria-practices-1.2/examples/accordion/accordion.html#kbd_label
 
             default:
+              flag = false
               break
+          }
+
+          if (flag) {
+            event.preventDefault()
           }
         })}
         {...domProps}

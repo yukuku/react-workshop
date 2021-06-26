@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { useParams } from 'react-router-dom'
 import './styles.scss'
 
 function App() {
@@ -12,12 +13,28 @@ function App() {
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
+function useStableRef(value) {
+  let valueRef = React.useRef(value)
+  React.useEffect(() => {
+    valueRef.current = value
+  }, [value])
+  return valueRef
+}
+
 function Count() {
   const [count, setCount] = React.useState(0)
 
+  let countRef = useStableRef(count)
+
   React.useEffect(() => {
-    // alert with the current count on an interval
-  }, [])
+    let id = window.setInterval(() => {
+      console.log(`Count is: ${countRef.current}`)
+    }, 2000)
+
+    return () => {
+      window.clearInterval(id)
+    }
+  }, [countRef])
 
   return (
     <div>
