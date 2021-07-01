@@ -7,8 +7,7 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 import { TaskColor } from 'ProjectPlanner/TaskColor'
-// import { useBoardContext } from './BoardContext'
-import { useTask } from './useTask'
+import { useBoardContext } from './BoardContext'
 import { Task } from 'ProjectPlanner/types'
 import 'ProjectPlanner/TaskDialog.scss'
 
@@ -27,7 +26,20 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useTask(taskId)
+  const { getTask, updateTask } = useBoardContext()
+  const [task, setTask] = useState(() => getTask(taskId))
+  const [edited, setEdited] = useState(false)
+
+  useEffect(() => {
+    if (edited) {
+      const id = setTimeout(() => {
+        updateTask(taskId, task)
+      }, 1000)
+      return () => {
+        clearTimeout(id)
+      }
+    }
+  }, [task])
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
@@ -36,6 +48,7 @@ export const TaskDialog: React.FC<Props> = ({
 
   function update(partialTask: Partial<Task>) {
     if (!task) return
+    setEdited(true)
     setTask({ ...task, ...partialTask })
   }
   return (

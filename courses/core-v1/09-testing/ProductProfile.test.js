@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/extend-expect'
 // Mock modules
 import api from 'YesterTech/api'
 import { useShoppingCart } from 'YesterTech/ShoppingCartState'
+
 import ProductProfile from 'YesterTech/ProductProfile'
 
 /**

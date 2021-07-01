@@ -10,20 +10,46 @@ type Props = {
 }
 
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN':
+          const newState = JSON.parse(JSON.stringify(state))
+          newState.loading = true
+
+          return newState
+        case 'LOGIN_FAILED':
+          return { ...state, loading: false, error: action.error }
+        case 'CHANGE_FIELD':
+          return { ...state, [action.field]: action.value }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const { error, loading, username, password } = state
+
+  const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'LOGIN' }) // what happened
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
+        usernameRef.current.focus()
       })
   }
 
@@ -51,7 +77,12 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             className="form-field"
             aria-label="Username"
             type="text"
+            value={username}
+            onChange={(event) => {
+              dispatch({ type: 'CHANGE_FIELD', field: 'username', value: event.target.value })
+            }}
             placeholder="Username"
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -60,6 +91,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             className="form-field"
             aria-label="Password"
             type="password"
+            value={password}
+            onChange={(event) => {
+              dispatch({ type: 'CHANGE_FIELD', field: 'password', value: event.target.value })
+            }}
             placeholder="Password"
           />
           <label>
