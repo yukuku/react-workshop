@@ -2,10 +2,11 @@ import * as React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
+import ProductProfile from 'YesterTech/ProductProfile'
+
 // Mock modules
 import api from 'YesterTech/api'
 import { useShoppingCart } from 'YesterTech/ShoppingCartState'
-import ProductProfile from 'YesterTech/ProductProfile'
 
 /**
  * Mocks

@@ -19,6 +19,7 @@ function ProductProfile() {
   productId = parseInt(productId, 10)
 
   let product: Product | null = null
+  const [product, setproduct] = useState()
 
   api.products.getProduct(productId)
 

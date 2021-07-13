@@ -25,7 +25,17 @@ export const TaskDialog: React.FC<Props> = ({
 }) => {
   const [task, setTask] = useState<Task | null>(null)
 
-  // api.boards.getTask(taskId)
+  useEffect(() => {
+    let mounted = true
+    api.boards.getTask(taskId).then((task) => {
+      if (mounted) {
+        setTask(task)
+      }
+    })
+    return () => {
+      mounted = false
+    }
+  }, [taskId])
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
