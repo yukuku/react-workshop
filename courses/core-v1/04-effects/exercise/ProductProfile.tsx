@@ -15,8 +15,24 @@ import './styles.scss'
 import { Chat } from './Chat'
 
 function ProductProfile() {
-  let chatIsVisible = true
+  let [chatIsVisible, setChatIsVisible] = React.useState(false)
   let { productId } = useParams<{ productId: any }>()
+  React.useEffect(() => {
+    // effect callback
+    let id = window.setTimeout(() => {
+      setChatIsVisible(true)
+    }, 5000)
+
+    // cleanup for effect
+    return () => {
+      setChatIsVisible(false);
+      window.clearTimeout(id)
+    }
+
+    // In this case, I want to re-hide and re-show the chat widget when the
+    // product view changes, which depends on the productId
+  }, [productId])
+
   let { user } = useAuthState()
   productId = parseInt(productId, 10)
 
