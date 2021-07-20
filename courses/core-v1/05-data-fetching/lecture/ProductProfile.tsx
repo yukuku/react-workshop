@@ -18,13 +18,10 @@ function ProductProfile() {
   let { productId } = useParams<{ productId: any }>()
   productId = parseInt(productId, 10)
 
-  let product: Product | null = null
-
-  api.products.getProduct(productId)
-
   // Cart
   let { addToCart, updateQuantity, getQuantity } = useShoppingCart()
   let quantity = getQuantity(productId)
+  let product = useProduct(productId)
 
   if (!product) {
     return <div>Loading...</div>
@@ -84,3 +81,24 @@ function ProductProfile() {
 }
 
 export default ProductProfile
+
+export function useProduct(productId: number) {
+  let [product, setProduct] = React.useState<Product | null>(null)
+
+  React.useEffect(() => {
+    let isCurrent = true
+
+    api.products.getProduct(productId).then((product) => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+
+    return () => {
+      setProduct(null)
+      isCurrent = false
+    }
+  }, [productId])
+
+  return product
+}

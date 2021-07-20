@@ -10,6 +10,7 @@ import ProductImage from 'YesterTech/ProductImage'
 import StarRatings from 'YesterTech/StarRatings'
 import ProductFilterItem from 'YesterTech/ProductFilterItem'
 import ProductSubNav from 'YesterTech/ProductSubNav'
+import { Product } from 'YesterTech/types'
 
 const PrimaryLayout = (): React.ReactElement => {
   return (
@@ -18,12 +19,24 @@ const PrimaryLayout = (): React.ReactElement => {
         <PrimaryHeader />
         <ProductSubNav />
         <main className="primary-content">
-          <Home />
+          <Switch>
+            <Route path="/products">
+              <ProductsLayout />
+            </Route>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Redirect to="/products" />
+          </Switch>
         </main>
         <PrimaryFooter />
       </div>
     </div>
   )
+}
+
+function Error404() {
+  return <h1>Oh noooooooooooo!</h1>
 }
 
 export default PrimaryLayout
@@ -35,12 +48,12 @@ function PrimaryHeader(): React.ReactElement {
         <Logo />
       </div>
       <nav className="horizontal-spacing-large align-right">
-        <a href="/" className="primary-nav-item">
+        <Link to="/" className="primary-nav-item">
           Home
-        </a>
-        <a href="/products" className="primary-nav-item">
+        </Link>
+        <Link to="/products" className="primary-nav-item">
           Products
-        </a>
+        </Link>
       </nav>
     </header>
   )
@@ -75,28 +88,56 @@ function ProductsLayout(): React.ReactElement {
         </section>
       </aside>
       <div>
-        <BrowseProducts />
-        {/* BrowseProducts is the page being shown, but other pages could go here like ProductProfile */}
+        <Route path="/products" exact>
+          <BrowseProducts />
+        </Route>
+        <Route path="/products/:productId">
+          <ProductProfile />
+        </Route>
       </div>
     </div>
   )
 }
 
 function ProductProfile(): React.ReactElement {
+  let { productId } = useParams<{ productId: string }>()
+
+  let [product, setProduct] = React.useState<null | Product>(null)
+  React.useEffect(() => {
+    let isCurrent = true
+    let productIdString = parseInt(productId, 10)
+    api.products.getProduct(productIdString).then((product) => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [productId])
+
+  if (productId == null) {
+    return <h1>Sorry, no product found!</h1>
+  }
+
+  if (!product) {
+    return <h2>Loading...</h2>
+  }
+
   return (
     <div className="spacing">
       <Columns gutters>
         <Column>
-          <ProductImage src="/images/products/mario-kart.jpg" alt="Mario Kart" size={15} />
+          <ProductImage src={product.imagePath} alt={product.name} size={15} />
         </Column>
         <Column flex className="spacing">
-          <Heading>Mario Kart</Heading>
-          <StarRatings rating={4.5} />
+          <Heading>{product.name}</Heading>
+          <StarRatings rating={product.rating} />
           <hr />
           <div className="text-small">
-            <div>Brand: Nintendo</div>
-            <div>Category: Games</div>
-            <div>Condition: Good</div>
+            <div>Brand: {product.brand}</div>
+            <div>Category: {product.category}</div>
+            <div>Condition: {product.condition}</div>
           </div>
         </Column>
       </Columns>
@@ -109,13 +150,13 @@ function BrowseProducts(): React.ReactElement {
     <div className="spacing">
       <ul>
         <li>
-          <a href="/products/1">Nintendo NES</a>
+          <Link to="/products/1">Nintendo NES</Link>
         </li>
         <li>
-          <a href="/products/2">Donkey Kong Country</a>
+          <Link to="/products/2">Donkey Kong Country</Link>
         </li>
         <li>
-          <a href="/products/3">Mario Kart</a>
+          <Link to="/products/3">Mario Kart</Link>
         </li>
       </ul>
     </div>
