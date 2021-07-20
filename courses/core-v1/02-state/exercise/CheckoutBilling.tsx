@@ -8,7 +8,7 @@ interface CheckoutBillingProps {
 }
 
 const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
-  const sameAsBilling = false
+  const [sameAsBilling, setSameAsBilling] = React.useState<boolean>(false)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -42,19 +42,29 @@ const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
         </Heading>
 
         <label>
-          <input type="checkbox" /> <span>Same as Billing</span>
+          <input
+            type="checkbox"
+            defaultChecked={sameAsBilling}
+            onChange={() => {
+              console.log('change!')
+              setSameAsBilling((sameAsBilling) => !sameAsBilling)
+            }}
+          />{' '}
+          <span>Same as Billing (Currently: {String(sameAsBilling)})</span>
         </label>
 
-        <div className="spacing">
-          <div className="form-field">
-            <label htmlFor="shipping:name">Name</label>
-            <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+        {!sameAsBilling ? (
+          <div className="spacing">
+            <div className="form-field">
+              <label htmlFor="shipping:name">Name</label>
+              <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="shipping:address">Address</label>
+              <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
+            </div>
           </div>
-          <div className="form-field">
-            <label htmlFor="shipping:address">Address</label>
-            <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
-          </div>
-        </div>
+        ) : null}
 
         <footer>
           <button type="submit" className="button">
