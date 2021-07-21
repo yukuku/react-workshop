@@ -12,14 +12,12 @@ const colors = {
 export const TaskCard: React.FC<{ color: string }> = ({ color }) => {
   const taskRef = useRef<HTMLDivElement>(null)
 
-  // We need to apply the CSS property of `--taskColor` to the div below.
-  // We have a ref made, and this is the line of code that will address
-  // that ref and assign the CSS Property, but there's a few steps missing.
-  // See the README.md
-  // taskRef.current.style.setProperty(`--taskColor`, colors[color])
+  useEffect(() => {
+    taskRef.current.style.setProperty(`--taskColor`, colors[color])
+  }, [color])
 
   return (
-    <div className="task-card spacing">
+    <div className="task-card spacing" ref={taskRef}>
       <Heading>Task Card</Heading>
       {color && (
         <span>

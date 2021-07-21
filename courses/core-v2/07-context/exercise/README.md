@@ -10,7 +10,7 @@ There are basically three parts to context:
 
 - Creating the context object (outside of your components)
 - The Provider JSX where the `value` prop is the data being passed down through context
-- The Consumer using `useContext(/* Context Object Here*/)`
+- The Consumer using `useContext(/* Context Object Here */)`
 
 2. In the list above, the first two things can be found in `index.tsx` file near the `App` component. Migrate those into `ThemeContext.tsx` first.
 3. For the third thing in that list, you'll want to open `TaskCard.tsx` where context is being consumed. You can see that `useContext` is being used and we're passing in the `ThemeContext` that used to exist in the `index.tsx` file. But now `ThemeContext` should be in the `ThemeContext.tsx` file.

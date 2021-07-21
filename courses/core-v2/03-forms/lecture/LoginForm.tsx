@@ -13,11 +13,15 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const usernameRef = useRef()
+  const passwordRef = useRef()
+
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     setLoading(true)
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(usernameRef.current.value, passwordRef.current.value)
       .then((user: User) => {
         onAuthenticated(user)
       })
@@ -52,6 +56,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -61,6 +66,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            ref={passwordRef}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password
