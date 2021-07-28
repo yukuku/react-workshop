@@ -27,7 +27,7 @@ const ProductProfile: ReactFCNoChildren = () => {
   const getProduct = React.useCallback(() => api.products.getProduct(productId), [productId])
   const [product] = usePromise(getProduct)
 
-  if (!product) return <div>Loading...</div>
+  if (!product) return <span>Loading...</span>
 
   return (
     <div className="spacing">

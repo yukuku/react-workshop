@@ -39,7 +39,7 @@ export const Task = () => {
           status="progress"
           // Task 1:
           onChange={(completedMinutes) => {
-            // setCompletedMinutes(completedMinutes)
+            setCompletedMinutes(completedMinutes)
           }}
         />
       </div>

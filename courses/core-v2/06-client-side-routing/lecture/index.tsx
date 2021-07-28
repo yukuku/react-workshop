@@ -30,7 +30,14 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards">
+            <BoardLayout />
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
     </div>
@@ -64,6 +71,32 @@ const Dashboard: React.FC = () => {
     <Centered size={50}>
       <Heading>Welcome to your Dashboard</Heading>
     </Centered>
+  )
+}
+
+function BoardLayout() {
+  React.useEffect(() => {
+    console.log('effect')
+  }, [])
+
+  return (
+    <div>
+      <aside>
+        <Route path="/boards" exact>
+          here
+        </Route>
+      </aside>
+      <div>
+        <Switch>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+        </Switch>
+      </div>
+    </div>
   )
 }
 

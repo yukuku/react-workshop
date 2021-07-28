@@ -1,18 +1,41 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useLayoutEffect, useEffect } from 'react'
 import { RecentBoards } from 'ProjectPlanner/RecentBoards'
 import { ActiveUsers } from 'ProjectPlanner/ActiveUsers'
 import 'ProjectPlanner/BrowseBoardsSidebar.scss'
 
-export const BrowseBoardsSidebar: React.FC = () => {
-  const [isWide, setIsWide] = useState(true)
+type Props = {
+  width?: number
+}
 
-  // What if we didn't want to show the sidebar if the screen was less than
-  // 900px? We could use a CSS media query, but then we'd still get "side effects"
-  // that are doing network requests in these children components even when the
-  // user can't see the UI for them
+const useIsomorphicEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
+function useMedia(query) {
+  const [matches, setMatches] = useState(true) // wrong
+
+  useIsomorphicEffect(() => {
+    const media = window.matchMedia(query)
+    const listener = () => {
+      setMatches(media.matches)
+    }
+
+    setMatches(media.matches)
+
+    media.addEventListener('change', listener)
+    return () => {
+      media.removeEventListener('change', listener)
+    }
+  }, [query])
+
+  return matches
+}
+
+export const BrowseBoardsSidebar: React.FC<Props> = ({ width = 900 }) => {
+  const isWide = useMedia(`(min-width: ${width}px)`)
+  const darkMode = useMedia(`(prefers-color-scheme: dark)`)
 
   return isWide ? (
     <aside className="browse-boards-sidebar spacing">
+      {darkMode ? 'dark' : 'light'}
       <RecentBoards />
       <ActiveUsers />
     </aside>

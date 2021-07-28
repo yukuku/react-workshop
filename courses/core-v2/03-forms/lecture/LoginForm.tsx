@@ -1,4 +1,4 @@
-import React, { useState, useRef, useReducer } from 'react'
+import React, { useRef, useReducer } from 'react'
 import { FaSignInAlt, FaExclamationCircle } from 'react-icons/fa'
 import { User } from 'ProjectPlanner/types'
 import { Heading } from 'ProjectPlanner/Heading'
@@ -9,21 +9,47 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
+function useState(initialState) {
+  return useReducer((_, newState) => newState, initialState)
+}
+
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN': {
+          return { ...state, loading: true }
+        }
+        case 'LOGIN_FAILED': {
+          return { ...state, loading: false, error: action.error }
+        }
+        case 'CHANGE_FIELD': {
+          return { ...state, [action.field]: action.value }
+        }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const { error, loading, username, password } = state
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'LOGIN' })
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
       })
   }
 
@@ -32,6 +58,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
     // console.log(event.target.checked)
     // Ultimately we don't need the event if we have "source of truth"
     // state for the checkbox.
+  }
+
+  function changeField(field, value) {
+    dispatch({ type: 'CHANGE_FIELD', field, value })
   }
 
   return (
@@ -52,6 +82,8 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => changeField('username', e.target.value)}
           />
         </div>
         <div>
@@ -61,6 +93,8 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => changeField('password', e.target.value)}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password
@@ -68,7 +102,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
         </div>
 
         <footer>
-          <button type="submit" className="button">
+          <button type="submit" className="button" disabled={loading}>
             {!loading ? (
               <>
                 <FaSignInAlt /> <span>Login</span>
