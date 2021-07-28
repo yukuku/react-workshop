@@ -9,26 +9,27 @@ React.useEffect(() => {}, []); // sync this effect with NO changes
 React.useEffect(() => {}, [sync, with, these]);
  */
 
-function ProductsSidebar({ minWidth = 600 }) {
+function useMatchMedia(query: string) {
   let mql = React.useMemo(() => {
-    return window.matchMedia(`(min-width: ${minWidth}px)`)
-  }, [minWidth])
+    return window.matchMedia(query)
+  }, [query])
 
   let [matches, setMatches] = React.useState(mql.matches)
 
   React.useEffect(() => {
-    console.log('effect callback fired')
     let listener = (event) => {
       setMatches(event.matches)
     }
-
-    mql.addEventListener('change', listener)
     return function cleanup() {
-      console.log('cleanup  fired')
       mql.removeEventListener('change', listener)
     }
   }, [mql])
 
+  return matches
+}
+
+function ProductsSidebar({ minWidth = 600 }) {
+  let matches = useMatchMedia(`(min-width: ${minWidth}px)`)
   return matches ? (
     <aside>
       <ProductFilters />
