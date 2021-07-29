@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { ShoppingCartProvider } from 'YesterTech/ShoppingCartState'
+import { AuthStateProvider } from 'YesterTech/AuthState'
 import PrimaryLayout from 'YesterTech/PrimaryLayout'
 
 import 'YesterTech/styles/global-styles.scss'
@@ -12,9 +13,11 @@ import 'YesterTech/ProductsLayout.scss'
 function App() {
   return (
     <BrowserRouter>
-      <ShoppingCartProvider>
-        <PrimaryLayout />
-      </ShoppingCartProvider>
+      <AuthStateProvider>
+        <ShoppingCartProvider>
+          <PrimaryLayout />
+        </ShoppingCartProvider>
+      </AuthStateProvider>
     </BrowserRouter>
   )
 }

@@ -2,16 +2,17 @@ import * as React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
 import BrowseProducts from './BrowseProducts'
 import Checkout from './Checkout'
-// import { useShoppingCart } from './ShoppingCartState'
+import { useShoppingCart } from './ShoppingCartState'
 import 'YesterTech/PrimaryLayout.scss'
 
 function PrimaryLayout(): React.ReactElement {
+  let { getCartSize } = useShoppingCart()
   return (
     <div className="primary-layout">
       <div>
         <header className="primary-header">
           <NavLink to="/products">Products</NavLink>
-          <NavLink to="/checkout">Checkout</NavLink>
+          <NavLink to="/checkout">Checkout ({getCartSize()})</NavLink>
         </header>
         <main className="primary-content">
           <Switch>
