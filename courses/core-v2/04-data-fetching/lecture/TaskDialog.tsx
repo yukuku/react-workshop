@@ -11,10 +11,26 @@ import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
-  taskId: number
-  siblingTaskIds: number[]
-  onChangeTaskId(taskId: number): void
-  onClose(): void
+  [key: string]: any
+}
+
+function useTask(taskId) {
+  const [task, setTask] = useState<Task | null>(null)
+
+  // Any variables that we "close over" that CAN CHANGE!!!
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [setTask, taskId])
+
+  return [task, setTask] as const
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -23,9 +39,7 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  // api.boards.getTask(taskId)
+  const [task, setTask] = useTask(taskId)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

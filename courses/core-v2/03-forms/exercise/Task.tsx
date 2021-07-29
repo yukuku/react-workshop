@@ -4,14 +4,16 @@ import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 
 type TaskType = {
-  // name: string
-  // content: string
+  name: string
+  content: string
   minutes: number
   completedMinutes: number
 }
 
 export const Task = () => {
   const [task, setTask] = useState<TaskType>({
+    name: '',
+    content: '',
     minutes: 20,
     completedMinutes: 0,
   })
