@@ -12,6 +12,8 @@ import ProductFilterItem from 'YesterTech/ProductFilterItem'
 import ProductSubNav from 'YesterTech/ProductSubNav'
 
 const PrimaryLayout = () => {
+  const authenticated = true
+
   return (
     <div className="primary-layout">
       <div>
@@ -19,11 +21,11 @@ const PrimaryLayout = () => {
         <ProductSubNav />
         <main className="primary-content">
           <Switch>
-            <Route path="/products">
-              <ProductsLayout />
-            </Route>
             <Route path="/" exact>
               <Home />
+            </Route>
+            <Route path="/products">
+              <ProductsLayout />
             </Route>
           </Switch>
         </main>

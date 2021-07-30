@@ -75,7 +75,9 @@ export const TaskDialog: React.FC<Props> = ({
                 <Minutes
                   minutes={task.minutes}
                   min={task.completedMinutes}
-                  onChange={(minutes) => update({ minutes })}
+                  onChange={(minutes) => {
+                    $('find').change()
+                  }}
                 />
               )}
             </div>
