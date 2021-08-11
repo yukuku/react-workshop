@@ -15,7 +15,9 @@ import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // Lazy load this component and demonstrate suspense
-import { UserProfile } from 'ProjectPlanner/UserProfile'
+// import { UserProfile } from './UserProfile'
+
+const UserProfile = React.lazy(() => import('./UserProfile'))
 
 const App: React.FC = () => {
   return (
@@ -30,9 +32,41 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <React.Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route path="/users/:userId">
+              <UserProfile />
+            </Route>
+            <Route path="/boards">
+              <BoardsLayout />
+            </Route>
+          </Switch>
+        </React.Suspense>
       </main>
       <PrimaryFooter />
+    </div>
+  )
+}
+
+function BoardsLayout() {
+  const match = useRouteMatch()
+
+  return (
+    <div>
+      <div>sub layout</div>
+      <div>
+        <Switch>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId" exact>
+            <Board />
+          </Route>
+        </Switch>
+      </div>
     </div>
   )
 }

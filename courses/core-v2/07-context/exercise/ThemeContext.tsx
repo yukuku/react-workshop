@@ -1,14 +1,17 @@
 import React, { useContext } from 'react'
 import { getTheme } from './utils'
 
-// Create context here
+type Colors = {
+  [key: string]: string
+}
+const ThemeContext = React.createContext<Colors | null>(null)
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  // Wrap the children in the provider
-  return null
+  const colors = getTheme()
+
+  return <ThemeContext.Provider value={colors} children={children} />
 }
 
 export const useTheme = () => {
-  // Temporary until you implement useContext
-  return { red: '', green: '', blue: '' }
+  return useContext(ThemeContext)
 }
