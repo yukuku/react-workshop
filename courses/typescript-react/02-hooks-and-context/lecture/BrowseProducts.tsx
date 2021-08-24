@@ -12,14 +12,18 @@ import { getInt } from 'YesterTech/utils'
 
 function BrowseProducts() {
   const urlQuery = useLocation().search
-  const search = React.useMemo(() => queryString.parse(urlQuery), [urlQuery])
-  const page = search.page != null ? getInt(search.page, 10) : 1
+  const search = React.useMemo<queryString.ParsedQuery<string>>(
+    () => queryString.parse(urlQuery),
+    [urlQuery]
+  )
+  const page = search.page != null ? getInt(search.page as string, 10) : 1
 
   // Get Products (Paginated) and Total
   const getProducts = React.useCallback(
     () => api.products.getProducts(search, page),
     [search, page]
   )
+
   const [response, loading] = usePromise(getProducts)
   const products = response?.products
   const totalResults = response?.totalResults
@@ -36,7 +40,7 @@ function BrowseProducts() {
               resultsPerPage={10}
               page={page}
               totalResults={totalResults}
-              query={search.q || ''}
+              query={(search.q as string) || ''}
             />
           )}
         </Column>

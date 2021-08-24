@@ -10,6 +10,8 @@ const initialState: State = {
   shippingAddress: '',
 }
 
+type SubmitHandler = (event: React.FormEvent<HTMLFormElement>) => void
+
 const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
   let [state, dispatch] = React.useReducer((state: State, action: Action) => {
     switch (action.type) {
@@ -45,13 +47,24 @@ const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
 
   let { sameAsBilling, billingName, billingAddress, shippingName, shippingAddress } = state
 
-  function handleSubmit(event: any) {
-    event.preventDefault()
-    dispatch({ type: 'SUBMIT_FORM', callback: onSubmit })
+  let handleSubmit = React.useCallback<SubmitHandler>(
+    (event) => {
+      event.preventDefault()
+      dispatch({ type: 'SUBMIT_FORM', callback: onSubmit })
+    },
+    [onSubmit]
+  )
+
+  function handleResetClick(event: React.MouseEvent<HTMLButtonElement>) {
+    let native = event.nativeEvent
+    dispatch({ type: 'RESET_FORM' })
   }
 
-  function handleResetClick(event: any) {
-    dispatch({ type: 'RESET_FORM' })
+  const formProps = {
+    onSubmit(event: React.FormEvent<HTMLFormElement>) {
+      event.preventDefault()
+      dispatch({ type: 'SUBMIT_FORM', callback: onSubmit })
+    },
   }
 
   function handleCheckboxChange(event: any) {
@@ -78,7 +91,7 @@ const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
       <Heading>
         <MdShoppingCart /> Billing &amp; Shipping
       </Heading>
-      <form onSubmit={handleSubmit} className="spacing">
+      <form className="spacing" {...formProps}>
         <Heading as="h2" size={3}>
           Billing Info
         </Heading>

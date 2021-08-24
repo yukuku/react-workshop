@@ -1,8 +1,18 @@
-import React from 'react'
+import * as React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
-import queryString from 'query-string'
+import * as queryString from 'query-string'
 import 'YesterTech/Pagination.scss'
+
+const CONSTANT = 'some-string'
+
+interface PaginationProps extends React.ComponentPropsWithoutRef<any> {
+  as?: any
+  path: string
+  totalResults: number
+  page?: number
+  resultsPerPage?: number
+}
 
 function Pagination({
   as: Component = 'div',
@@ -11,12 +21,12 @@ function Pagination({
   page = 1,
   resultsPerPage = 10,
   ...rest
-}) {
+}: PaginationProps) {
   const query = queryString.parse(useLocation().search)
   const pages = Math.ceil(totalResults / resultsPerPage)
 
   return (
-    <Component className="pagination horizontal-spacing-small" {...rest}>
+    <Component className="pagination horizontal-spacing-small">
       {pages > 1 &&
         Array(pages)
           .fill(null)
@@ -42,7 +52,14 @@ function Pagination({
 
 export { Pagination }
 
-function PaginationRange({ resultsPerPage, page, totalResults, query }) {
+interface PaginationRangeProps {
+  resultsPerPage: number
+  page: number
+  totalResults: number
+  query?: string
+}
+
+function PaginationRange({ resultsPerPage, page, totalResults, query }: PaginationRangeProps) {
   if (!totalResults) {
     return null
   }

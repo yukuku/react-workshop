@@ -14,9 +14,32 @@ import { useAuthState } from 'YesterTech/AuthState'
 import './styles.scss'
 import { Chat } from './Chat'
 
+function useTimeout(callback, time) {
+  let callbackRef = React.useRef(callback)
+  React.useEffect(() => {
+    callbackRef.current = callback
+  }, [callback])
+
+  React.useEffect(() => {
+    let timeoutId = window.setTimeout(callbackRef.current, time)
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [time])
+}
+
 function ProductProfile() {
-  let chatIsVisible = true
+  let [chatIsVisible, setChatIsVisible] = React.useState(false)
   let { productId } = useParams<{ productId: any }>()
+
+  let callback = React.useMemo(() => {
+    return () => {
+      setChatIsVisible(true)
+    }
+  }, [])
+
+  useTimeout(callback, 5000)
+
   let { user } = useAuthState()
   productId = parseInt(productId, 10)
 

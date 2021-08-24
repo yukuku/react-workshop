@@ -102,9 +102,23 @@ export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(
       }
     }
 
-    function handleKeyDown(event: unknown) {
+    function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
       // Handle keyboard events to help out our fellow keyboard and
       // screen-reader users!
+      switch (event.key) {
+        case 'ArrowLeft':
+          selectPreviousTab()
+          return
+        case 'ArrowRight':
+          selectNextTab()
+          return
+        case 'Home':
+          selectFirstTab()
+          return
+        case 'End':
+          selectLastTab()
+          return
+      }
     }
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom'
 
 import api from 'YesterTech/api'
@@ -17,7 +17,7 @@ import ProductsLayout from 'YesterTech/ProductsLayout'
 import ProductSubNav from 'YesterTech/ProductSubNav'
 import Checkout from 'YesterTech/Checkout'
 
-const PrimaryLayout = () => {
+function PrimaryLayout() {
   const history = useHistory()
   const dispatch = useAuthDispatch()
   const { authenticated } = useAuthState()

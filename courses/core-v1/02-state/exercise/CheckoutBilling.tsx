@@ -7,8 +7,30 @@ interface CheckoutBillingProps {
   onSubmit(fields: ReturnType<typeof serializeForm>): void
 }
 
-const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
-  const sameAsBilling = false
+const states = []
+let callCount = -1
+
+function useState(defaultValue) {
+  const id = ++callCount
+
+  function setState(newValue) {
+    // assign new value
+    // re-render
+    states[id][0] = typeof newValue === 'function' ? newValue(defaultValue) : newValue
+  }
+
+  const tuple = [defaultValue, setState]
+  states.push(tuple)
+
+  return tuple
+}
+
+const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit, someValue }) => {
+  if (someValue) {
+    return null
+  }
+
+  const [sameAsBilling, setSameAsBilling] = useState(false)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -42,19 +64,29 @@ const CheckoutBilling: React.FC<CheckoutBillingProps> = ({ onSubmit }) => {
         </Heading>
 
         <label>
-          <input type="checkbox" /> <span>Same as Billing</span>
+          <input
+            type="checkbox"
+            defaultChecked={sameAsBilling}
+            onChange={() => {
+              console.log('Changing')
+              setSameAsBilling(!sameAsBilling)
+            }}
+          />{' '}
+          <span>Same as Billing</span>
         </label>
 
-        <div className="spacing">
-          <div className="form-field">
-            <label htmlFor="shipping:name">Name</label>
-            <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+        {!sameAsBilling ? (
+          <div className="spacing">
+            <div className="form-field">
+              <label htmlFor="shipping:name">Name</label>
+              <input id="shipping:name" type="text" name="shippingName" autoComplete="off" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="shipping:address">Address</label>
+              <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
+            </div>
           </div>
-          <div className="form-field">
-            <label htmlFor="shipping:address">Address</label>
-            <input id="shipping:address" type="text" name="shippingAddress" autoComplete="off" />
-          </div>
-        </div>
+        ) : null}
 
         <footer>
           <button type="submit" className="button">

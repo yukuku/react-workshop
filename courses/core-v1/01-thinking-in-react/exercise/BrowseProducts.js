@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'
-import Heading from 'YesterTech/Heading'
 import StarRatings from './StarRatings'
+// import Heading from 'YesterTech/Heading'
 
 const products = [
   {
@@ -28,18 +27,20 @@ const products = [
 ]
 
 export default function BrowseProducts() {
+  console.log(products)
+
   return (
     <div>
-      {products.map((product) => (
-        <div key={`product-${product.id}`}>
-          <Heading>{product.name}</Heading>
-          <StarRatings rating={product.rating} />
-          <div className="text-small">
-            <div>Brand: {product.brand}</div>
-            <div>Condition: {product.condition}</div>
-          </div>
-        </div>
-      ))}
+      {products.map((product, index) => {
+        return (
+          <React.Fragment key={product.id}>
+            <h1>{product.name}</h1>
+            <StarRatings rating={product.rating} />
+            <p>Brand: {product.brand}</p>
+            <p>Condition: {product.condition}</p>
+          </React.Fragment>
+        )
+      })}
     </div>
   )
 }
