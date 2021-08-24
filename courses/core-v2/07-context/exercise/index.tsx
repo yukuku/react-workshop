@@ -3,22 +3,15 @@ import ReactDOM from 'react-dom'
 import { TaskDialog } from './TaskDialog'
 import { TaskCard } from './TaskCard'
 import { getTheme } from './utils'
-// import { ThemeProvider } from './ThemeContext'
+import { ThemeProvider } from './ThemeContext'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-type Colors = {
-  [key: string]: string
-}
-export const ThemeContext = React.createContext<Colors | null>(null)
-
 const App: React.FC = () => {
-  const colors = getTheme()
-
   return (
-    <ThemeContext.Provider value={colors}>
+    <ThemeProvider>
       <PrimaryLayout />
-    </ThemeContext.Provider>
+    </ThemeProvider>
   )
 }
 
