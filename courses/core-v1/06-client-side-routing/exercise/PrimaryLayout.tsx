@@ -19,14 +19,39 @@ import { useShoppingCart } from 'YesterTech/ShoppingCartState'
 export default function PrimaryLayout(): React.ReactElement {
   const { authenticated } = useAuthState()
   const { cart } = useShoppingCart()
-
   return (
     <div className="primary-layout">
       <div>
         <PrimaryHeader />
-        <ProductSubNav />
+        <Route path="/products">
+          <ProductSubNav />
+        </Route>
         <main className="primary-content">
-          <Home />
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/signup">
+              <SignupForm />
+            </Route>
+            <Route path="/login">
+              <LoginForm />
+            </Route>
+            <Route path="/products">
+              <ProductsLayout />
+            </Route>
+            {cart.length > 0 ? (
+              <Route path="/checkout">
+                <Checkout />
+              </Route>
+            ) : null}
+            {authenticated ? (
+              <Route path="/account">
+                <Account />
+              </Route>
+            ) : null}
+            <Redirect to="/" />
+          </Switch>
         </main>
         <PrimaryFooter />
       </div>

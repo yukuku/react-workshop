@@ -11,16 +11,14 @@ import { useShoppingCart } from 'YesterTech/ShoppingCartState'
 import ProductTile from 'YesterTech/ProductTile'
 import { Product } from 'YesterTech/types'
 import api from 'YesterTech/api'
+import { any } from 'prop-types'
 
 // https://twitter.com/dan_abramov/status/1313891773224189953
 
 function ProductProfile() {
   let { productId } = useParams<{ productId: any }>()
-  productId = parseInt(productId, 10)
 
-  let product: Product | null = null
-
-  api.products.getProduct(productId)
+  let product = useProduct(parseInt(productId, 10))
 
   // Cart
   let { addToCart, updateQuantity, getQuantity } = useShoppingCart()
@@ -81,6 +79,24 @@ function ProductProfile() {
       )}
     </div>
   )
+}
+
+function useProduct(productId: number) {
+  let [product, setProduct] = React.useState<Product | null>(null)
+
+  React.useEffect(() => {
+    let isCurrent = true
+    api.products.getProduct(productId).then((product) => {
+      if (isCurrent) {
+        setProduct(product)
+      }
+    })
+
+    return () => {
+      isCurrent = false
+    }
+  }, [productId])
+  return product
 }
 
 export default ProductProfile
