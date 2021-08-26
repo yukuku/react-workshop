@@ -6,10 +6,9 @@ const initialState: AuthState = {
   user: null,
 }
 
-const AuthStateContext = React.createContext<AuthStateContextValue>({
-  ...initialState,
-  dispatch() {},
-})
+const AuthStateContext = React.createContext<AuthStateContextValue>(initialState)
+
+const AuthDispatchContext = React.createContext<AuthDispatch>(() => {})
 
 export const AuthStateProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(function authReducer(
@@ -26,13 +25,11 @@ export const AuthStateProvider: React.FC = ({ children }) => {
     }
   },
   initialState)
-
-  const value = {
-    ...state,
-    dispatch,
-  }
-
-  return <AuthStateContext.Provider value={value} children={children} />
+  return (
+    <AuthDispatchContext.Provider value={dispatch}>
+      <AuthStateContext.Provider value={state}>{children}</AuthStateContext.Provider>
+    </AuthDispatchContext.Provider>
+  )
 }
 
 export function useAuthState() {
@@ -46,9 +43,7 @@ type AuthState = {
 
 type AuthDispatch = React.Dispatch<AuthActions>
 
-type AuthStateContextValue = AuthState & {
-  dispatch: AuthDispatch
-}
+type AuthStateContextValue = AuthState
 
 type AuthActions =
   | {
@@ -61,5 +56,5 @@ type AuthActions =
 
 // 👀👀👀
 export function useAuthDispatch() {
-  return React.useContext(AuthStateContext).dispatch
+  return React.useContext(AuthDispatchContext)
 }

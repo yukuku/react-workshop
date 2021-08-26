@@ -3,8 +3,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthStateProvider } from 'YesterTech/AuthState'
 import { ShoppingCartProvider } from 'YesterTech/ShoppingCartState'
 import { FavoriteProductProvider } from 'YesterTech/FavoriteProductState'
-import PrimaryLayout from 'YesterTech/PrimaryLayout'
+import __PrimaryLayout from 'YesterTech/PrimaryLayout'
 import 'YesterTech/styles/global-styles.scss'
+
+const PrimaryLayout = React.memo(__PrimaryLayout)
 
 function App() {
   return (
