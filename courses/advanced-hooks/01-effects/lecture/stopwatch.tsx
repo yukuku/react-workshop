@@ -1,19 +1,28 @@
 import * as React from 'react'
 import './styles.scss'
 
+function useState(initialState) {
+  return React.useReducer(
+    (state, newState) => (typeof newState === 'function' ? newState(state) : newState),
+    initialState
+  )
+}
+
 export default function App() {
-  const [active, setActive] = React.useState(false)
-  const [seconds, setSeconds] = React.useState(0)
+  const [active, setActive] = useState(false)
+  const [seconds, setSeconds] = useState(0)
 
   React.useEffect(() => {
     if (active) {
-      setInterval(() => {
-        console.log('Set Seconds')
-        setSeconds(seconds + 1)
+      const id = setInterval(() => {
+        setSeconds((seconds) => {
+          return seconds + 1
+        })
       }, 1000)
+      return () => {
+        clearInterval(id)
+      }
     }
-    // Show what happens when we add seconds to
-    // the dep array, or leave it out ?
   }, [active])
 
   return (

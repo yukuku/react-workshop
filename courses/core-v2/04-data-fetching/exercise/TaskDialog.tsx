@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { Task } from 'ProjectPlanner/types'
@@ -8,7 +8,6 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 import { api } from 'ProjectPlanner/api'
-// import { useTask } from './useTask'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
@@ -18,25 +17,32 @@ type Props = {
   onClose(): void
 }
 
+function useApi(api) {
+  const [results, setResults] = useState(null)
+
+  useEffect(() => {
+    let isCurrent = true
+    api().then((results) => {
+      if (isCurrent) {
+        setResults(results)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [api])
+
+  return results
+}
+
 export const TaskDialog: React.FC<Props> = ({
   taskId,
   siblingTaskIds,
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  useEffect(() => {
-    let isCurrent = true
-    api.boards.getTask(taskId).then((task) => {
-      if (isCurrent) {
-        setTask(task)
-      }
-    })
-    return () => {
-      isCurrent = false
-    }
-  }, [taskId])
+  const getTask = useCallback(() => api.boards.getTask(taskId), [taskId])
+  const task = useApi(getTask)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
@@ -45,7 +51,7 @@ export const TaskDialog: React.FC<Props> = ({
 
   function update(partialTask: Partial<Task>) {
     if (!task) return
-    setTask({ ...task, ...partialTask })
+    // setTask({ ...task, ...partialTask })
   }
 
   return (

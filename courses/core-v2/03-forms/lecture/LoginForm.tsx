@@ -10,20 +10,41 @@ type Props = {
 }
 
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN': {
+          return { ...state, loading: true }
+        }
+        case 'LOGIN_FAILED': {
+          return { ...state, loading: false, error: action.error }
+        }
+        default:
+          return state
+      }
+    },
+    {
+      error: '',
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const { error, loading, username, password } = state
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+
+    dispatch({ type: 'LOGIN' }) // what happened (event)
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
       })
   }
 
@@ -37,6 +58,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   return (
     <div>
       <Heading>Login</Heading>
+
       <form onSubmit={handleLogin} className="spacing">
         {error && (
           <Notice type="error">
@@ -44,7 +66,6 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             <span>{error}</span>
           </Notice>
         )}
-
         <div>
           <input
             required
@@ -52,6 +73,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
           />
         </div>
         <div>
@@ -61,6 +86,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password
@@ -68,7 +97,7 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
         </div>
 
         <footer>
-          <button type="submit" className="button">
+          <button type="submit" className="button" disabled={loading}>
             {!loading ? (
               <>
                 <FaSignInAlt /> <span>Login</span>
