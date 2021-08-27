@@ -7,8 +7,10 @@ import './styles.scss'
 // import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
 function App() {
+  const [isOpen, setIsOpen] = React.useState(false)
+
   return (
-    <Disclosure>
+    <Disclosure onChange={setIsOpen}>
       <DisclosureButton>Click Me</DisclosureButton>
       <DisclosurePanel>Panel Info</DisclosurePanel>
     </Disclosure>

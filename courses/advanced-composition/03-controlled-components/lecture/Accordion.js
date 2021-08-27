@@ -9,9 +9,14 @@ const AccordionContext = React.createContext()
  */
 
 export const Accordion = React.forwardRef(
-  ({ children, onChange, defaultIndex = 0, id, ...props }, forwardedRef) => {
+  (
+    { children, index: controlledIndex, onChange, defaultIndex = 0, id, ...props },
+    forwardedRef
+  ) => {
     const [selectedIndex, setSelectedIndex] = React.useState(defaultIndex)
     const accordionId = useId(id)
+
+    const controlled = !!controlledIndex
 
     children = React.Children.map(children, (child, index) => {
       const panelId = `accordion-${accordionId}-panel-${index}`
@@ -20,7 +25,7 @@ export const Accordion = React.forwardRef(
       const context = {
         buttonId,
         panelId,
-        selected: selectedIndex === index,
+        selected: controlled ? controlledIndex === index : selectedIndex === index,
         selectPanel: () => {
           onChange && onChange(index)
           setSelectedIndex(index)

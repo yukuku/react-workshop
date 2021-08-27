@@ -6,12 +6,22 @@ import './styles.scss'
 function App() {
   return (
     <Accordion>
-      <AccordionItem>
-        <AccordionButton>What is ARIA?</AccordionButton>
-        <AccordionPanel>
-          A way to make web content more accessible: "Accessible Rich Internet Applications".
-        </AccordionPanel>
-      </AccordionItem>
+      <div>
+        <AccordionItem>
+          <AccordionButton>What is ARIA?</AccordionButton>
+          <AccordionPanel>
+            A way to make web content more accessible: "Accessible Rich Internet Applications".
+          </AccordionPanel>
+        </AccordionItem>
+      </div>
+      <CustomAccordionItems />
+    </Accordion>
+  )
+}
+
+function CustomAccordionItems() {
+  return (
+    <>
       <AccordionItem>
         <AccordionButton>What does "a11y" stand for?</AccordionButton>
         <AccordionPanel>
@@ -22,26 +32,9 @@ function App() {
         <AccordionButton>Other</AccordionButton>
         <AccordionPanel>Other Content</AccordionPanel>
       </AccordionItem>
-    </Accordion>
+    </>
   )
 }
-
-// function CustomAccordionItems() {
-//   return (
-//     <>
-//       <AccordionItem>
-//         <AccordionButton>What does "a11y" stand for?</AccordionButton>
-//         <AccordionPanel>
-//           A11y is short for "accessibility" since there are 11 characters between "a" and "y".
-//         </AccordionPanel>
-//       </AccordionItem>
-//       <AccordionItem>
-//         <AccordionButton>Other</AccordionButton>
-//         <AccordionPanel>Other Content</AccordionPanel>
-//       </AccordionItem>
-//     </>
-//   )
-// }
 
 /*
 ✅ It works, but needs some improvements...
