@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -11,10 +11,18 @@ import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
-  taskId: number
-  siblingTaskIds: number[]
-  onChangeTaskId(taskId: number): void
-  onClose(): void
+  [key: string]: any
+}
+
+// server side react
+// make sure we talk about memoized comp
+// What goes into the dependency array
+// refactor class based to hooks (with redux)
+
+function App({ taskId }) {
+  const [task, setTask] = useState<Task | null>(null)
+
+  return <TaskDialog task={task} setTask={setTask} />
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -22,10 +30,21 @@ export const TaskDialog: React.FC<Props> = ({
   siblingTaskIds,
   onChangeTaskId,
   onClose,
+  task,
+  setTask,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  // api.boards.getTask(taskId)
+  // Any variables that we close over that can change
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [setTask, taskId]) // ===
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

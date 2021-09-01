@@ -1,0 +1,16 @@
+@import 'ProjectPlanner/styles/center-lesson';
+
+:root {
+  --red: #ff5656;
+  --green: #4dd579;
+  --blue: #04b3ff;
+}
+
+html {
+  // Just so everything is a little bigger
+  font-size: 18pt;
+}
+
+body {
+  background-color: var(--lightGray);
+}

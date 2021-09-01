@@ -1,14 +1,17 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { actions } from './state/counterState'
+import store from './store'
 
-function Counter({ dispatch }) {
+function Counter({ count }) {
   function decrement() {
-    dispatch(actions.decrement())
+    store.dispatch(actions.decrement())
   }
   function increment() {
-    dispatch(actions.increment())
+    store.dispatch(actions.increment())
   }
+
+  console.log('>>>', count)
 
   return (
     <div className="horizontal-spacing">
@@ -22,4 +25,8 @@ function Counter({ dispatch }) {
   )
 }
 
-export default connect()(Counter)
+function mapStateToProps({ counterState }) {
+  return { count: counterState.count }
+}
+
+export default connect(mapStateToProps)(Counter)
