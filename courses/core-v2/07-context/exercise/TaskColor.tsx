@@ -7,24 +7,20 @@ type Props = {
 }
 
 export const TaskColor: React.FC<Props> = ({ task, children }) => {
-  const divRef = React.useRef<HTMLDivElement>(null!)
   const colors = useTheme()
 
-  useEffect(() => {
-    if (colors) {
-      let statusColor: string | null = null
-      if (task) {
-        if (task.completedMinutes === 0) {
-          statusColor = colors.red
-        } else if (task.completedMinutes >= task.minutes) {
-          statusColor = colors.green
-        } else {
-          statusColor = colors.blue
-        }
+  let statusColor: string | null = null
+  if (colors) {
+    if (task) {
+      if (task.completedMinutes === 0) {
+        statusColor = colors.red
+      } else if (task.completedMinutes >= task.minutes) {
+        statusColor = colors.green
+      } else {
+        statusColor = colors.blue
       }
-      divRef.current.style.setProperty(`--taskColor`, statusColor)
     }
-  }, [colors, task])
+  }
 
-  return <div ref={divRef}>{children}</div>
+  return <div style={{ '--taskColor': statusColor }}>{children}</div>
 }
