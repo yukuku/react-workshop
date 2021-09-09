@@ -7,7 +7,10 @@ import { Notice } from 'ProjectPlanner/Notice'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-function App() {
+//////////
+const AuthContext = React.createContext()
+
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -20,14 +23,39 @@ function App() {
     return () => (isCurrent = false)
   }, [])
 
-  return user ? (
-    <PrimaryLayout user={user} setUser={setUser} />
-  ) : (
-    <UnauthenticatedLayout setUser={setUser} />
-  )
+  const context = {
+    user,
+    setUser,
+  }
+
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
-function PrimaryLayout({ user, setUser }) {
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw Error()
+  }
+  return context
+}
+
+/////////
+
+function App() {
+  const { user } = useContext(AuthContext)
+  return user ? <PrimaryLayout /> : <UnauthenticatedLayout />
+}
+
+ReactDOM.render(
+  <AuthProvider>
+    <App />
+  </AuthProvider>,
+  document.getElementById('root')
+)
+
+function PrimaryLayout() {
+  const { user, setUser } = useAuth()
+
   function logout() {
     api.auth.logout().then(() => {
       setUser(null)
@@ -46,7 +74,8 @@ function PrimaryLayout({ user, setUser }) {
   )
 }
 
-function UnauthenticatedLayout({ setUser }) {
+function UnauthenticatedLayout() {
+  const { setUser } = useAuth()
   function login(user) {
     setUser(user)
   }
@@ -136,5 +165,3 @@ function LoginForm({ onAuthenticated }) {
     </>
   )
 }
-
-ReactDOM.render(<App />, document.getElementById('root'))

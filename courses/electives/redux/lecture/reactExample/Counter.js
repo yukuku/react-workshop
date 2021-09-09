@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { actions } from './state/counterState'
+import store from './store'
 
-function Counter({ dispatch }) {
+function Counter() {
   function decrement() {
-    dispatch(actions.decrement())
+    store.dispatch(actions.decrement())
   }
   function increment() {
-    dispatch(actions.increment())
+    store.dispatch(actions.increment())
   }
 
   return (
