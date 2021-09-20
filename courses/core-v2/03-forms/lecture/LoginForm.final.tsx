@@ -5,27 +5,10 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Notice } from 'ProjectPlanner/Notice'
 import { api } from 'ProjectPlanner/api'
 
-type Props = {
-  onAuthenticated(user: UserType): void
-}
-
-type StateType = {
-  username: string
-  password: string
-  showPassword: boolean
-  error: string | null
-  loading: boolean
-}
-
-type ActionTypes =
-  | { type: 'FETCH' }
-  | { type: 'ERROR'; error: string }
-  | { type: 'TOGGLE_SHOW_PASSWORD' }
-  | { type: 'CHANGE_FIELD'; field: string; value: string }
 
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   const [state, dispatch] = useReducer(
-    (state: StateType, action: ActionTypes) => {
+    (state action) => {
       switch (action.type) {
         case 'FETCH':
           return { ...state, loading: true, error: null }

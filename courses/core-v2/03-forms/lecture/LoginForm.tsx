@@ -10,20 +10,40 @@ type Props = {
 }
 
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN':
+          return { ...state, loading: true }
+        case 'LOGIN_FAILED':
+          return { ...state, loading: false, error: action.error }
+        default:
+          break
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const usernameRef = useRef<HTMLInputElement>()
+  const { error, loading, username, password } = state
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    dispatch({ type: 'LOGIN' }) // pass an action
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
+        usernameRef.current.focus()
       })
   }
 
@@ -47,11 +67,16 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
 
         <div>
           <input
+            ref={usernameRef}
             required
             className="form-field"
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
           />
         </div>
         <div>
@@ -61,6 +86,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password
