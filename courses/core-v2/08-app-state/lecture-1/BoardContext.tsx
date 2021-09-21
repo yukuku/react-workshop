@@ -83,7 +83,7 @@ export const BoardProvider: React.FC<Props> = ({ boardId, children }) => {
     tasks,
     loading,
 
-    getTask: (taskId) => {
+    getTask: (taskId: number) => {
       return tasks?.find((t: TaskType) => t.id === taskId)
     },
     updateTask: useCallback((taskId, task) => {

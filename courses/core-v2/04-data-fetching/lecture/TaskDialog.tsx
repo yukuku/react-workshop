@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -14,26 +14,23 @@ type Props = {
   [key: string]: any
 }
 
-function useState(defaultState) {
-  return React.useReducer((_, newValue) => newValue, defaultState)
-}
+function usePromise(p) {
+  const [results, setResults] = useState(null)
 
-function useTask(taskId) {
-  const [task, setTask] = useState(null)
-
+  // Any variable that we close over that CAN CHANGE!!!!
   useEffect(() => {
     let isCurrent = true
-    api.boards.getTask(taskId).then((task) => {
+    p().then((results) => {
       if (isCurrent) {
-        setTask(task)
+        setResults(results)
       }
     })
     return () => {
       isCurrent = false
     }
-  }, [taskId])
+  }, [p]) // ===
 
-  return [task, setTask] as const
+  return results
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -42,7 +39,8 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useTask(taskId)
+  const getTask = useCallback(() => api.boards.getTask(taskId), [taskId])
+  const task = usePromise(getTask)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
@@ -51,7 +49,7 @@ export const TaskDialog: React.FC<Props> = ({
 
   function update(partialTask: Partial<Task>) {
     if (!task) return
-    setTask({ ...task, ...partialTask })
+    // setTask({ ...task, ...partialTask })
   }
 
   return (
