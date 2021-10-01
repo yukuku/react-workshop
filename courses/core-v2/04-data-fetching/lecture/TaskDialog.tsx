@@ -17,15 +17,31 @@ type Props = {
   onClose(): void
 }
 
+function useTask(taskId) {
+  const [task, setTask] = useState<Task | null>(null)
+
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [taskId])
+
+  return [task, setTask] as const
+}
+
 export const TaskDialog: React.FC<Props> = ({
   taskId,
   siblingTaskIds,
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  // api.boards.getTask(taskId)
+  const [task, setTask] = useTask(taskId)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

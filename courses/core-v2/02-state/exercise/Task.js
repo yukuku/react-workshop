@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import classnames from 'classnames'
 import { Heading } from 'ProjectPlanner/Heading'
 import { Progress } from 'ProjectPlanner/Progress'
 import { Minutes } from './Minutes'
@@ -7,18 +8,8 @@ import { Minutes } from './Minutes'
 // file with every exercise
 
 export const Task = () => {
-  // Task 1: Make this variable "stateful" using useState. Then go
-  // down to where it says "Task 1" below and uncomment the part
-  // that changes this state when the progress slider changes
-  const completedMinutes = 4
-
-  // Task 2: You need to "lift" the state from the Minutes component
-  // to here. That means you'll move the useState() line in Minutes
-  // to here and pass down a `minutes` and an `setMinutes` prop like this:
-  // <Minutes minutes={minutes} setMinutes={setMinutes}>
-  const minutes = 8
-
-  // For more tasks, see the README.md
+  const [completedMinutes, setCompletedMinutes] = useState(0)
+  const [minutes, setMinutes] = useState(0)
 
   return (
     <div className="spacing">
@@ -26,7 +17,7 @@ export const Task = () => {
         <Heading as="h2" size={4}>
           Total Task Minutes:
         </Heading>
-        <Minutes />
+        <Minutes minutes={minutes} setMinutes={setMinutes} min={completedMinutes} />
       </div>
 
       <div className="spacing-small">
@@ -37,16 +28,15 @@ export const Task = () => {
           completedMinutes={completedMinutes}
           totalMinutes={minutes}
           status="progress"
-          // Task 1:
           onChange={(completedMinutes) => {
-            // setCompletedMinutes(completedMinutes)
+            setCompletedMinutes(completedMinutes)
           }}
         />
       </div>
 
       {minutes > 0 && (
         <div>
-          <button className={`button`}>Complete</button>
+          <button className={classnames()}>Complete</button>
         </div>
       )}
     </div>
