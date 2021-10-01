@@ -1,4 +1,4 @@
-import React, { useState, useRef, useReducer } from 'react'
+import React, { useRef, useReducer } from 'react'
 import { FaSignInAlt, FaExclamationCircle } from 'react-icons/fa'
 import { User } from 'ProjectPlanner/types'
 import { Heading } from 'ProjectPlanner/Heading'
@@ -9,17 +9,21 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
+function useState(init) {
+  return useReducer((_, newValue) => newValue, typeof init === 'function' ? init() : init)
+}
+
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState()
 
   const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
+
     setLoading(true)
 
     api.auth
@@ -28,8 +32,6 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
         usernameRef.current.focus()
       })
   }
