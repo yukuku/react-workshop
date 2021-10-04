@@ -2,20 +2,32 @@ import * as React from 'react'
 import { useId } from '../../useId'
 import { wrapEvent } from '../../utils'
 
-// You know what to do 😉
+const TabsContext = React.createContext()
+const TabListContext = React.createContext()
 
 export const Tabs = ({ children, ...props }) => {
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+
+  const context = {
+    selectedIndex,
+    onSelect: setSelectedIndex,
+  }
+
   return (
-    <div {...props} data-tabs="">
-      {children}
-    </div>
+    <TabsContext.Provider value={context}>
+      <div {...props} data-tabs="">
+        {children}
+      </div>
+    </TabsContext.Provider>
   )
 }
 
 export const TabList = ({ children, ...props }) => {
-  // This is where we need to map over children to discover the Tab's
-  // index. Aside from the main TabsContext you'll create, you could have
-  // a special TabContext just for passing the index of each tab down.
+  children = React.Children.map(children, (child, index) => {
+    const context = { index }
+    return <TabListContext.Provider value={context}>{child}</TabListContext.Provider>
+  })
+
   return (
     <div {...props} data-tab-list="">
       {children}
@@ -24,8 +36,17 @@ export const TabList = ({ children, ...props }) => {
 }
 
 export const Tab = ({ children, ...props }) => {
+  const { index } = React.useContext(TabListContext)
+  const { selectedIndex, onSelect } = React.useContext(TabsContext)
+  const selected = index === selectedIndex
+
   return (
-    <div {...props} data-tab="">
+    <div
+      {...props}
+      data-tab=""
+      onClick={() => onSelect(index)}
+      data-selected={selected ? '' : undefined}
+    >
       {children}
     </div>
   )
