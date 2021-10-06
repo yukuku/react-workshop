@@ -3,15 +3,17 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 
-type TaskType = {
-  // name: string
-  // content: string
+interface TaskType {
+  name: string
+  content: string
   minutes: number
   completedMinutes: number
 }
 
 export const Task = () => {
   const [task, setTask] = useState<TaskType>({
+    name: '',
+    content: '',
     minutes: 20,
     completedMinutes: 0,
   })
@@ -31,7 +33,16 @@ export const Task = () => {
     <form onSubmit={handleSubmit}>
       <div className="flex">
         <div className="flex-1 spacing">
-          <input className="form-field" type="text" placeholder="Task Name" required />
+          <input
+            value={task.name}
+            onChange={(e) => {
+              update({ name: e.target.value })
+            }}
+            className="form-field"
+            type="text"
+            placeholder="Task Name"
+            required
+          />
           <textarea className="form-field" placeholder="Task" required />
         </div>
         <div className="spacing w-40 ml-4">
