@@ -9,21 +9,56 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
+// function useState(defaultValue) {
+//   return useReducer((_, newState) => newState, defaultValue)
+// }
+
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  // const [error, setError] = useState(null)
+  // const [loading, setLoading] = useState(false)
+  // const [username, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN':
+          return { ...state, loading: true }
+        case 'LOGIN_FAILED':
+          return { ...state, loading: false, error: action.error }
+        case 'CHANGE_FIELD':
+          return { ...state, [action.field]: action.value }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const { error, loading, username, password } = state
+
+  const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+
+    dispatch({ type: 'LOGIN' }) // describes what happened (action, event)
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        // setError(error)
+        // setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
+        usernameRef.current.focus()
       })
   }
 
@@ -34,9 +69,13 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
     // state for the checkbox.
   }
 
+  function changeField(field, value) {
+    dispatch({ type: 'CHANGE_FIELD', field, value })
+  }
+
   return (
     <div>
-      <Heading>Login</Heading>
+      <Heading>Login....</Heading>
       <form onSubmit={handleLogin} className="spacing">
         {error && (
           <Notice type="error">
@@ -52,6 +91,11 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => {
+              changeField('username', e.target.value)
+            }}
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -61,6 +105,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              changeField('password', e.target.value)
+            }}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password

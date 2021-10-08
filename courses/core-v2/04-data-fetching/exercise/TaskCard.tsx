@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Heading } from 'ProjectPlanner/Heading'
 import { Task } from 'ProjectPlanner/types'
 import { api } from 'ProjectPlanner/api'
-// import { useTask } from './useTask'
+import { useTask } from './useTask'
 import 'ProjectPlanner/TaskCard.scss'
 
 type Props = {

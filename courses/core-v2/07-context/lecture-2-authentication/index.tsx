@@ -5,18 +5,37 @@ import { ThemeProvider } from 'ProjectPlanner/ThemeContext'
 import { PrimaryLayout } from './PrimaryLayout'
 import { UnauthenticatedLayout } from './UnauthenticatedLayout'
 import { AuthProvider, useAuth } from './AuthContext'
+import { api } from 'ProjectPlanner/api'
 import 'ProjectPlanner/styles/global-styles.scss'
 
 const App = () => {
-  const authenticated = false
+  const { authenticated, login, logout } = useAuth()
 
-  return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>{authenticated ? <PrimaryLayout /> : <UnauthenticatedLayout />}</AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  )
+  React.useEffect(() => {
+    let isCurrent = true
+    api.auth.getAuthenticatedUser().then((user) => {
+      if (user && isCurrent) {
+        login(user)
+      } else {
+        logout()
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [login, logout])
+
+  if (authenticated === null) return <div>loading....</div>
+  return authenticated ? <PrimaryLayout /> : <UnauthenticatedLayout />
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
+  </BrowserRouter>,
+  document.getElementById('root')
+)
