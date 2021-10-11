@@ -1,6 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Switch, Route, Redirect, NavLink, Link, useParams } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Redirect,
+  useRouteMatch,
+  NavLink,
+  Link,
+  useParams,
+} from 'react-router-dom'
 import { Logo } from 'ProjectPlanner/Logo'
 import { PrimaryFooter } from 'ProjectPlanner/PrimaryFooter'
 import { Centered } from 'ProjectPlanner/Centered'
@@ -15,7 +24,8 @@ import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // Lazy load this component and demonstrate suspense
-import { UserProfile } from './UserProfile'
+
+const UserProfile = React.lazy(() => import('./UserProfile'))
 
 const App: React.FC = () => {
   return (
@@ -30,9 +40,41 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <React.Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route path="/boards">
+              <BoardSubLayout />
+            </Route>
+            <Route path="/users/:userId">
+              <UserProfile />
+            </Route>
+          </Switch>
+        </React.Suspense>
       </main>
       <PrimaryFooter />
+    </div>
+  )
+}
+
+function BoardSubLayout() {
+  const match = useRouteMatch()
+
+  return (
+    <div>
+      <div>sub layout</div>
+      <div>
+        <Switch>
+          <Route path={match.path} exact>
+            <BrowseBoards />
+          </Route>
+          <Route path={`${match.path}/:boardId`}>
+            <Board />
+          </Route>
+        </Switch>
+      </div>
     </div>
   )
 }
@@ -101,13 +143,8 @@ const BrowseBoards: React.FC = () => {
   )
 }
 
-type ParamsType = {
-  boardId: string
-}
-
 const Board: React.FC = () => {
-  const { boardId } = useParams<ParamsType>()
-
+  const boardId = parseInt(useParams<{ boardId: string }>().boardId)
   return (
     <Centered size={50}>
       <Heading>👋 Hi from board {boardId}</Heading>
