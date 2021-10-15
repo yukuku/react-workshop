@@ -3,20 +3,22 @@ import { useParams } from 'react-router-dom'
 import { Centered } from 'ProjectPlanner/Centered'
 import { Tiles } from 'ProjectPlanner/Tiles'
 import { api } from 'ProjectPlanner/api'
-import { useUser } from 'ProjectPlanner/hooks/dataHooks'
 import { useQuery } from 'react-query'
+
+function useUser(userId) {
+  const query = useQuery(['user', userId], () => api.users.getUser(userId), {
+    staleTime: 1000 * 15, // good for demonstrating
+  })
+  const { data: user } = query
+  return user
+}
 
 export const UserProfile: React.FC = () => {
   const userId = parseInt(useParams<{ userId: string }>().userId)
-  const user = useUser(userId)
 
   // Instead of useUser, use react-query to cache the `['user', userId]` key to align
   // with `AvatarGroup`:
-
-  // const query = useQuery(['user', userId], () => api.users.getUser(userId), {
-  //   staleTime: 1000 * 15, // good for demonstrating
-  // })
-  // const { data: user } = query
+  const user = useUser(userId)
 
   return (
     <Centered size={50}>

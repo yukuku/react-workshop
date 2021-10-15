@@ -37,6 +37,6 @@ describe('TaskCard', () => {
     const taskName = screen.getByText('fakeTaskName')
     expect(taskName).toBeTruthy()
     // Produces error if not found
-    const taskContent = screen.getByText('fakeTaskContent')
+    screen.getByText('fakeTaskContent')
   })
 })

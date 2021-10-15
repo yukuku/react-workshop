@@ -6,7 +6,15 @@ import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
 function App() {
-  return <Minutes />
+  return (
+    <>
+      <Minutes />
+    </>
+  )
+}
+
+function Report({ minutes }) {
+  return <div>Minutes: {minutes}</div>
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
