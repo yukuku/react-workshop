@@ -8,7 +8,7 @@ import 'ProjectPlanner/TaskCard.scss'
 // import { BoardContext } from './Board'
 
 export const TaskCard = ({ taskId }) => {
-  // Get the `getTask` from from context and call it with
+  // Get the `getTask` from context and call it with
   // the `taskId`. Then replace this empty task object with
   // the real task
   const task = {}

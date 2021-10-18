@@ -10,7 +10,7 @@ import { BrowseBoards } from 'ProjectPlanner/BrowseBoards'
 import { Board } from 'ProjectPlanner/Board'
 import { UserProfile } from 'ProjectPlanner/UserProfile'
 
-export const PrimaryLayout: React.FC = () => {
+export const PrimaryLayout: React.FC = React.memo(() => {
   const { key } = useLocation()
 
   // Scroll to the top of the page when pages change
@@ -41,4 +41,4 @@ export const PrimaryLayout: React.FC = () => {
       <PrimaryFooter />
     </div>
   )
-}
+})

@@ -35,19 +35,23 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
 
   const usernameRef = useRef<HTMLInputElement>()
 
+  useEffect(() => {
+    if (loading) {
+      api.auth
+        .login(username, password)
+        .then((user: User) => {
+          onAuthenticated(user)
+        })
+        .catch((error) => {
+          dispatch({ type: 'LOGIN_FAILED', error })
+          usernameRef.current.focus()
+        })
+    }
+  }, [loading])
+
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     dispatch({ type: 'LOGIN' }) // describe what happened
-
-    api.auth
-      .login(username, password)
-      .then((user: User) => {
-        onAuthenticated(user)
-      })
-      .catch((error) => {
-        dispatch({ type: 'LOGIN_FAILED', error })
-        usernameRef.current.focus()
-      })
   }
 
   function handleShowPassword(event: React.ChangeEvent) {

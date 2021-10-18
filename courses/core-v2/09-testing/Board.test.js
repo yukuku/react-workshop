@@ -35,7 +35,7 @@ jest.mock('./BoardContext', () => ({
  */
 
 describe('Board', () => {
-  it('should render the board with no tasks', () => {
+  it('should render the board when the data is still resolving', () => {
     useBoardContext.mockReturnValue({
       board: null,
       taskGroups: [],
