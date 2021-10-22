@@ -29,8 +29,8 @@ export const Task = () => {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    setTask(initialTask)
     console.log(task)
+    setTask(initialTask)
     nameRef.current.focus()
   }
 

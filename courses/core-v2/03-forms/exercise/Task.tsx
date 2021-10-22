@@ -4,8 +4,8 @@ import { Minutes } from 'ProjectPlanner/Minutes'
 import { Progress } from 'ProjectPlanner/Progress'
 
 type TaskType = {
-  // name: string
-  // content: string
+  name: string
+  content: string
   minutes: number
   completedMinutes: number
 }
@@ -14,6 +14,8 @@ export const Task = () => {
   const [task, setTask] = useState<TaskType>({
     minutes: 20,
     completedMinutes: 0,
+    name: '',
+    content: '',
   })
   const complete = task.minutes > 0 && task.minutes === task.completedMinutes
 

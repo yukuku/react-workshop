@@ -7,6 +7,8 @@ import { Notice } from 'ProjectPlanner/Notice'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
+const AuthContext = React.createContext()
+
 function App() {
   const [user, setUser] = useState(null)
 
@@ -20,14 +22,21 @@ function App() {
     return () => (isCurrent = false)
   }, [])
 
-  return user ? (
-    <PrimaryLayout user={user} setUser={setUser} />
-  ) : (
-    <UnauthenticatedLayout setUser={setUser} />
+  const context = {
+    user,
+    setUser,
+  }
+
+  return (
+    <AuthContext.Provider value={context}>
+      {user ? <PrimaryLayout /> : <UnauthenticatedLayout />}
+    </AuthContext.Provider>
   )
 }
 
-function PrimaryLayout({ user, setUser }) {
+function PrimaryLayout() {
+  const { setUser, user } = useContext(AuthContext)
+
   function logout() {
     api.auth.logout().then(() => {
       setUser(null)
@@ -46,7 +55,9 @@ function PrimaryLayout({ user, setUser }) {
   )
 }
 
-function UnauthenticatedLayout({ setUser }) {
+function UnauthenticatedLayout() {
+  const { setUser } = useContext(AuthContext)
+
   function login(user) {
     setUser(user)
   }

@@ -34,7 +34,7 @@ export const Task = () => {
       {minutes > 0 && (
         <div>
           <button
-            className={`button ${complete ? 'button-green' : ''}`}
+            className={`button button-green`}
             onClick={() => {
               setCompletedMinutes(minutes)
             }}
