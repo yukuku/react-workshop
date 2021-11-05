@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import { TaskGroup } from './TaskGroup'
+import { TaskGroup } from 'ProjectPlanner/TaskGroup'
 import { Heading } from 'ProjectPlanner/Heading'
-import {
-  Board as BoardType,
-  TaskGroup as TaskGroupType,
-  Task as TaskType,
-} from 'ProjectPlanner/types'
-import { api } from 'ProjectPlanner/api'
 import { BoardProvider, useBoardContext } from './BoardContext'
 import 'ProjectPlanner/Board.scss'
 
@@ -16,7 +10,7 @@ export const Board: React.FC = () => {
 
   return (
     <BoardProvider boardId={boardId}>
-      <BoardUI></BoardUI>
+      <BoardUI />
     </BoardProvider>
   )
 }
@@ -28,12 +22,12 @@ export const BoardUI: React.FC = () => {
     <div className="board spacing">
       <Heading style={{ minWidth: '25rem' }}>{board?.name}</Heading>
 
-      <div className="board-scroll-area">
+      <div className="board-scroll-area" data-testid="results">
         {taskGroups &&
           taskGroups.map((taskGroup) => {
             return (
               <div className="task-group-wrap" key={taskGroup.id}>
-                <TaskGroup name={taskGroup.name} taskIds={taskGroup.taskIds} />
+                <TaskGroup taskGroupId={1} name={taskGroup.name} taskIds={taskGroup.taskIds} />
               </div>
             )
           })}

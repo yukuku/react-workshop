@@ -63,5 +63,5 @@ if (nameRef.current) nameRef.current.focus()
 
 // Or "Optional Chaining" which is actually a JS thing not TS
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
-nameRef.current?.focus
+nameRef.current?.focus()
 ```

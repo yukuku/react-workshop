@@ -6,7 +6,7 @@ import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
 function App() {
-  return <Minutes />
+  return <Minutes></Minutes>
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
