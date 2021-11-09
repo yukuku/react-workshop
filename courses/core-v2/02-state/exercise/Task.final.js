@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import classnames from 'classnames'
 import { Heading } from 'ProjectPlanner/Heading'
 import { Progress } from 'ProjectPlanner/Progress'
 import { Minutes } from './Minutes.final'
@@ -34,7 +35,7 @@ export const Task = () => {
       {minutes > 0 && (
         <div>
           <button
-            className={`button ${complete ? 'button-green' : ''}`}
+            className={classnames('button', { 'button-green': complete })}
             onClick={() => {
               setCompletedMinutes(minutes)
             }}
