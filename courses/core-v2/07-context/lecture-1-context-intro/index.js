@@ -7,8 +7,10 @@ import { Notice } from 'ProjectPlanner/Notice'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-function App() {
-  const [user, setUser] = useState(null)
+const AuthContext = React.createContext()
+
+function AuthProvider({ children }) {
+
 
   useEffect(() => {
     let isCurrent = true
@@ -20,14 +22,31 @@ function App() {
     return () => (isCurrent = false)
   }, [])
 
-  return user ? (
-    <PrimaryLayout user={user} setUser={setUser} />
-  ) : (
-    <UnauthenticatedLayout setUser={setUser} />
-  )
+  const context = {
+    user,
+    setUser,
+  }
+
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
-function PrimaryLayout({ user, setUser }) {
+function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw Error('Youre not in the.....')
+  }
+  return context
+}
+
+/////////////
+
+function App() {
+  return <ShoppingProvider><AuthProvider>{user ? <PrimaryLayout /> : <UnauthenticatedLayout />}</AuthProvider><ShoppingProvider>
+}
+
+function PrimaryLayout() {
+  const { user, setUser } = useAuth()
+
   function logout() {
     api.auth.logout().then(() => {
       setUser(null)
@@ -46,7 +65,9 @@ function PrimaryLayout({ user, setUser }) {
   )
 }
 
-function UnauthenticatedLayout({ setUser }) {
+function UnauthenticatedLayout() {
+  const { setUser } = useContext(AuthContext)
+
   function login(user) {
     setUser(user)
   }
