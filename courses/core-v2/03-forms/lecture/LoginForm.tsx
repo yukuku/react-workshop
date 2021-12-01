@@ -9,21 +9,47 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
+// const answer = [1, 2, 3].reduce((totalSoFar, number) => {
+//   return totalSoFar + number
+// }, 0)
+
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'LOGIN': {
+          return { ...state, loading: true }
+        }
+        case 'LOGIN_FAILED': {
+          return { ...state, loading: false, error: action.error }
+        }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
+
+  const { error, loading, username, password } = state
+  const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+    // setLoading(true)
+    dispatch({ type: 'LOGIN' })
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
-      .then((user: User) => {
+      .login(username, password)
+      .then((user) => {
         onAuthenticated(user)
       })
       .catch((error) => {
-        setError(error)
-        setLoading(false)
+        dispatch({ type: 'LOGIN_FAILED', error })
+        usernameRef.current.focus()
       })
   }
 
@@ -52,6 +78,9 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -61,6 +90,8 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password

@@ -3,7 +3,11 @@ import { connect, useSelector } from 'react-redux'
 import Counter from './Counter'
 
 function PrimaryLayout() {
-  const count = 0
+  // const { count } = useContext(What)
+
+  const count = useSelector((state) => {
+    return state.counterState.count
+  })
 
   return (
     <div>
