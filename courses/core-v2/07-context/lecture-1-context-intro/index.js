@@ -62,7 +62,7 @@ ReactDOM.render(
 
 ///////////
 
-function PrimaryLayout() {
+const PrimaryLayout = React.memo(() => {
   const { setUser, user } = useAuth()
 
   function logout() {
@@ -81,7 +81,7 @@ function PrimaryLayout() {
       </div>
     </div>
   )
-}
+})
 
 function UnauthenticatedLayout() {
   const { setUser } = useContext(AuthContext)
