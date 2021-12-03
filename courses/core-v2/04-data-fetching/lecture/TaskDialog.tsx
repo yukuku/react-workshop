@@ -17,15 +17,40 @@ type Props = {
   onClose(): void
 }
 
-export const TaskDialog: React.FC<Props> = ({
-  taskId,
-  siblingTaskIds,
-  onChangeTaskId,
-  onClose,
-}) => {
-  const [task, setTask] = useState<Task | null>(null)
+function useTask(taskId) {
+  const [task, setTask] = useState<Task>(null)
 
-  // api.boards.getTask(taskId)
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [taskId])
+
+  return [task, setTask] as const
+}
+
+export const TaskDialog: React.FC<Props> = ({ taskId, siblingTaskIds, onChangeTaskId, onClose }) => {
+  const [task, setTask] = useTask(taskId)
+
+  useEffect(() => {
+    if (task) {
+      document.title = task.name
+    }
+  }, [task])
+
+  // Side effects include:
+  // Network
+  // localStorage
+  // cookies
+  // document
+  // window
+  // Working with the DOM directly
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
