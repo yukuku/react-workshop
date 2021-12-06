@@ -13,18 +13,23 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    if (loading) {
+      api.auth
+        .login('username', 'password') // 👈 👀 Get Real Values
+        .then((user: User) => {
+          onAuthenticated(user)
+        })
+        .catch((error) => {
+          setError(error)
+          setLoading(false)
+        })
+    }
+  }, [loading])
+
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     setLoading(true)
-    api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
-      .then((user: User) => {
-        onAuthenticated(user)
-      })
-      .catch((error) => {
-        setError(error)
-        setLoading(false)
-      })
   }
 
   function handleShowPassword(event: React.ChangeEvent) {
