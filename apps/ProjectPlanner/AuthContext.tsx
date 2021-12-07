@@ -61,11 +61,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  const context: Context = {
-    ...state,
-    login,
-    logout,
-  }
+  const context: Context = React.useMemo(() => {
+    return {
+      ...state,
+      login,
+      logout,
+    }
+  }, [state])
 
   return <AuthStateContext.Provider value={context} children={children} />
 }
