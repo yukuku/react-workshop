@@ -8,37 +8,21 @@ import {
   Task as TaskType,
 } from 'ProjectPlanner/types'
 import { api } from 'ProjectPlanner/api'
-// import { BoardProvider } from './BoardContext'
+import { BoardProvider, useBoardContext } from './BoardContext'
 import 'ProjectPlanner/Board.scss'
 
 export const Board: React.FC = () => {
   const boardId = parseInt(useParams<{ boardId: string }>().boardId)
-  const [board, setBoard] = useState<BoardType | null>(null)
-  const [taskGroups, setTaskGroups] = useState<TaskGroupType[] | null>(null)
-  const [tasks, setTasks] = useState<TaskType[] | null>(null)
 
-  useEffect(() => {
-    api.boards.getBoard(boardId).then((data) => {
-      const { taskGroups, tasks, ...board } = data
-      setBoard(board)
-      setTaskGroups(taskGroups)
-      setTasks(tasks)
-    })
-  }, [boardId])
+  return (
+    <BoardProvider boardId={boardId}>
+      <BoardUI></BoardUI>
+    </BoardProvider>
+  )
+}
 
-  // Lets put these on context:
-
-  const getTask = (taskId: number): TaskType | undefined => {
-    return tasks?.find((task) => task.id === taskId)
-  }
-
-  const updateTask = (taskId: number, task: TaskType): void => {
-    if (!tasks) return
-    api.boards.updateTask(taskId, task).then(() => {
-      const i = tasks.findIndex((t) => t.id === taskId)
-      setTasks([...tasks.slice(0, i), task, ...tasks.slice(i + 1, tasks.length)])
-    })
-  }
+export const BoardUI: React.FC = () => {
+  const { board, taskGroups } = useBoardContext()
 
   return (
     <div className="board spacing">

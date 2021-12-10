@@ -4,18 +4,32 @@ import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
 import 'ProjectPlanner/Minutes.scss'
 
 export const Minutes = () => {
-  const minutes = 0
+  const [minutes, setMinutes] = useState(0)
+
+  function subtract() {
+    setMinutes(minutes - 1)
+  }
+
+  function add() {
+    setMinutes(minutes + 1)
+  }
 
   return (
     <div className="minutes">
       <div>
-        <button type="button">
+        <button onClick={subtract} type="button">
           <FaMinusCircle />
         </button>
       </div>
-      <div>{minutes}</div>
+      <input
+        type="text"
+        value={minutes}
+        onChange={(e) => {
+          setMinutes(parseInt(e.target.value))
+        }}
+      />
       <div>
-        <button type="button">
+        <button onClick={add} type="button">
           <FaPlusCircle />
         </button>
       </div>

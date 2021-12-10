@@ -83,6 +83,7 @@ export const BoardProvider: React.FC<Props> = ({ boardId, children }) => {
     tasks,
     loading,
 
+    dispatch,
     getTask: (taskId) => {
       return tasks?.find((t: TaskType) => t.id === taskId)
     },
