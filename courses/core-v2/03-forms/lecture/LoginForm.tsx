@@ -9,21 +9,27 @@ type Props = {
   onAuthenticated(user: User): void
 }
 
-export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
-  const [error, setError] = useState(null)
+export const LoginForm = ({ onAuthenticated }: Props) => {
+  const [error, setError] = useState<string>(null)
   const [loading, setLoading] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     setLoading(true)
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
         setError(error)
         setLoading(false)
+        usernameRef.current.focus()
       })
   }
 
@@ -52,6 +58,11 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(event) => {
+              setUsername(event.target.value)
+            }}
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -61,6 +72,10 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value)
+            }}
           />
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password

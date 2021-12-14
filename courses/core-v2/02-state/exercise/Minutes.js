@@ -5,18 +5,15 @@ import 'ProjectPlanner/Minutes.scss'
 // When you "lift" this state up, you'll pass down `minutes` and `setMinutes`
 // as props. The rest of this component doesn't care that those things came
 // from a local useState before or from props.
-export const Minutes = () => {
-  // Lift this state
-  const [minutes, setMinutes] = useState(0)
-
+export const Minutes = ({ minutes, onChange, min = 0 }) => {
   function subtract() {
-    if (minutes > 0) {
-      setMinutes(minutes - 1)
+    if (minutes > min) {
+      onChange(minutes - 1)
     }
   }
 
   function add() {
-    setMinutes(minutes + 1)
+    onChange(minutes + 1)
   }
 
   return (
