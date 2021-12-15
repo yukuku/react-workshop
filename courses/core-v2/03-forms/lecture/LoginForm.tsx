@@ -10,16 +10,34 @@ type Props = {
 }
 
 export const LoginForm = ({ onAuthenticated }: Props) => {
-  const [error, setError] = useState<string>(null)
-  const [loading, setLoading] = useState(false)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  // const [error, setError] = useState<string>(null)
+  // const [loading, setLoading] = useState(false)
+  // const [username, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action) {
+        case 'LOGIN':
+          return { ...state, loading: true }
+        default:
+          return state
+      }
+    },
+    {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+    }
+  )
 
   const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
-    setLoading(true)
+
+    dispatch({ type: 'LOGIN' }) // action
 
     api.auth
       .login(username, password)

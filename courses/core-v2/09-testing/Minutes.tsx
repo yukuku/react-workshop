@@ -34,11 +34,10 @@ export const Minutes: React.FC<Props> = ({ minutes, min = 0, onChange }) => {
   }
 
   function handleInputKeyDown(event: React.KeyboardEvent) {
+    event.preventDefault()
     if (event.key === 'ArrowUp') {
-      event.preventDefault()
       add()
     } else if (event.key === 'ArrowDown') {
-      event.preventDefault()
       subtract()
     }
   }

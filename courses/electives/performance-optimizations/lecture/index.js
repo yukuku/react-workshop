@@ -7,7 +7,7 @@ import './styles.scss'
  */
 
 // 1. Demonstrate useMemo Hook
-import App from './useMemo'
+// import App from './useMemo'
 
 // 2. Demonstrate shouldComponentUpdate vs PureComponent vs React.memo
 //    Then how useCallback helps

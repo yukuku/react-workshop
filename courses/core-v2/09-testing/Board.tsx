@@ -15,7 +15,7 @@ export const Board: React.FC = () => {
   )
 }
 
-export const BoardUI: React.FC = () => {
+const BoardUI: React.FC = () => {
   const { board, taskGroups } = useBoardContext()
 
   return (
