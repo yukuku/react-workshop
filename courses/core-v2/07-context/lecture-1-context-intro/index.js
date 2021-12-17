@@ -7,7 +7,11 @@ import { Notice } from 'ProjectPlanner/Notice'
 import 'ProjectPlanner/styles/global-styles.scss'
 import './styles.scss'
 
-function App() {
+////////
+
+const AuthContext = React.createContext()
+
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -20,14 +24,47 @@ function App() {
     return () => (isCurrent = false)
   }, [])
 
-  return user ? (
-    <PrimaryLayout user={user} setUser={setUser} />
-  ) : (
-    <UnauthenticatedLayout setUser={setUser} />
-  )
+  const context = {
+    user,
+    setUser,
+  }
+
+  return <AuthContext.Provider value={context} children={children} />
 }
 
-function PrimaryLayout({ user, setUser }) {
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw Error('You are trying to consume, but youre not in an AuthProvider')
+  }
+  return context
+}
+
+///////
+
+function App() {
+  const { user } = useAuth()
+  return user ? <PrimaryLayout /> : <UnauthenticatedLayout />
+}
+
+ReactDOM.render(
+  <Stripe api={123}>
+    <BrowserRouter>
+      <ShoppingProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ShoppingProvider>
+    </BrowserRouter>
+  </Stripe>,
+  document.getElementById('root')
+)
+
+/////////
+
+function PrimaryLayout() {
+  const { user, setUser } = useAuth()
+
   function logout() {
     api.auth.logout().then(() => {
       setUser(null)
@@ -46,7 +83,9 @@ function PrimaryLayout({ user, setUser }) {
   )
 }
 
-function UnauthenticatedLayout({ setUser }) {
+function UnauthenticatedLayout() {
+  const { setUser } = useAuth()
+
   function login(user) {
     setUser(user)
   }
@@ -136,5 +175,3 @@ function LoginForm({ onAuthenticated }) {
     </>
   )
 }
-
-ReactDOM.render(<App />, document.getElementById('root'))

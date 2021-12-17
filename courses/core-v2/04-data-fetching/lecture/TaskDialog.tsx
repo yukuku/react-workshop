@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -17,15 +17,39 @@ type Props = {
   onClose(): void
 }
 
+// Network (Promise, Callback, Subscription)
+// localStorage
+// Cookies
+// window / document
+// working with the DOM directly (imperatively)
+
+function useApi<T>(api) {
+  const [results, setResults] = useState<T>(null)
+
+  // Any variable that we "close over" that CAN CHANGE!!!!
+  useEffect(() => {
+    let isCurrent = true
+    api().then((results) => {
+      if (isCurrent) {
+        setResults(results)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [api])
+
+  return [results, setResults] as const
+}
+
 export const TaskDialog: React.FC<Props> = ({
   taskId,
   siblingTaskIds,
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  // api.boards.getTask(taskId)
+  const getTask = useCallback(() => api.boards.getTask(taskId), [taskId])
+  const [task, setTask] = useApi<Task>(getTask)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

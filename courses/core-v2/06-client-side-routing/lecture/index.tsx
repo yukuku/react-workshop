@@ -30,9 +30,34 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards">
+            <BoardLayout />
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
+    </div>
+  )
+}
+
+function BoardLayout() {
+  return (
+    <div>
+      <div>Board Layout</div>
+      <div>
+        <Switch>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+        </Switch>
+      </div>
     </div>
   )
 }
@@ -68,7 +93,7 @@ const Dashboard: React.FC = () => {
 }
 
 const BrowseBoards: React.FC = () => {
-  const boards = useBoards()
+  const boards = useBoards() // useEffect / state
 
   return (
     <Centered size={50}>
@@ -106,7 +131,7 @@ type ParamsType = {
 }
 
 const Board: React.FC = () => {
-  const { boardId } = useParams<ParamsType>()
+  const boardId = parseInt(useParams<ParamsType>().boardId)
 
   return (
     <Centered size={50}>
