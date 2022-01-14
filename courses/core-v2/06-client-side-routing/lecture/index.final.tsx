@@ -30,22 +30,20 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <Switch>
-            <Route path="/" exact>
-              <Dashboard />
-            </Route>
-            <Route path="/boards" exact>
-              <BrowseBoards />
-            </Route>
-            <Route path="/boards/:boardId">
-              <Board />
-            </Route>
-            <Route path="/users/:userId">
-              <UserProfile />
-            </Route>
-          </Switch>
-        </React.Suspense>
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+          <Route path="/users/:userId">
+            <UserProfile />
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
     </div>

@@ -12,18 +12,24 @@ type Props = {
 export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const usernameRef = useRef<HTMLInputElement>()
 
   function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     setLoading(true)
+
     api.auth
-      .login('username', 'password') // 👈 👀 Get Real Values
+      .login(username, password)
       .then((user: User) => {
         onAuthenticated(user)
       })
       .catch((error) => {
         setError(error)
         setLoading(false)
+        usernameRef.current.focus()
       })
   }
 
@@ -44,7 +50,6 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             <span>{error}</span>
           </Notice>
         )}
-
         <div>
           <input
             required
@@ -52,6 +57,11 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Username"
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+            ref={usernameRef}
           />
         </div>
         <div>
@@ -61,7 +71,12 @@ export const LoginForm: React.FC<Props> = ({ onAuthenticated }) => {
             aria-label="Password"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
           />
+
           <label>
             <input className="passwordCheckbox" type="checkbox" /> show password
           </label>
