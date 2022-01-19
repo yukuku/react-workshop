@@ -24,25 +24,24 @@ export const Task = () => {
         <Progress
           completedMinutes={completedMinutes}
           totalMinutes={minutes}
-          status={complete ? 'complete' : 'progress'}
+          // status={complete ? 'complete' : 'progress'}
           onChange={(completedMinutes) => {
             setCompletedMinutes(completedMinutes)
           }}
         />
       </div>
 
-      {minutes > 0 && (
-        <div>
-          <button
-            className={`button ${complete ? 'button-green' : ''}`}
-            onClick={() => {
-              setCompletedMinutes(minutes)
-            }}
-          >
-            Complete
-          </button>
-        </div>
-      )}
+      <div>
+        <button
+          disabled={minutes === 0}
+          className={`button ${complete ? 'button-green' : ''}`}
+          onClick={() => {
+            setCompletedMinutes(minutes)
+          }}
+        >
+          Complete
+        </button>
+      </div>
     </div>
   )
 }

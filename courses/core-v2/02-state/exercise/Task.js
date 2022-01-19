@@ -39,6 +39,7 @@ export const Task = () => {
           status="progress"
           // Task 1:
           onChange={(completedMinutes) => {
+            console.log(completedMinutes)
             // setCompletedMinutes(completedMinutes)
           }}
         />
@@ -46,7 +47,7 @@ export const Task = () => {
 
       {minutes > 0 && (
         <div>
-          <button className={`button`}>Complete</button>
+          <button className={`button ${null}`}>Complete</button>
         </div>
       )}
     </div>

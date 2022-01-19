@@ -23,9 +23,23 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
+  const [task, setTask] = useState<Task>(null)
 
-  // api.boards.getTask(taskId)
+  // When we mount
+  // When the dep array changes
+  useEffect(() => {
+    let isCurrent = true
+    api.boards.getTask(taskId).then((task) => {
+      if (isCurrent) {
+        setTask(task)
+      }
+    })
+    // When we unmount
+    // When the dep array changes
+    return () => {
+      isCurrent = false
+    }
+  }, [taskId]) // Any variable that we "close over" that CAN CHANGE (between re-renders)!!!!!
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
