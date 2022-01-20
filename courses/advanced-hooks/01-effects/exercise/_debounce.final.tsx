@@ -18,13 +18,14 @@ function ClapButton(): React.ReactElement {
     }
   }, [queueClaps])
 
-  const clap = () => {
-    setQueueClaps(queueClaps + 1)
-  }
-
   return (
     <div className="align-center spacing debounce">
-      <button onClick={clap} className="button">
+      <button
+        onClick={() => {
+          setQueueClaps(queueClaps + 1)
+        }}
+        className="button"
+      >
         Clap
       </button>
       <hr />
