@@ -10,16 +10,14 @@ import 'ProjectPlanner/styles/global-styles.scss'
 const queryClient = new QueryClient()
 
 ReactDOM.render(
-  <Stripe>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  </Stripe>,
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </BrowserRouter>,
   document.getElementById('root')
 )
