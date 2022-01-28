@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Switch, Route, Redirect, NavLink, Link, useParams } from 'react-router-dom'
 import { Logo } from 'ProjectPlanner/Logo'
@@ -15,7 +15,11 @@ import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // Lazy load this component and demonstrate suspense
-import { UserProfile } from './UserProfile'
+
+// const { UserProfile } = React.lazy(() => import('./UserProfile'))
+const UserProfile = React.lazy(() => import('./UserProfile'))
+
+const Loading = () => <div>...</div>
 
 const App: React.FC = () => {
   return (
@@ -30,7 +34,23 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <Suspense fallback={<Loading />}>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route path="/boards" exact>
+              <BrowseBoards />
+            </Route>
+            <Route path="/boards/:boardId">
+              <Board />
+            </Route>
+
+            <Route path="/users/:userId">
+              <UserProfile></UserProfile>
+            </Route>
+          </Switch>
+        </Suspense>
       </main>
       <PrimaryFooter />
     </div>
@@ -106,7 +126,7 @@ type ParamsType = {
 }
 
 const Board: React.FC = () => {
-  const { boardId } = useParams<ParamsType>()
+  const boardId = parseInt(useParams<ParamsType>().boardId)
 
   return (
     <Centered size={50}>
