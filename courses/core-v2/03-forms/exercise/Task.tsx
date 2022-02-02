@@ -18,7 +18,6 @@ export const Task = () => {
   const complete = task.minutes > 0 && task.minutes === task.completedMinutes
 
   function update(partialTask: Partial<TaskType>) {
-    if (!task) return
     setTask({ ...task, ...partialTask })
   }
 

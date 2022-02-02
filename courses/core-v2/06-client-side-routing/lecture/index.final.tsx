@@ -13,9 +13,9 @@ import 'ProjectPlanner/PrimaryLayout.scss'
 import 'ProjectPlanner/BrowseBoardItem.scss'
 import 'ProjectPlanner/PrimaryHeader.scss'
 
-// https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
-// import { UserProfile } from 'ProjectPlanner/UserProfile'
-const UserProfile = React.lazy(() => import('./UserProfile'))
+// // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
+// // import { UserProfile } from 'ProjectPlanner/UserProfile'
+// const UserProfile = React.lazy(() => import('./UserProfile'))
 
 const App: React.FC = () => {
   return (
@@ -30,22 +30,17 @@ const PrimaryLayout: React.FC = () => {
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <Switch>
-            <Route path="/" exact>
-              <Dashboard />
-            </Route>
-            <Route path="/boards" exact>
-              <BrowseBoards />
-            </Route>
-            <Route path="/boards/:boardId">
-              <Board />
-            </Route>
-            <Route path="/users/:userId">
-              <UserProfile />
-            </Route>
-          </Switch>
-        </React.Suspense>
+        <Switch>
+          <Route path="/" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/boards" exact>
+            <BrowseBoards />
+          </Route>
+          <Route path="/boards/:boardId">
+            <Board />
+          </Route>
+        </Switch>
       </main>
       <PrimaryFooter />
     </div>

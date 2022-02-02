@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const TaskCard: React.FC<Props> = ({ taskId, onClick }) => {
-  const { getTask } = useBoardContext()
+  const { getTask } = useBoardContext() // useContext
   const task = getTask(taskId)
 
   return (
