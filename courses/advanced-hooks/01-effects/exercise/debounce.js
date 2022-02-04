@@ -3,46 +3,40 @@ import * as ReactDOM from 'react-dom'
 import debounce from 'lodash.debounce'
 import { saveClapsToDatabase } from './utils'
 
-class ClapButton extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      claps: 0,
-      queueClaps: 0,
-    }
-    this.saveClaps = debounce(this.saveClaps, 1000)
-  }
+const ClapButton = () => {
+  const [claps, setClaps] = React.useState(0)
+  const [queueClaps, setQueueClaps] = React.useState(0)
 
-  saveClaps = () => {
-    saveClapsToDatabase(this.state.queueClaps).then((latestClaps) => {
-      this.setState({
-        claps: latestClaps,
-        queueClaps: 0,
-      })
+  const queueClapsRef = React.useRef(0)
+
+  // React.useEffect(() => {
+  //   if (queueClaps > 0) {
+
+  //     return () => {
+  //       clearTimeout(id)
+  //     }
+  //   }
+  // }, [queueClaps])
+
+  const save = debounce(() => {
+    saveClapsToDatabase(queueClaps).then((latestClaps) => {
+      setClaps(latestClaps)
+      setQueueClaps(0)
     })
+  })
+
+  const clap = () => {
+    queueClapsRef.current++
+    save()
   }
 
-  clap = () => {
-    this.setState((state) => {
-      return { queueClaps: state.queueClaps + 1 }
-    })
-    this.saveClaps()
-  }
-
-  render() {
-    return (
-      <div className="align-center spacing debounce">
-        <button onClick={this.clap} className="button">
-          Clap
-        </button>
-        <hr />
-        <div className="horizontal-spacing">
-          <span>Queue Claps: {this.state.queueClaps}</span>
-          <span>Claps: {this.state.claps}</span>
-        </div>
-      </div>
-    )
-  }
+  return (
+    <div className="align-center spacing debounce">
+      <button onClick={clap} className="button">
+        Clap {queueClaps + claps}
+      </button>
+    </div>
+  )
 }
 
 ReactDOM.render(<ClapButton />, document.getElementById('root'))

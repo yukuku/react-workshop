@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -11,10 +11,34 @@ import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
-  taskId: number
-  siblingTaskIds: number[]
-  onChangeTaskId(taskId: number): void
-  onClose(): void
+  [key: string]: any
+}
+
+function usePromise(p) {
+  const [results, setResults] = useState(null)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    let isCurrent = true
+    setLoading(true)
+    p()
+      .then((results) => {
+        if (isCurrent) {
+          setResults(results)
+          setLoading(false)
+        }
+      })
+      .catch((e) => {
+        setError(e)
+        setLoading(false)
+      })
+    return () => {
+      isCurrent = false
+    }
+  }, [p])
+
+  return [results, error, loading]
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -23,9 +47,10 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
+  const getTask = useCallback(() => api.boards.getTask(taskId), [taskId])
+  const [task, _, loading] = usePromise(getTask)
 
-  // api.boards.getTask(taskId)
+  // const task = useTask(taskId)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)

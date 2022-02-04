@@ -9,9 +9,18 @@ const AccordionContext = React.createContext()
  */
 
 export const Accordion = React.forwardRef(
-  ({ children, onChange, defaultIndex = 0, id, ...props }, forwardedRef) => {
+  (
+    { children, onChange, index: controlledIndex, defaultIndex = 0, id, ...props },
+    forwardedRef
+  ) => {
     const [selectedIndex, setSelectedIndex] = React.useState(defaultIndex)
     const accordionId = useId(id)
+
+    const isControlled = controlledIndex != null
+    const { current: startedControlled } = React.useRef(isControlled)
+    if (isControlled !== startedControlled) {
+      console.warn('You cannot change a controlled thing to uncontrolled and vice versa')
+    }
 
     children = React.Children.map(children, (child, index) => {
       const panelId = `accordion-${accordionId}-panel-${index}`
@@ -20,7 +29,7 @@ export const Accordion = React.forwardRef(
       const context = {
         buttonId,
         panelId,
-        selected: selectedIndex === index,
+        selected: isControlled ? controlledIndex === index : selectedIndex === index,
         selectPanel: () => {
           onChange && onChange(index)
           setSelectedIndex(index)

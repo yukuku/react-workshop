@@ -15,8 +15,9 @@ export const PrimaryHeader: React.FC = () => {
   const { user, logout } = useAuth()
 
   function handleLogout() {
-    logout()
-    api.auth.logout()
+    api.auth.logout().then(() => {
+      logout()
+    })
   }
 
   function resetData() {

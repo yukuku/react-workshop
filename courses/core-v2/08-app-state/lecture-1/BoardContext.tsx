@@ -18,7 +18,7 @@ type BoardContextType = {
   loading: boolean
 
   getTask: (taskId: number) => TaskType | undefined
-  updateTask: (taskId: number, task: TaskType) => void
+  updateTask: (taskId: number, task: TaskType) => Promise<void>
 }
 
 const BoardContext = React.createContext<BoardContextType>(null!)
@@ -87,7 +87,7 @@ export const BoardProvider: React.FC<Props> = ({ boardId, children }) => {
       return tasks?.find((t: TaskType) => t.id === taskId)
     },
     updateTask: useCallback((taskId, task) => {
-      api.boards.updateTask(taskId, task).then(() => {
+      return api.boards.updateTask(taskId, task).then(() => {
         dispatch({ type: 'UPDATE_TASK', taskId, task })
       })
     }, []),

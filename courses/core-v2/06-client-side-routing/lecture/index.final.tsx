@@ -35,8 +35,10 @@ const PrimaryLayout: React.FC = () => {
             <Route path="/" exact>
               <Dashboard />
             </Route>
-            <Route path="/boards" exact>
-              <BrowseBoards />
+            <Route path="/boards" exact element={<BrowseBoards />}>
+              <Route path=":id">
+                <Page></Page>
+              </Route>
             </Route>
             <Route path="/boards/:boardId">
               <Board />
