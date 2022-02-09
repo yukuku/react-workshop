@@ -22,15 +22,18 @@ export const BoardUI: React.FC = () => {
     <div className="board spacing">
       <Heading style={{ minWidth: '25rem' }}>{board?.name}</Heading>
 
-      <div className="board-scroll-area" data-testid="results">
-        {taskGroups &&
+      <div className="board-scroll-area">
+        {taskGroups ? (
           taskGroups.map((taskGroup) => {
             return (
               <div className="task-group-wrap" key={taskGroup.id}>
                 <TaskGroup taskGroupId={1} name={taskGroup.name} taskIds={taskGroup.taskIds} />
               </div>
             )
-          })}
+          })
+        ) : (
+          <div data-testid="no-results">No Results</div>
+        )}
       </div>
     </div>
   )

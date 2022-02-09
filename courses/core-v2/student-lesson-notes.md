@@ -91,7 +91,7 @@ For this document fn = Callback Function
 - However, be careful, any variables that your effect uses (depends on) need to be stated in your dependency array. With the older mental model of time and `componentDidMount`, we thought in terms of "this just needs to happen once when we mount". But now with `useEffect` we need to think in terms of "anytime state changes, what do I need to do". Therefore you'll probably need to put values in your dependency array often.
 
 ```js
-useEffect(fn) // runs when a component mounts, and any state changes
+useEffect(fn) // runs when a component mounts, and any state changes (after every render phase)
 useEffect(fn, []) // runs just when a component mounts
 useEffect(fn, [some, example, state]) // runs when a component mounts, and when `some` or `example` or `state` changes.
 ```

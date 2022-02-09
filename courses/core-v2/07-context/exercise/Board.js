@@ -5,8 +5,7 @@ import { Heading } from 'ProjectPlanner/Heading'
 import { api } from 'ProjectPlanner/api'
 import 'ProjectPlanner/Board.scss'
 
-// Create Context Here (React.createContext())
-// Don't forget to export it
+export const BoardContext = React.createContext()
 
 export const Board = () => {
   const boardId = parseInt(useParams().boardId)
@@ -29,25 +28,26 @@ export const Board = () => {
 
   // Pass this context object down through the provider
 
-  // const context = {
-  //   getTask,
-  // }
+  const context = {
+    getTask,
+  }
 
-  // Wrap this JSX in the context provider
   return (
-    <div className="board spacing">
-      <Heading style={{ minWidth: '25rem' }}>{board?.name}</Heading>
+    <BoardContext.Provider value={context}>
+      <div className="board spacing">
+        <Heading style={{ minWidth: '25rem' }}>{board?.name}</Heading>
 
-      <div className="board-scroll-area">
-        {taskGroups &&
-          taskGroups.map((taskGroup) => {
-            return (
-              <div className="task-group-wrap" key={taskGroup.id}>
-                <TaskGroup name={taskGroup.name} taskIds={taskGroup.taskIds} />
-              </div>
-            )
-          })}
+        <div className="board-scroll-area">
+          {taskGroups &&
+            taskGroups.map((taskGroup) => {
+              return (
+                <div className="task-group-wrap" key={taskGroup.id}>
+                  <TaskGroup name={taskGroup.name} taskIds={taskGroup.taskIds} />
+                </div>
+              )
+            })}
+        </div>
       </div>
-    </div>
+    </BoardContext.Provider>
   )
 }

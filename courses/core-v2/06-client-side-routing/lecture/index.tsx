@@ -15,7 +15,8 @@ import 'ProjectPlanner/PrimaryHeader.scss'
 
 // https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 // Lazy load this component and demonstrate suspense
-import { UserProfile } from './UserProfile'
+
+const UserProfile = React.lazy(() => import('./UserProfile'))
 
 const App: React.FC = () => {
   return (
@@ -25,14 +26,77 @@ const App: React.FC = () => {
   )
 }
 
+// React Router 6 sub layouts
+
+// const PrimaryLayout: React.FC = () => {
+//   return (
+//     <div className="primary-layout">
+//       <PrimaryHeader />
+//       <main className="primary-content">
+//         <Router> // same as Switch
+//           <Route path="/" exact element={<Dashboard />} />
+//           <Route path="/boards" element={<BoardsSubLayout />}>
+//             <Route index exact>
+//               <BrowseBoards />
+//             </Route>
+//             <Route path=":boardId">
+//               <Board />
+//             </Route>
+//           </Route>
+//         </Router>
+//       </main>
+//       <PrimaryFooter />
+//     </div>
+//   )
+// }
+
+// function BoardsSubLayout() {
+//   return (
+//     <div>
+//       <h1>This is our sub layout</h1>
+//       <Outlet></Outlet>
+//     </div>
+//   )
+// }
+
+// Sub layouts in React Router 4 and 5
+
 const PrimaryLayout: React.FC = () => {
   return (
     <div className="primary-layout">
       <PrimaryHeader />
       <main className="primary-content">
-        <Dashboard />
+        <React.Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route path="/boards">
+              <BoardsSubLayout />
+            </Route>
+            <Route path="/users/:userId">
+              <UserProfile />
+            </Route>
+          </Switch>
+        </React.Suspense>
       </main>
       <PrimaryFooter />
+    </div>
+  )
+}
+
+function BoardsSubLayout() {
+  return (
+    <div>
+      <h1>This is our sub layout</h1>
+      <Switch>
+        <Route path="/boards" exact>
+          <BrowseBoards />
+        </Route>
+        <Route path="/boards/:boardId">
+          <Board />
+        </Route>
+      </Switch>
     </div>
   )
 }
@@ -106,7 +170,7 @@ type ParamsType = {
 }
 
 const Board: React.FC = () => {
-  const { boardId } = useParams<ParamsType>()
+  const boardId = parseInt(useParams<ParamsType>().boardId)
 
   return (
     <Centered size={50}>

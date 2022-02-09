@@ -5,13 +5,11 @@ import 'ProjectPlanner/TaskCard.scss'
 // Don't forget to import BoardContext to use with useContext()
 // Also don't forget to export that variable from Board.js
 
-// import { BoardContext } from './Board'
+import { BoardContext } from './Board'
 
 export const TaskCard = ({ taskId }) => {
-  // Get the `getTask` from from context and call it with
-  // the `taskId`. Then replace this empty task object with
-  // the real task
-  const task = {}
+  const { getTask } = useContext(BoardContext)
+  const task = getTask(taskId)
 
   return (
     <div className="task-card">
