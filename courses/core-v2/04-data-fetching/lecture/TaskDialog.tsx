@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 import { FaCheck, FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 import { api } from 'ProjectPlanner/api'
@@ -11,10 +11,39 @@ import { Progress } from 'ProjectPlanner/Progress'
 import 'ProjectPlanner/TaskDialog.scss'
 
 type Props = {
-  taskId: number
-  siblingTaskIds: number[]
-  onChangeTaskId(taskId: number): void
-  onClose(): void
+  // taskId: number
+  // siblingTaskIds: number[]
+  // onChangeTaskId(taskId: number): void
+  // onClose(): void
+  [key: string]: any
+}
+
+function usePromise(p) {
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  // Variables that we "close over" that CAN CHANGE
+  useEffect(() => {
+    let isCurrent = true
+    setLoading(true)
+    p()
+      .then((results) => {
+        if (isCurrent) {
+          setResults(results)
+          setLoading(false)
+        }
+      })
+      .catch((err) => {
+        setError(err)
+        setLoading(false)
+      })
+    return () => {
+      isCurrent = false
+    }
+  }, [p])
+
+  return { results, loading, err }
 }
 
 export const TaskDialog: React.FC<Props> = ({
@@ -23,9 +52,8 @@ export const TaskDialog: React.FC<Props> = ({
   onChangeTaskId,
   onClose,
 }) => {
-  const [task, setTask] = useState<Task | null>(null)
-
-  // api.boards.getTask(taskId)
+  const getTask = useCallback(() => api.boards.getTask(taskId), [taskId])
+  const { results: task, err } = usePromise(getTask)
 
   const complete = (task && task.minutes === task.completedMinutes && task.minutes > 0) || false
   const i = siblingTaskIds.indexOf(taskId)
@@ -34,7 +62,7 @@ export const TaskDialog: React.FC<Props> = ({
 
   function update(partialTask: Partial<Task>) {
     if (!task) return
-    setTask({ ...task, ...partialTask })
+    // setTask({ ...task, ...partialTask })
   }
 
   return (

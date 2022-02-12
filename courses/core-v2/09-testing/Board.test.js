@@ -41,7 +41,7 @@ describe('Board', () => {
       taskGroups: [],
     })
     render(<Board />)
-    screen.getByTestId('results')
+    screen.getByTestId('no-results')
   })
   it('should render the board with tasks', () => {
     useBoardContext.mockReturnValue({
