@@ -4,7 +4,11 @@ import { BrowseCourses } from './BrowseCourses'
 import './styles.scss'
 
 function App() {
-  return <BrowseCourses />
+  return (
+    <>
+      <BrowseCourses />
+    </>
+  )
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root')!)

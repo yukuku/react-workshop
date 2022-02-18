@@ -6,15 +6,19 @@ const initialFormValues = {
   username: '',
 }
 
-export function AddStudentForm() {
+function useFormState(initialValues) {
   const [formValues, setFormValues] = useState(initialFormValues)
-  const [autoUsername, setAutoUsername] = useState(true)
-
-  const fullNameRef = useRef<HTMLInputElement>(null!)
-
   function setField(field: string, value: string) {
     setFormValues({ ...formValues, [field]: value })
   }
+
+  return [formValues, setField, setFormValues]
+}
+
+export function AddStudentForm() {
+  const [formValues, setField, setFormValues] = useFormState(initialFormValues)
+  const [autoUsername, setAutoUsername] = useState(true)
+  const fullNameRef = useRef<HTMLInputElement>(null!)
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()

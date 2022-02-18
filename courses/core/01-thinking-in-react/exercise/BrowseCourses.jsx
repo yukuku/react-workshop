@@ -1,4 +1,4 @@
-// import { Heading } from './Heading'
+import { Heading } from './Heading'
 
 export function BrowseCourses() {
   const courses = [
@@ -13,21 +13,38 @@ export function BrowseCourses() {
 
   return (
     <div className="card spacing">
-      <h1 className="heading size-1">Courses</h1>
+      <Heading>Courses</Heading>
       <div className="spacing">
-        {/* Start Iteration */}
-        <div className="course-listing flex-split">
-          <h2 className="heading size-3">Course Name</h2>
-          <div className="flex-split flex-gap-large">
-            <div>Lessons: 5</div>
-            <div>
-              <button className="button" onClick={null}>
-                Remove
-              </button>
-            </div>
-          </div>
+        {courses.map((course) => {
+          return (
+            <BrowseCourseItem
+              key={course.id}
+              // {...course}
+              id={course.id}
+              name={course.name}
+              lessons={course.lessons}
+              removeCourse={removeCourse}
+            />
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function BrowseCourseItem({ id, name, lessons, removeCourse }) {
+  return (
+    <div className="course-listing flex-split">
+      <Heading as="h2" size={3}>
+        {name}
+      </Heading>
+      <div className="flex-split flex-gap-large">
+        <div>Lessons: {lessons}</div>
+        <div>
+          <button className="button" onClick={() => removeCourse(id)}>
+            Remove
+          </button>
         </div>
-        {/* End Iteration */}
       </div>
     </div>
   )
