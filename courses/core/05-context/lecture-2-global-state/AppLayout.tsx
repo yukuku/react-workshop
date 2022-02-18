@@ -5,16 +5,12 @@ import { Logo } from 'course-platform/Logo'
 import { AuthenticatedDropdownMenu } from './AuthenticatedDropdownMenu'
 import { Icon } from 'course-platform/Icon'
 import styles from '../../../../apps/course-platform/AppLayout/AppLayout.module.scss'
-// import { useAuthContext } from './AuthContext'
+import { useAuthContext } from './AuthContext'
 // import { AuthContext } from './App'
 
-// Temporary
-type Props = {
-  [key: string]: any
-}
-
-export function AppLayout({ authenticated, user, logout }: Props) {
+export function AppLayout() {
   // const location = useLocation()
+  const { authenticated, user, logout } = useAuthContext()
 
   if (authenticated === false) {
     // return <Navigate to="/login" replace state={{ backTo: location }} />

@@ -10,18 +10,8 @@ type Props = {
 }
 
 export function PreviousNextCourse({ courseId }: Props) {
-  const [courses, setCourses] = useState<CourseWithLessons[] | null>(null)
-
-  useEffect(() => {
-    let isCurrent = true
-    api.courses.getAll().then((courses) => {
-      if (!isCurrent) return
-      setCourses(courses)
-    })
-    return () => {
-      isCurrent = false
-    }
-  }, [])
+  const { getCourses } = useCoursesContext()
+  const courses = getCourses()
 
   // Previous and Next
   const i = (courses?.map((c) => c.id) || []).indexOf(courseId || -1)

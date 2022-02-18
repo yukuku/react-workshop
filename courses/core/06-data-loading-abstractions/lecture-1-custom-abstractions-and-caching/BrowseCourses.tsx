@@ -9,19 +9,8 @@ import { useCoursesContext } from './CoursesContext'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
 export function BrowseCourses() {
-  const [courses, setCourses] = useState<CourseWithLessons[] | null>(null)
-  const isLoading = courses === null
-
-  useEffect(() => {
-    let isCurrent = true
-    api.courses.getAll().then((courses) => {
-      if (!isCurrent) return
-      setCourses(courses)
-    })
-    return () => {
-      isCurrent = false
-    }
-  }, [])
+  const { getCourses, isLoading } = useCoursesContext()
+  const courses = getCourses()
 
   function removeCourse(courseId: number) {
     if (!courses) return

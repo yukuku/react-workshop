@@ -4,15 +4,12 @@ import { Logo } from 'course-platform/Logo'
 import { Centered } from 'course-platform/Centered'
 import { AuthenticatedDropdownMenu } from './AuthenticatedDropdownMenu'
 import styles from '../../../../apps/course-platform/WebsiteHeader/WebsiteHeader.module.scss'
-// import { useAuthContext } from './AuthContext'
+import { useAuthContext } from './AuthContext'
 // import { AuthContext } from './App'
 
-// Temporary
-type Props = {
-  [key: string]: any
-}
+export function WebsiteHeader() {
+  const { authenticated, user, logout } = useAuthContext()
 
-export function WebsiteHeader({ authenticated, user, logout }: Props) {
   return (
     <header className={`${styles.component} spacing`}>
       <Centered>

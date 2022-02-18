@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form } from 'formik'
-// import { useCoursesContext } from 'course-platform/CoursesContext'
+//import { useCoursesContext } from 'course-platform/CoursesContext'
+import { useRemoveCourse } from './useCourses'
 import { FieldInput } from 'course-platform/FormFields'
 import { Heading } from 'course-platform/Heading'
 import { Notice } from 'course-platform/Notice'

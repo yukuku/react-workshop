@@ -14,7 +14,7 @@ type ContextType = {
 const Context = createContext<ContextType>(null!)
 
 export const CoursesProvider: React.FC = ({ children }) => {
-  const { courses, isLoading, error, refetch } = useCourses()
+  const { courses, isLoading, error, refetch } = useCourses() // state + effect
 
   const context: ContextType = {
     fetchCourses: refetch,
