@@ -9,6 +9,9 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
+// debouncing
+// advanced useEffect -> setState(fn)
+
 export function BrowseCourseLessons() {
   const courseSlug = useParams().courseSlug!
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
@@ -18,8 +21,17 @@ export function BrowseCourseLessons() {
   const lessons = course && course.lessons
   const isLoading = course === null
 
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
+  useEffect(() => {
+    let isCurrent = true
+    api.courses.getCourse(courseSlug).then((newCourse) => {
+      if (isCurrent) {
+        setCourse(newCourse)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [courseSlug]) // ===
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return

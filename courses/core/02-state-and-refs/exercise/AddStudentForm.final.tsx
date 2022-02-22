@@ -16,6 +16,12 @@ export function AddStudentForm() {
     setFormValues({ ...formValues, [field]: value })
   }
 
+  function getUsernameValue() {
+    return autoUsername
+      ? formValues.fullName.toLowerCase().replaceAll(/\s/g, '')
+      : formValues.username
+  }
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     console.log(formValues)
@@ -44,11 +50,7 @@ export function AddStudentForm() {
       <div className="field-wrap">
         <label htmlFor="username">Username</label>
         <input
-          value={
-            autoUsername
-              ? formValues.fullName.toLowerCase().replaceAll(/\s/g, '')
-              : formValues.username
-          }
+          value={getUsernameValue()}
           disabled={autoUsername}
           onChange={(e) => setField('username', e.target.value)}
           id="username"

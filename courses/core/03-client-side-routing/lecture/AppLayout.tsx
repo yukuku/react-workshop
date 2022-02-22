@@ -31,31 +31,37 @@ export function AppLayout() {
           </nav>
         </aside>
         <div className="primary-content flex-1">
-          {/* Sub Layout (This needs to be different on a per section basis: courses, students, etc) */}
-          <div className={subNavStyles.component}>
-            <header className="flex-split">
-              <nav className="horizontal-spacing-large">
-                <NavLink to="courses" end>
-                  <Icon name="home" />
-                  <span>All Courses</span>
-                </NavLink>
-                <NavLink to="add" end>
-                  <Icon name="createCourse" />
-                  <span>Add Course</span>
-                </NavLink>
-              </nav>
-            </header>
-            <main>
-              <Outlet />
-            </main>
-          </div>
-          {/* End Sub Layout */}
+          <Outlet />
         </div>
       </div>
     </div>
   )
 }
 
-export function AppSubLayout() {
-  return null
+export const AppSubLayout: React.FC = ({ children }) => {
+  return (
+    <div className={subNavStyles.component}>
+      <header className="flex-split">
+        <nav className="horizontal-spacing-large">{children}</nav>
+      </header>
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  )
+}
+
+export function CoursesSubLayout() {
+  return (
+    <AppSubLayout>
+      <NavLink to="courses" end>
+        <Icon name="home" />
+        <span>All Courses</span>
+      </NavLink>
+      <NavLink to="add" end>
+        <Icon name="createCourse" />
+        <span>Add Course</span>
+      </NavLink>
+    </AppSubLayout>
+  )
 }

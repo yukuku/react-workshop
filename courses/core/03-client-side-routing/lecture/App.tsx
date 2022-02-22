@@ -7,7 +7,7 @@ import './styles.scss'
 
 // Layouts
 import { WebsiteLayout } from './WebsiteLayout'
-import { AppLayout, AppSubLayout } from './AppLayout'
+import { AppLayout, CoursesSubLayout } from './AppLayout'
 
 // Pages
 import { HomePage } from 'course-platform/HomePage'
@@ -23,10 +23,21 @@ export function App() {
         </Route>
         <Route path="admin" element={<AppLayout />}>
           <Route index element={<Navigate replace to="courses" />} />
-          <Route path="courses">
+          <Route path="courses" element={<CoursesSubLayout />}>
             <Route index element={<BrowseCourses />} />
             <Route path=":courseSlug" element={<BrowseCourseLessons />} />
           </Route>
+          {/* <Route path="students">
+            <Route></Route>
+            <Route></Route>
+            <Route></Route>
+          </Route>
+          <Route path="chat">
+            <Route></Route>
+            <Route></Route>
+            <Route></Route>
+            <Route></Route>
+          </Route> */}
         </Route>
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
