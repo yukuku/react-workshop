@@ -14,29 +14,29 @@ export function BrowseCourses() {
   // const { getCourses, isLoading, fetchCourses } = useCoursesContext()
   // const courses = getCourses()
 
-  // 2. New Approach: Use React Query (useEffect and caching library)
-  const {
-    data: courses,
-    isLoading,
-    refetch,
-  } = useQuery('courses', () => api.courses.getAll(), {
-    staleTime: 1000 * 30,
-  })
+  // // 2. New Approach: Use React Query (useEffect and caching library)
+  // const {
+  //   data: courses,
+  //   isLoading,
+  //   refetch,
+  // } = useQuery('courses', () => api.courses.getAll(), {
+  //   staleTime: 1000 * 30,
+  // })
 
-  // // 3. New Approach tucked under custom hook abstraction
-  // const { courses, isLoading, refetch } = useCourses()
-  // // const removeCourse = useRemoveCourse()
+  // 3. New Approach tucked under custom hook abstraction
+  const { courses, isLoading, refetch } = useCourses()
+  const removeCourse = useRemoveCourse()
 
   // ✅ Remove course via API
   // ✅ Renew cache by refetching
   // ❌ Requires two serial network requests
   // ❌ over-fetches (why do we need to get all courses again)
-  function removeCourse(courseId: number) {
-    if (!courses) return
-    api.courses.removeCourse(courseId).then(() => {
-      refetch()
-    })
-  }
+  // function removeCourse(courseId: number) {
+  //   if (!courses) return
+  //   api.courses.removeCourse(courseId).then(() => {
+  //     refetch()
+  //   })
+  // }
 
   // // ✅ Remove course via API
   // // ✅ Renew cache by selectively updating the array in the cache

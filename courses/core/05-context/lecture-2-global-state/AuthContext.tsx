@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import { api } from 'course-platform/utils/api'
+import React, { createContext, useContext, useState, useEffect } from 'react'
+
 import type { User } from 'course-platform/utils/types'
 
 type Context = {
@@ -15,28 +15,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null)
   const [user, setUser] = useState<User | null>(null)
 
-  const login = (user: User) => {
+  const login = React.useCallback((user: User) => {
     setAuthenticated(true)
     setUser(user)
-  }
+  }, [])
 
-  const logout = () => {
+  const logout = React.useCallback(() => {
     setAuthenticated(false)
     setUser(null)
-  }
-
-  useEffect(() => {
-    let isCurrent = true
-    api.auth.getAuthenticatedUser().then((user: User) => {
-      if (user && isCurrent) {
-        login(user)
-      } else {
-        logout()
-      }
-    })
-    return () => {
-      isCurrent = false
-    }
   }, [])
 
   const context: Context = {

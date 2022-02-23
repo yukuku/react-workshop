@@ -36,6 +36,7 @@ export function useCourse(courseSlug: string) {
 }
 
 export function useRemoveCourse() {
+  // return a function to remove a course
   const mutation = useMutation((courseId: number) => api.courses.removeCourse(courseId), {
     mutationKey: 'courses',
     onSuccess: (_, courseId) => {

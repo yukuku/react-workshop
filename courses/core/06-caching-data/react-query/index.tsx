@@ -13,9 +13,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <AuthProvider>
-        {/* <CoursesProvider> */}
         <App />
-        {/* </CoursesProvider> */}
       </AuthProvider>
     </BrowserRouter>
   </QueryClientProvider>
