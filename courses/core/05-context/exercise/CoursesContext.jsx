@@ -1,20 +1,24 @@
 import { createContext, useContext } from 'react'
 import { useCourses } from './useCourses'
 
-export const CoursesProvider = ({ children }) => {
-  // const context = {
-  //   refetch,
-  //   isLoading,
-  //   error,
-  //   courses,
-  //   getCourse(courseSlug) {
-  //     return courses?.find((c) => c.slug === courseSlug)
-  //   }
-  // }
+const CoursesContext = createContext()
 
-  return children // Return a provider wrapped around the children
+export const CoursesProvider = ({ children }) => {
+  const { courses, isLoading, refetch, error } = useCourses() // useEffect
+
+  const context = {
+    refetch,
+    isLoading,
+    error,
+    courses,
+    getCourse(courseSlug) {
+      return courses?.find((c) => c.slug === courseSlug)
+    },
+  }
+
+  return <CoursesContext.Provider value={context}>{children}</CoursesContext.Provider>
 }
 
 export function useCoursesContext() {
-  return {} // just a temporary return until you return the real context object
+  return useContext(CoursesContext)
 }

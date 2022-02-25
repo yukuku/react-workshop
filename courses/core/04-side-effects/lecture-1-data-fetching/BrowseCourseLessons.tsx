@@ -9,17 +9,40 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
-export function BrowseCourseLessons() {
-  const courseSlug = useParams().courseSlug!
+function usePromise(p) {
+  const [results, setResults] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    let isCurrent = true
+    setIsLoading(true)
+    p()
+      .then((results) => {
+        if (isCurrent) {
+          setResults(results)
+          setIsLoading(false)
+        }
+      })
+      .catch((e) => {
+        if (isCurrent) {
+          setError(e)
+          setIsLoading(false)
+        }
+      })
+    return () => {
+      isCurrent = false
+    }
+  }, [p])
+
+  return { results, isLoading, error }
+}
+
+export function BrowseCourseLessons({ getCourse }) {
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
-  // Course and Lesson Data
-  const [course, setCourse] = useState<CourseWithLessons | null>(null)
-  const lessons = course && course.lessons
-  const isLoading = course === null
-
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
+  const getCourse = useCallback(() => api.courses.getCourse(courseSlug), [courseSlug])
+  const { results: course, isLoading } = usePromise(getCourse)
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return
