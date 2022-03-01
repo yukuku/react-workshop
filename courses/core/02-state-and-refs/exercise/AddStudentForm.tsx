@@ -19,12 +19,29 @@ export function AddStudentForm() {
       <Heading>Add Student</Heading>
       <div className="field-wrap">
         <label htmlFor="full-name">Full Name</label>
-        <input id="full-name" type="text" className="form-field" required />
+        <input
+          onChange={(e) => {
+            setFullName(e.target.value)
+          }}
+          id="full-name"
+          type="text"
+          className="form-field"
+          required
+        />
       </div>
 
       <div className="field-wrap">
         <label htmlFor="username">Username</label>
-        <input id="username" type="text" className="form-field" required autoComplete="off" />
+        <input
+          onChange={(e) => {
+            setUsername(e.target.value)
+          }}
+          id="username"
+          type="text"
+          className="form-field"
+          required
+          autoComplete="off"
+        />
       </div>
 
       <div>

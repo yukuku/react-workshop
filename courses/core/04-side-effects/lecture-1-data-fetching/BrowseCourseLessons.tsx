@@ -9,27 +9,43 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
-export function BrowseCourseLessons() {
-  const courseSlug = useParams().courseSlug!
-  const [createLessonDialog, setCreateLessonDialog] = useState(false)
-
-  // Course and Lesson Data
+function useCourse(courseSlug) {
   const [course, setCourse] = useState<CourseWithLessons | null>(null)
-  const lessons = course && course.lessons
   const isLoading = course === null
 
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
+  // any variable that we "close over" that can change (from standpoint of "stable")
+  useEffect(() => {
+    let isCurrent = true
+    api.courses.getCourse(courseSlug).then((course) => {
+      if (isCurrent) {
+        setCourse(course)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [courseSlug])
+
+  return [course, setCourse, isLoading] as const
+}
+
+export function BrowseCourseLessons() {
+  const courseSlug = useParams().courseSlug!
+  const [createLessonDialog, setCreateLessonDialog] = useState(false) // useState
+
+  // Course and Lesson Data
+  const [course, setCourse, isLoading] = useCourse(courseSlug) // useState
+  const lessons = course?.lessons
 
   function removeLesson(lessonId: number) {
-    // if (!lessons) return
-    // api.courses.removeLesson(lessonId).then(() => {
-    //   const i = lessons.findIndex((l) => l.id === lessonId)
-    //   setCourse({
-    //     ...course,
-    //     lessons: [...lessons.slice(0, i), ...lessons.slice(i + 1, lessons.length)],
-    //   })
-    // })
+    if (!lessons) return
+    api.courses.removeLesson(lessonId).then(() => {
+      const i = lessons.findIndex((l) => l.id === lessonId)
+      setCourse({
+        ...course,
+        lessons: [...lessons.slice(0, i), ...lessons.slice(i + 1, lessons.length)],
+      })
+    })
   }
 
   return (

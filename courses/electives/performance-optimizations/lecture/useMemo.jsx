@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import slowFunction from './utils/slowFunction'
 
 export function App() {
@@ -7,8 +7,14 @@ export function App() {
   const input = count >= 5 // Let's change the input to the slow function
 
   console.time()
-  const x = slowFunction(input)
+  const x = useMemo(() => slowFunction(input), [input])
   console.timeEnd()
+
+  // stabilizing a function
+  // useCallback
+
+  // stabilizing the return value of a function
+  // useMemo
 
   return (
     <div className="text-center spacing">
