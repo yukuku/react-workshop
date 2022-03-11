@@ -18,8 +18,13 @@ export function BrowseCourseLessons() {
   const lessons = course && course.lessons
   const isLoading = course === null
 
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
+  // After first render phase (mount)
+  // Again after re-renders if the dep array changes
+  useEffect(() => {
+    api.courses.getCourse(courseSlug).then((course) => {
+      setCourse(course)
+    })
+  }, [courseSlug]) // if-statement - compare old stuff to the new stuff using ===
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return

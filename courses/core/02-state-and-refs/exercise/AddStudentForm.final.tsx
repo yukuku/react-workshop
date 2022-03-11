@@ -19,7 +19,7 @@ export function AddStudentForm() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     console.log(formValues)
-    setFormValues(initialFormValues)
+    setFormValues(initialFormValues) // resets the form
     fullNameRef.current.focus()
   }
 
