@@ -15,7 +15,7 @@ export function BrowseCourseLessons() {
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
   // Get a course
-  const { courses, isLoading, refetch } = useCourses()
+  const { courses, isLoading, refetch } = useCoursesContext()
   const course = courses?.find((c) => c.slug === courseSlug)
   const lessons = course?.lessons
 

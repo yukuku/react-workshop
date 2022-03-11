@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Icon } from 'course-platform/Icon'
 import { useCoursesContext } from './CoursesContext'
-import { useCourses } from './useCourses'
 
 type Props = {
   courseId?: number
 }
 
 export function PreviousNextCourse({ courseId }: Props) {
-  const { courses } = useCourses()
+  const { courses } = useCoursesContext()
 
   // Previous and Next
   const i = (courses?.map((c) => c.id) || []).indexOf(courseId || -1)
