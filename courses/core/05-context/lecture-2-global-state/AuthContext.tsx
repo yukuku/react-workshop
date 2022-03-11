@@ -25,6 +25,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUser(null)
   }
 
+  // Renews the login status upon refresh
   useEffect(() => {
     let isCurrent = true
     api.auth.getAuthenticatedUser().then((user: User) => {
@@ -47,6 +48,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   return <AuthContext.Provider value={context} children={children} />
+  // return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
 export function useAuthContext() {

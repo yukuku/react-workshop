@@ -9,22 +9,36 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
+function usePromise<T>(p) {
+  const [results, setResults] = useState<T | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Any variable that we close over that CAN CHANGE!
+  useEffect(() => {
+    let isCurrent = true
+    setIsLoading(true)
+    p().then((results) => {
+      if (isCurrent) {
+        setResults(results)
+        setIsLoading(false)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [p])
+
+  return [results, isLoading] as const
+}
+
 export function BrowseCourseLessons() {
-  const courseSlug = useParams().courseSlug!
+  const courseSlug = useParams().courseSlug! // subscribes to the URL and has useState
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
-  // Course and Lesson Data
-  const [course, setCourse] = useState<CourseWithLessons | null>(null)
-  const lessons = course && course.lessons
-  const isLoading = course === null
+  const getCourse = useCallback(() => api.courses.getCourse(courseSlug), [courseSlug])
+  const [course] = usePromise<CourseWithLessons>(getCourse)
 
-  // After first render phase (mount)
-  // Again after re-renders if the dep array changes
-  useEffect(() => {
-    api.courses.getCourse(courseSlug).then((course) => {
-      setCourse(course)
-    })
-  }, [courseSlug]) // if-statement - compare old stuff to the new stuff using ===
+  const lessons = course && course.lessons
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return
