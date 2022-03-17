@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from 'course-platform/AuthContext'
-// import { CoursesProvider } from 'course-platform/CoursesContext'
+// import { CoursesProvider } from './CoursesContext'
 import { App } from 'course-platform/App'
 import 'course-platform/styles/all.scss'
 

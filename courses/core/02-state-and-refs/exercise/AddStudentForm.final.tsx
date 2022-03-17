@@ -18,7 +18,12 @@ export function AddStudentForm() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    console.log(formValues)
+    console.log({
+      fullName: formValues.fullName,
+      username: autoUsername
+        ? formValues.fullName.toLowerCase().replaceAll(/\s/g, '')
+        : formValues.username,
+    })
     setFormValues(initialFormValues)
     fullNameRef.current.focus()
   }
