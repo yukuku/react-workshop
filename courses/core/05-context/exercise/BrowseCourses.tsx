@@ -5,10 +5,18 @@ import { DataGrid, Row, Col } from 'course-platform/DataGrid'
 import { Loading } from 'course-platform/Loading'
 import { NoResults } from 'course-platform/NoResults'
 import { useCoursesContext } from './CoursesContext'
-import { useCourses } from './useCourses'
+
+function useCourses() {
+  const [courses, setcourses] = useState()
+
+  useEffect(() => {}, [])
+
+  return {}
+}
 
 export function BrowseCourses() {
-  const { courses, isLoading, refetch } = useCourses()
+  // const { courses, isLoading, refetch } = useCourses() // state and effects
+  const { courses, isLoading, refetch } = useCoursesContext()
 
   function removeCourse(courseId: number) {
     if (!courses) return

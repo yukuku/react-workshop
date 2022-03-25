@@ -8,7 +8,7 @@ type Props = {
 }
 
 export function PreviousNextCourse({ courseId }: Props) {
-  const { courses } = useCourses()
+  const { courses } = useCourses() // useEffect
 
   // Previous and Next
   const i = (courses?.map((c) => c.id) || []).indexOf(courseId || -1)
