@@ -9,17 +9,33 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
+function useCourse(courseSlug: string) {
+  const [course, setCourse] = useState<CourseWithLessons | null>(null)
+
+  // Any variable that we "close over" that CAN CHANGE!!!!!
+  useEffect(() => {
+    let isCurrent = true
+    api.courses.getCourse(courseSlug).then((course) => {
+      if (isCurrent) {
+        setCourse(course)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [courseSlug])
+
+  return course
+}
+
 export function BrowseCourseLessons() {
   const courseSlug = useParams().courseSlug!
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
   // Course and Lesson Data
-  const [course, setCourse] = useState<CourseWithLessons | null>(null)
+  const course = useCourse(courseSlug)
   const lessons = course && course.lessons
   const isLoading = course === null
-
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return

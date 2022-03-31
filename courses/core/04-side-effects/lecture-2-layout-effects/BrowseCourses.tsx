@@ -11,6 +11,7 @@ export function BrowseCourses() {
   const [courses, setCourses] = useState<Course[]>(null!)
 
   useEffect(() => {
+    console.log('parent effect')
     let isCurrent = true
     api.courses.getAll().then((courses: Course[]) => {
       if (!isCurrent) return
