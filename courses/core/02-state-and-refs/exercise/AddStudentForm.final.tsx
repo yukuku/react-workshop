@@ -9,7 +9,6 @@ const initialFormValues = {
 export function AddStudentForm() {
   const [formValues, setFormValues] = useState(initialFormValues)
   const [autoUsername, setAutoUsername] = useState(true)
-
   const fullNameRef = useRef<HTMLInputElement>(null!)
 
   function setField(field: string, value: string) {

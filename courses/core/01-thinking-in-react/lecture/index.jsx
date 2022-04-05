@@ -1,8 +1,42 @@
-// import React from 'react' <-- We don't need this anymore (React 17)
 import * as ReactDOM from 'react-dom/client'
 import { FaTrash } from 'react-icons/fa'
 import './styles.scss'
 
-// This is our "entry" file for our build system.
-// Let's start making our React app and "mount" it
-// to the DOM
+function Button({ onClick, children }) {
+  return (
+    <button onClick={onClick} type="button" className="button">
+      {children}
+    </button>
+  )
+}
+
+function App() {
+  const courses = [
+    { id: 1, name: 'HTML' },
+    { id: 2, name: 'CSS' },
+    { id: 3, name: 'JS' },
+  ]
+
+  function onClick() {
+    console.log('the logic for removing....')
+  }
+
+  return (
+    <div>
+      {courses.map((course) => {
+        return (
+          <div key={course.id}>
+            <h1>{course.name}</h1>
+            <Button onClick={onClick}>
+              <FaTrash />
+              <span>Remove Course</span>
+            </Button>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(<App />)
