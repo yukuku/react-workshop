@@ -9,29 +9,33 @@ import { NoResults } from 'course-platform/NoResults'
 import { PreviousNextCourse } from 'course-platform/PreviousNextCourse'
 import type { CourseWithLessons } from 'course-platform/utils/types'
 
+function useApi(api) {
+  const [results, setResults] = useState(null)
+
+  useEffect(() => {
+    let isCurrent = true
+    api().then((results) => {
+      if (isCurrent) {
+        setResults(results)
+      }
+    })
+    return () => {
+      isCurrent = false
+    }
+  }, [api])
+
+  return results
+}
+
 export function BrowseCourseLessons() {
   const courseSlug = useParams().courseSlug!
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
-  // Course and Lesson Data
-  const [course, setCourse] = useState<CourseWithLessons | null>(null)
+  const getCourse = useCallback(() => api.courses.getCourse(courseSlug), [courseSlug])
+  const course = useApi(getCourse)
+
   const lessons = course && course.lessons
   const isLoading = course === null
-
-  // Network
-  // localStorage
-  // cookies
-  // document
-  // window
-  // working with the dom (imperatively ie refs)
-
-  // control
-  useEffect(() => {})
-
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug).then((course) => {
-  //   setCourse(course)
-  // })
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return
