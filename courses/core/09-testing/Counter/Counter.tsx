@@ -6,6 +6,8 @@ type CounterProps = {
   min?: number
 }
 
+// kent c dodds
+
 export function Counter({ count, setCount, min = 0 }: CounterProps) {
   function subtract() {
     if (count > min) {

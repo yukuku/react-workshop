@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import dayjs from 'dayjs'
 
 const DateContext = createContext()
@@ -26,4 +26,12 @@ export function DateMonth({ format = 'MM' }) {
 export function DateDay({ format = 'DD' }) {
   const { date } = useContext(DateContext)
   return <>{date.format(format)}</>
+}
+
+export function CommonDate({ date = '' }) {
+  return (
+    <DateDisplay date={date}>
+      <DateMonth format="MMMM" /> <DateDay />, <DateYear />
+    </DateDisplay>
+  )
 }

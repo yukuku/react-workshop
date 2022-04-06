@@ -17,7 +17,6 @@ export function App() {
           </span>
         </DateDisplay>
       </div>
-
       <p>
         A "compound component" is a pattern where one visual component is actually made with several
         React components being composed together. The React components are closely related and were
