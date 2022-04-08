@@ -14,12 +14,22 @@ export function BrowseCourseLessons() {
   const [createLessonDialog, setCreateLessonDialog] = useState(false)
 
   // Course and Lesson Data
-  const [course, setCourse] = useState<CourseWithLessons | null>(null)
+  const [course, setCourse] = useState<null | CourseWithLessons>(null)
   const lessons = course && course.lessons
   const isLoading = course === null
 
-  // Load Course and Lesson Data
-  // api.courses.getCourse(courseSlug)
+  // Any variable that we "close over" that CAN CHANGE!!!
+  useEffect(() => {
+    let isCurrent = true
+    async function foo() {
+      const results = await api.courses.getCourse(courseSlug)
+      setCourse(results)
+    }
+    foo()
+    return () => {
+      isCurrent = false
+    }
+  }, [courseSlug])
 
   function removeLesson(lessonId: number) {
     // if (!lessons) return

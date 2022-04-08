@@ -18,17 +18,22 @@ export function BrowseCourses() {
   const [minLessons, setMinLessons] = useState(0)
   const filterLessonsId = useId()
 
-  // const [pending, startTransition] = useTransition()
+  const [pending, startTransition] = useTransition()
   function filterCourses(minLessons: number) {
-    setMinLessons(minLessons)
-    setCourses(allCourses?.filter((c) => c.lessons.length >= minLessons))
-  }
-
-  function removeCourse(courseId: number) {
-    api.courses.removeCourse(courseId).then(() => {
-      fetchCourses()
+    setMinLessons(minLessons) // high priority
+    startTransition(() => {
+      setCourses(allCourses?.filter((c) => c.lessons.length >= minLessons)) // low
     })
   }
+
+  const removeCourse = useCallback(
+    (courseId: number) => {
+      api.courses.removeCourse(courseId).then(() => {
+        fetchCourses()
+      })
+    },
+    [fetchCourses]
+  )
 
   return (
     <div className="flex flex-gap">
@@ -59,7 +64,7 @@ export function BrowseCourses() {
             />
           </div>
         </div>
-
+        <CourseList courses={courses} removeCourse={removeCourse}></CourseList>
         {isLoading && !courses && <Loading />}
         {!isLoading && Array.isArray(courses) && courses.length === 0 ? (
           <NoResults>
@@ -72,28 +77,6 @@ export function BrowseCourses() {
           </NoResults>
         ) : (
           <>
-            <DataGrid>
-              {courses?.map((course) => {
-                return (
-                  <Row key={course.id}>
-                    <Col flex>
-                      <Link to={`${course.slug}`} className="text-large">
-                        <b>{course.name}</b>
-                      </Link>
-                    </Col>
-                    <Col width={150}>Lessons: {course.lessons.length}</Col>
-                    <Col>
-                      <button
-                        className="button button-small button-outline"
-                        onClick={() => removeCourse(course.id)}
-                      >
-                        Remove
-                      </button>
-                    </Col>
-                  </Row>
-                )
-              })}
-            </DataGrid>
             <footer>
               <Link to="add" className="button">
                 Add Course
@@ -109,13 +92,35 @@ export function BrowseCourses() {
   )
 }
 
-// type Props = {
-//   courses: CourseWithLessons[]
-//   removeCourse(id: number): void
-// }
+type Props = {
+  courses: CourseWithLessons[]
+  removeCourse(id: number): void
+}
 
-// const CourseList: React.FC<Props> = memo(({ courses, removeCourse }) => {
-//   return (
-
-//   )
-// })
+const CourseList = memo(({ courses, removeCourse }: Props) => {
+  console.log('here')
+  return (
+    <DataGrid>
+      {courses?.map((course) => {
+        return (
+          <Row key={course.id}>
+            <Col flex>
+              <Link to={`${course.slug}`} className="text-large">
+                <b>{course.name}</b>
+              </Link>
+            </Col>
+            <Col width={150}>Lessons: {course.lessons.length}</Col>
+            <Col>
+              <button
+                className="button button-small button-outline"
+                onClick={() => removeCourse(course.id)}
+              >
+                Remove
+              </button>
+            </Col>
+          </Row>
+        )
+      })}
+    </DataGrid>
+  )
+})

@@ -8,7 +8,7 @@ const initialFormValues = {
 
 export function AddStudentForm() {
   const [formValues, setFormValues] = useState(initialFormValues)
-  const [autoUsername, setAutoUsername] = useState(true)
+  const [autoUsername, setAutoUsername] = useState(true) // checkbox boolean
 
   const fullNameRef = useRef<HTMLInputElement>(null!)
 
@@ -16,17 +16,17 @@ export function AddStudentForm() {
     setFormValues({ ...formValues, [field]: value })
   }
 
-  function getUsername() {
-    return autoUsername
-      ? formValues.fullName.toLowerCase().replaceAll(/\s/g, '')
-      : formValues.username
-  }
+  // function getUsername() {
+  //   return autoUsername
+  //     ? formValues.fullName.toLowerCase().replaceAll(/\s/g, '')
+  //     : formValues.username
+  // }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
 
     // Get the form values
-    console.log({ ...formValues, username: getUsername() })
+    // console.log({ ...formValues, username: getUsername() })
 
     // Reset form, set focus
     setFormValues(initialFormValues)
@@ -41,7 +41,14 @@ export function AddStudentForm() {
         <input
           value={formValues.fullName}
           onChange={(e) => {
-            setField('fullName', e.target.value)
+            if (autoUsername) {
+              setFormValues({
+                fullName: e.target.value,
+                username: e.target.value.toLowerCase().replaceAll(/\s/g, ''),
+              })
+            } else {
+              setFormValues({ ...formValues, fullName: e.target.value })
+            }
           }}
           id="full-name"
           type="text"
@@ -55,7 +62,7 @@ export function AddStudentForm() {
       <div className="field-wrap">
         <label htmlFor="username">Username</label>
         <input
-          value={getUsername()}
+          value={formValues.username}
           disabled={autoUsername}
           onChange={(e) => setField('username', e.target.value)}
           id="username"
