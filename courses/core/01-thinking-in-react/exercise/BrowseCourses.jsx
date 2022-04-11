@@ -1,4 +1,4 @@
-// import { Heading } from './Heading'
+import { Heading } from "./Heading"
 
 export function BrowseCourses() {
   const courses = [
@@ -13,7 +13,7 @@ export function BrowseCourses() {
 
   return (
     <div className="card spacing">
-      <h1 className="heading size-1">Courses</h1>
+      <Heading size="3">Courses</Heading>
       <div className="spacing">
         {
           courses.map((course) => {
@@ -23,7 +23,7 @@ export function BrowseCourses() {
                 <div className="flex-split flex-gap-large">
                   <div>Lessons: {course.lessons}</div>
                   <div>
-                    <button className="button" onClick={() => removeCourse(course.id)}>
+                    <button className="button" onClick={removeCourse(course.id)}>
                       Remove
                     </button>
                   </div>
