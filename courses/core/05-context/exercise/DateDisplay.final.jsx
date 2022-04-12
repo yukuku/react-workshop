@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 
 const DateContext = createContext()
 
-export function DateDisplay({ children, date }) {
+export function DateDisplay({ children, date = ''}) {
   const context = {
     date: dayjs(date || new Date()),
   }

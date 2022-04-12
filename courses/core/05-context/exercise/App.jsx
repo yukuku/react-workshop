@@ -5,7 +5,20 @@ export function App() {
   return (
     <div className="spacing-large">
       <div className="text-large text-center horizontal-spacing">
-        <DateDisplay>
+        <DateDisplay date="1111/3/1">
+          <span className="date-card">
+            <DateMonth format="MMMM" />
+          </span>
+          <span className="date-card">
+            <DateDay />
+          </span>
+          <span className="date-card">
+            <DateYear />
+          </span>
+        </DateDisplay>
+      </div>
+      <div className="text-large text-center horizontal-spacing">
+        <DateDisplay date="2222/3/1">
           <span className="date-card">
             <DateMonth format="MMMM" />
           </span>
