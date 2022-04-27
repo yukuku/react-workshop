@@ -1,11 +1,6 @@
 @import 'course-platform/styles/all.scss';
 @import 'course-platform/styles/center-lesson.css';
 
-html {
-  // Just so everything is a little bigger
-  font-size: 20pt;
-}
-
 [data-datepicker] button {
   all: unset;
   text-align: center;
@@ -58,9 +53,20 @@ html {
 }
 
 [data-datepicker-calendar-boxes] > button[data-today] {
-  border: 1px solid var(--datePickerCalendarBoxToday, rgba(0, 0, 0, 0.2));
+  color: #fff;
+  background-color: var(--blue2);
 }
 
 [data-datepicker-calendar-boxes] > button:first-child {
   grid-column: var(--datePickerCalendarBoxOffset, 0);
+}
+
+.popover {
+  background-color: #fff;
+  border-radius: 0.3em;
+}
+
+.select-date-range {
+  width: 500px;
+  padding: var(--gutter);
 }

@@ -1,4 +1,4 @@
-import React, { useId } from 'react'
+import React, { useId, forwardRef } from 'react'
 import classnames from 'classnames'
 import { useField } from 'formik'
 import styles from './FormFields.module.scss'
@@ -12,18 +12,16 @@ type FieldWrapProps = {
   name: string
   required?: boolean
   className?: string
-  error?: string
-  children(field: { id: string; name: string; [key: string]: any }): JSX.Element
+  children(field: { id: string; name: string; [key: string]: any }): React.ReactNode
 }
 
-export const FieldWrap: React.FC<FieldWrapProps> = ({
+export function FieldWrap({
   label,
   name,
   required = false,
-  error,
   children,
   className = '',
-}) => {
+}: FieldWrapProps) {
   const [field, meta] = useField(name)
   const id = useId()
 
@@ -48,7 +46,7 @@ type CustomFieldProps = {
 
 type FieldInputProps = CustomFieldProps & React.InputHTMLAttributes<HTMLInputElement>
 
-export const FieldInput = React.forwardRef<HTMLInputElement, FieldInputProps>(
+export const FieldInput = forwardRef<HTMLInputElement, FieldInputProps>(
   ({ label, name, className, required = false, type = 'text', ...props }, ref) => {
     return (
       <FieldWrap label={label} name={name} required={required}>
@@ -74,7 +72,7 @@ export const FieldInput = React.forwardRef<HTMLInputElement, FieldInputProps>(
 
 type FieldSelectProps = CustomFieldProps & React.HTMLAttributes<HTMLSelectElement>
 
-export const FieldSelect = React.forwardRef<HTMLSelectElement, FieldSelectProps>(
+export const FieldSelect = forwardRef<HTMLSelectElement, FieldSelectProps>(
   ({ label, name, className, required = false, ...props }, ref) => {
     return (
       <FieldWrap label={label} name={name} required={required}>

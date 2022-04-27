@@ -13,24 +13,28 @@ type D = dayjs.Dayjs // smaller alias
 // we'll always store it as an array
 type SelectedDates = [] | [D] | [D, D]
 
+// type ContextType = {
+//   selectedDates: SelectedDates
+//   selectDate(date: D): void
+//   baseMonthFirst: D
+//   setBaseMonth(to: number | D): void
+// }
+
 /****************************************
   DatePicker
 *****************************************/
 
 type DatePickerProps = {
+  children: React.ReactNode
   selectRange?: boolean
-  // All the DayJS types
+  // All the types DayJS can receive
   baseMonth?: string | number | D | Date | null | undefined
   onSelectDate?: (selectedDate: SelectedDates) => void
 }
 
 // const Context = createContext<ContextType>(null!)
 
-export const DatePicker: React.FC<DatePickerProps> = ({
-  selectRange = false,
-  baseMonth,
-  onSelectDate,
-}) => {
+export function DatePicker({ selectRange = false, baseMonth, onSelectDate }: DatePickerProps) {
   const [selectedDates, setSelectedDates] = useState<SelectedDates>([])
 
   // A DateJS (D) Object for the first day of the month
@@ -72,9 +76,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   DatePickerCalendar
 *****************************************/
 
-// type Offset = -1 | 0 | 1
+type Offset = -1 | 0 | 1
 type DatePickerCalendarProps = {
-  // offset?: Offset
+  offset?: Offset
   selectedDates: SelectedDates
   selectDate(date: D): void
   baseMonthFirst: D
@@ -82,13 +86,14 @@ type DatePickerCalendarProps = {
 }
 
 export function DatePickerCalendar({
+  offset = 0,
   selectedDates,
   selectDate,
   baseMonthFirst,
   setBaseMonth,
 }: DatePickerCalendarProps) {
   // The first day of the base month
-  const theFirst = baseMonthFirst
+  const theFirst = offset === 0 ? baseMonthFirst : baseMonthFirst.add(offset, 'month')
 
   // The day of the week of the first day of the month
   const dayOfWeek = theFirst.day()
@@ -102,11 +107,10 @@ export function DatePickerCalendar({
 
   return (
     <div className="spacing">
-      <button data-datepicker-change-month="" onClick={() => setBaseMonth(1)}>
+      <button className="button" data-datepicker-change-month="" onClick={() => setBaseMonth(1)}>
         Next Month
       </button>
 
-      <hr />
       <div data-datepicker-calendar="" style={style}>
         <div data-datepicker-calendar-dayofweek="">
           <div>S</div>
@@ -153,3 +157,39 @@ export function DatePickerCalendar({
     </div>
   )
 }
+
+/****************************************
+  DatePicker Navigation
+*****************************************/
+
+// type DatePickerChangeMonthProps = {
+//   children: React.ReactNode
+//   to: number | D
+// } & React.HTMLAttributes<HTMLButtonElement>
+
+// export function DatePickerChangeMonth({ children, to, ...props }: DatePickerChangeMonthProps) {
+//   const { setBaseMonth } = useContext(Context)
+//   return (
+//     <button {...props} data-datepicker-change-month="" onClick={() => setBaseMonth(to)}>
+//       {children}
+//     </button>
+//   )
+// }
+
+/****************************************
+  Labels
+*****************************************/
+
+// type DatePickerLabelProps = {
+//   offset?: number
+//   format?: string
+// } & React.HTMLAttributes<HTMLDivElement>
+
+// export function DatePickerLabel({
+//   format = 'MMMM',
+//   offset = 0,
+//   ...props
+// }: DatePickerLabelProps) {
+//   const { baseMonthFirst } = useContext(Context)
+//   return <div {...props}>{baseMonthFirst.add(offset, 'month').format(format)}</div>
+// }

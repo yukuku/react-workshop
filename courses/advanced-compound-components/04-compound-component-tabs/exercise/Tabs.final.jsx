@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useId } from '../../useId'
 import { wrapEvent } from '../../utils'
 
 const TabsContext = React.createContext()
@@ -9,15 +8,15 @@ const PanelContext = React.createContext()
 export const Tabs = React.forwardRef(
   ({ children, onChange, index: controlledIndex, id, ...props }, forwardedRef) => {
     const isControlled = controlledIndex != null
-    const { current: wasControlled } = React.useRef(isControlled)
-    if ((!isControlled && wasControlled) || (isControlled && !wasControlled)) {
+    const { current: startedControlled } = React.useRef(isControlled)
+    if (isControlled !== startedControlled) {
       console.warn('Cannot change from controlled to uncontrolled or vice versa.')
     }
 
     const [selectedIndex, setSelectedIndex] = React.useState(0)
 
     const context = {
-      tabsId: useId(id),
+      tabsId: React.useId(id),
       selectedIndex: isControlled ? controlledIndex : selectedIndex,
       setSelectedIndex: (index) => {
         onChange && onChange(index)

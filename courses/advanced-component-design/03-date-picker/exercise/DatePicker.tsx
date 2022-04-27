@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import { createContext, useState, useContext } from 'react'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import isBetween from 'dayjs/plugin/isBetween'
@@ -25,20 +25,21 @@ type ContextType = {
 *****************************************/
 
 type DatePickerProps = {
+  children: React.ReactNode
   selectRange?: boolean
-  // All the DayJS types
+  // All the types DayJS can receive
   baseMonth?: string | number | D | Date | null | undefined
   onSelectDate?: (selectedDate: SelectedDates) => void
 }
 
 const Context = createContext<ContextType>(null!)
 
-export const DatePicker: React.FC<DatePickerProps> = ({
+export function DatePicker({
   children,
   selectRange = false,
   baseMonth,
   onSelectDate,
-}) => {
+}: DatePickerProps) {
   const [selectedDates, setSelectedDates] = useState<SelectedDates>([])
 
   // A DateJS (D) Object for the first day of the month
@@ -73,7 +74,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     setBaseMonth,
   }
 
-  return <Context.Provider value={context}>{children}<.Provider>
+  return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
 /****************************************
@@ -152,16 +153,14 @@ export function DatePickerCalendar({ offset = 0 }: DatePickerCalendarProps) {
 *****************************************/
 
 type DatePickerChangeMonthProps = {
-  to: any
+  children: React.ReactNode
+  to: number | D
 } & React.HTMLAttributes<HTMLButtonElement>
 
-export const DatePickerChangeMonth: React.FC<DatePickerChangeMonthProps> = ({
-  children,
-  to,
-  ...props
-}) => {
+export function DatePickerChangeMonth({ children, to, ...props }: DatePickerChangeMonthProps) {
+  const { setBaseMonth } = useContext(Context)
   return (
-    <button {...props} data-datepicker-change-month="">
+    <button {...props} data-datepicker-change-month="" onClick={() => setBaseMonth(to)}>
       {children}
     </button>
   )
@@ -173,8 +172,10 @@ export const DatePickerChangeMonth: React.FC<DatePickerChangeMonthProps> = ({
 
 type DatePickerLabelProps = {
   offset?: number
+  format?: string
 } & React.HTMLAttributes<HTMLDivElement>
 
-export const DatePickerLabel: React.FC<DatePickerLabelProps> = ({ offset = 0, ...props }) => {
-  return <div {...props}>Month Label</div>
+export function DatePickerLabel({ format = 'MMMM', offset = 0, ...props }: DatePickerLabelProps) {
+  const { baseMonthFirst } = useContext(Context)
+  return <div {...props}>{baseMonthFirst.add(offset, 'month').format(format)}</div>
 }
