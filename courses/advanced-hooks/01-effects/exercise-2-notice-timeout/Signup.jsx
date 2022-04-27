@@ -3,11 +3,26 @@ import { Avatar } from 'course-platform/Avatar'
 import { Heading } from 'course-platform/Heading'
 import { Notice } from 'course-platform/Notice'
 
+const special = {}
+
 export function useDelayedCallback(cb) {
-  const [callbackValue, setCallbackValue] = useState(null)
+  const [callbackValue, setCallbackValue] = useState(special)
+  const [ms, setMs] = useState(0)
+
+  useEffect(() => {
+    if (callbackValue !== special) {
+      const id = setTimeout(() => {
+        console.log('run', callbackValue)
+        cb(callbackValue);
+        setCallbackValue(special)
+      }, ms)
+      return () => clearTimeout(id)
+    }
+  }, [callbackValue, ms])
 
   function queueState(callbackValue, ms) {
-    // ...
+    setCallbackValue(callbackValue)
+    setMs(ms)
   }
 
   return queueState
@@ -22,7 +37,7 @@ export const Signup = () => {
 
   // Notice with Timeout
   const [showNotice, setShowNotice] = useState(false)
-  // const setShowNoticeDelayed = useDelayedCallback(setShowNotice)
+  const setShowNoticeDelayed = useDelayedCallback(setShowNotice)
 
   // Other State
   const [loadingAvatar, setLoadingAvatar] = useState(false)
@@ -30,7 +45,8 @@ export const Signup = () => {
   function onSubmit(e) {
     e.preventDefault()
     setShowNotice(true)
-    // setShowNoticeDelayed(false, 2000)
+    setShowNoticeDelayed('1000', 1000)
+    setShowNoticeDelayed('2000', 2000)
   }
 
   function fetchAvatar(username) {
@@ -58,7 +74,7 @@ export const Signup = () => {
             )}
           </div>
           <div className="flex-1 spacing">
-            {showNotice && <Notice>Form has been submitted</Notice>}
+            {showNotice && <Notice>Form has been submitted: {showNotice}</Notice>}
 
             <div>
               <label htmlFor="full-name">Full Name</label>
